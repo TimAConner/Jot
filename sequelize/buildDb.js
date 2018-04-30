@@ -1,11 +1,11 @@
 'use strict';
 const models = require('./models');
 
-const { keywords } = require('./seeders/keywords');
-const { users } = require('./seeders/users');
-const { note_dates } = require('./seeders/note_dates');
-const { options } = require('./seeders/options');
-const { notes } = require('./seeders/notes');
+let { keywords } = require('./seeders/keywords');
+let { users } = require('./seeders/users');
+let { note_dates } = require('./seeders/note_dates');
+let { options } = require('./seeders/options');
+let { notes } = require('./seeders/notes');
 
 // TODO: Add password hashing when user is entered into database.
 
