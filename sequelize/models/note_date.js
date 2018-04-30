@@ -4,7 +4,7 @@ module.exports = (sequelize, DataTypes) => {
     timestamp: DataTypes.DATE
   }, {});
   Note_Date.associate = function(models) {
-    Note_date.hasOne(models.Note, {
+    Note_Date.belongsTo(models.Note, {
       foreignKey: 'note_id'
     });
   };

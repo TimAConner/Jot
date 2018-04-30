@@ -4,7 +4,7 @@ module.exports = (sequelize, DataTypes) => {
     text: DataTypes.STRING
   }, {});
   Note.associate = function (models) {
-    Note.hasOne(models.User, {
+    Note.belongsTo(models.User, {
       foreignKey: 'user_id'
     });
     Note.hasMany(models.Keyword, {

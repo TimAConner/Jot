@@ -7,7 +7,7 @@ module.exports = (sequelize, DataTypes) => {
     user_keyword_style: DataTypes.STRING
   }, {});
   Option.associate = function(models) {
-    Option.hasOne(models.User, {
+    Option.belongsTo(models.User, {
       foreignKey: 'user_id'
     });
   };
