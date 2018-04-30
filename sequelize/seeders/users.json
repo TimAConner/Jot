@@ -1,0 +1,10 @@
+{
+  "users": [
+    {
+      "display_name": "Tim",
+      "password": "password123",
+      "email": "a@a.com",
+      "creation_date": 1525120916
+    }
+  ]
+}
