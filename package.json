@@ -16,5 +16,9 @@
   "bugs": {
     "url": "https://github.com/TimAConner/Jot/issues"
   },
-  "homepage": "https://github.com/TimAConner/Jot#readme"
+  "homepage": "https://github.com/TimAConner/Jot#readme",
+  "dependencies": {
+    "sequelize": "^4.37.6",
+    "sequelize-cli": "^4.0.0"
+  }
 }
