@@ -5,7 +5,7 @@ module.exports = (sequelize, DataTypes) => {
     font_style: DataTypes.STRING,
     auto_keyword_style: DataTypes.STRING,
     user_keyword_style: DataTypes.STRING
-  }, {});
+  }, { tableName: 'options', timestamps: false });
   Option.associate = function(models) {
     Option.belongsTo(models.User, {
       foreignKey: 'user_id'
