@@ -7,7 +7,12 @@ module.exports = (sequelize, DataTypes) => {
     creation_date: DataTypes.TIMESTAMP
   }, {});
   User.associate = function(models) {
-    // associations can be defined here
+    User.hasMany(models.Note, {
+      foreignKey: 'user_id'
+    });
+    User.hasOne(models.Option, {
+      foreignKey: 'user_id'
+    });
   };
   return User;
 };

@@ -4,7 +4,9 @@ module.exports = (sequelize, DataTypes) => {
     timestamp: DataTypes.TIMESTAMP
   }, {});
   Note_Date.associate = function(models) {
-    // associations can be defined here
+    Note_Date.hasOne(models.Note, {
+      foreignKey: 'note_id'
+    });
   };
   return Note_Date;
 };

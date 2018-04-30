@@ -7,7 +7,10 @@ module.exports = (sequelize, DataTypes) => {
     user_keyword_style: DataTypes.STRING
   }, {});
   Option.associate = function(models) {
-    // associations can be defined here
+    Option.hasOne(models.User, {
+      foreignKey: 'user_id'
+    });
+    Note.ha
   };
   return Option;
 };

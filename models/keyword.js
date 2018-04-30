@@ -5,7 +5,9 @@ module.exports = (sequelize, DataTypes) => {
     user_selected: DataTypes.BOOLEAN
   }, {});
   Keyword.associate = function(models) {
-    // associations can be defined here
+    Keyword.hasOne(models.Note, {
+      foreignKey: 'note_id'
+    });
   };
   return Keyword;
 };
