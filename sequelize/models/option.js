@@ -10,7 +10,6 @@ module.exports = (sequelize, DataTypes) => {
     Option.hasOne(models.User, {
       foreignKey: 'user_id'
     });
-    Note.ha
   };
   return Option;
 };
