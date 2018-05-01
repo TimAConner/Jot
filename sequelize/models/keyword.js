@@ -6,7 +6,12 @@ module.exports = (sequelize, DataTypes) => {
   }, { tableName: 'keywords', timestamps: false });
   Keyword.associate = function(models) {
     Keyword.belongsTo(models.Note, {
-      foreignKey: 'note_id'
+      foreignKey: {
+        name: 'note_id',
+        allowNull: false
+      },
+      onDelete: 'CASCADE',
+      onUpdate: 'CASCADE'
     });
   };
   return Keyword;

@@ -5,13 +5,24 @@ module.exports = (sequelize, DataTypes) => {
   }, { tableName: 'notes', timestamps: false });
   Note.associate = function (models) {
     Note.belongsTo(models.User, {
-      foreignKey: 'user_id'
-    });
-    Note.hasMany(models.Keyword, {
-      foreignKey: 'note_id'
+      foreignKey: {
+        name: 'user_id',
+        allowNull: false
+      },
+      onDelete: 'CASCADE',
+      onUpdate: 'CASCADE'
     });
     Note.hasMany(models.Note_Date, {
-      foreignKey: 'note_id'
+     foreignKey: {
+        name: 'note_id',
+        allowNull: false
+      },
+    });
+    Note.hasMany(models.Keyword, {
+      foreignKey: {
+        name: 'note_id',
+        allowNull: false
+      },
     });
   };
   return Note;

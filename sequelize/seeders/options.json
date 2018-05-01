@@ -2,9 +2,9 @@
   "options": [
     {
       "user_id": 1,
-      "font-size": 8,
-      "font-style": "sans-serif",
-      "auto_key word_style": "italic",
+      "font_size": 8,
+      "font_style": "sans-serif",
+      "auto_keyword_style": "italic",
       "user_keyword_style": "bold"
     }
   ]

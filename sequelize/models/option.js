@@ -8,7 +8,12 @@ module.exports = (sequelize, DataTypes) => {
   }, { tableName: 'options', timestamps: false });
   Option.associate = function(models) {
     Option.belongsTo(models.User, {
-      foreignKey: 'user_id'
+      foreignKey: {
+        name: 'user_id',
+        allowNull: false
+      },
+      onDelete: 'CASCADE',
+      onUpdate: 'CASCADE'
     });
   };
   return Option;
