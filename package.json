@@ -1,0 +1,26 @@
+{
+  "name": "Jot",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "buildDb": "node \"sequelize/buildDb.js\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/TimAConner/Jot.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/TimAConner/Jot/issues"
+  },
+  "homepage": "https://github.com/TimAConner/Jot#readme",
+  "dependencies": {
+    "pg": "^7.4.1",
+    "sequelize": "^4.37.6",
+    "sequelize-cli": "^4.0.0"
+  }
+}
