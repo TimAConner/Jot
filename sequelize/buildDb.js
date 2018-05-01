@@ -2,11 +2,11 @@
 const models = require('./models');
 const { hashSync, genSaltSync } = require('bcrypt-nodejs');
 
-let { keywords } = require('./seeders/keywords');
+const { keywords } = require('./seeders/keywords');
 let { users } = require('./seeders/users');
-let { note_dates } = require('./seeders/note_dates');
-let { options } = require('./seeders/options');
-let { notes } = require('./seeders/notes');
+const { note_dates } = require('./seeders/note_dates');
+const { options } = require('./seeders/options');
+const { notes } = require('./seeders/notes');
 
 // Hash plain text passwords from json file
 users = users.map(user => {
