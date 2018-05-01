@@ -1,5 +1,6 @@
 'use strict';
 const models = require('./models');
+const { hashSync, genSaltSync } = require('bcrypt-nodejs');
 
 let { keywords } = require('./seeders/keywords');
 let { users } = require('./seeders/users');
@@ -7,7 +8,11 @@ let { note_dates } = require('./seeders/note_dates');
 let { options } = require('./seeders/options');
 let { notes } = require('./seeders/notes');
 
-// TODO: Add password hashing when user is entered into database.
+// Hash plain text passwords from json file
+users = users.map(user => {
+  user.password = hashSync(user.password, genSaltSync(8));
+  return user;
+});
 
 models.sequelize.sync({ force: true })
   .then(() => {
@@ -29,6 +34,6 @@ models.sequelize.sync({ force: true })
     process.exit();
   })
   .catch(err => {
-    console.log("ERROR", err);
+    console.log('ERROR', err);
     process.exit();
   });
