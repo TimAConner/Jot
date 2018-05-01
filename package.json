@@ -19,6 +19,7 @@
   },
   "homepage": "https://github.com/TimAConner/Jot#readme",
   "dependencies": {
+    "bcrypt-nodejs": "0.0.3",
     "pg": "^7.4.1",
     "sequelize": "^4.37.6",
     "sequelize-cli": "^4.0.0"
