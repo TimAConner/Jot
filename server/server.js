@@ -20,7 +20,7 @@ const isLoggedIn = (req, res, next) => {
   } else {
 
     /* Go to login page */
-    res.redirect('/check');
+    res.redirect('/loginRouter');
   }
 }
 
@@ -86,7 +86,7 @@ app.post('/register', (req, res, next) => {
         }
         console.log('authenticated. Rerouting to welcome page!');
 
-        res.status(400).send('Registered and authenticated!');
+        res.redirect('/loginRouter');
       });
     })(req, res, next);
   } else {
@@ -95,27 +95,15 @@ app.post('/register', (req, res, next) => {
 });
 
 const createCookie = (req, res, next) => {
-  console.log('CHECK IF REMEMBER ME', req.body);
-  // issue a remember me cookie if the option was checked
-  // if (!req.body.remember_me) { return next(); }
-
   const { Token } = req.app.get('models');
-  console.log('GONNA CREATE IT');
   createToken(req.user).then((newToken, _) => {
 
     // TODO: make sure that tokens are deleted after they are used.  How should this be done/
     // Somehow by default a token is generated and the consume route is not taken, which 
     // creates more tokens.
-    console.log('GENERATE TOKEN FROM req.login', newToken.value);
     res.cookie('remember_me', newToken.value, { path: '/', httpOnly: true, maxAge: 604800000 }); // 7 days
     next()
   });
-};
-
-const alreadyLoggedIn = (req, res, next) => {
-  console.log('Already logged in');
-  console.log(req.user);
-  next();
 };
 
 app.get('/login',
@@ -124,26 +112,22 @@ app.get('/login',
   });
 
 // TOOD: Look into failure rediret.  That might be one of the issues.
-app.post('/', passport.authenticate('local-signin', { successRedirect: '/check', failureRedirect: '/check', failureFlash: true }));
+app.post('/', passport.authenticate('local-signin', { successRedirect: '/loginRouter', failureRedirect: '/loginRouter', failureFlash: true }));
 
 
 // TODO: Right now if you login with a cookie, it goes to check.  How can i do this differently?
 // Possibly have a middleware that checks if login failed but if req.user has info on it?
 
-// '/check' is used to see if a user is logged in instead of built in express because
+// '/loginRouter' is used to see if a user is logged in instead of built in express because
 // express hijacks remmeber-me and says the user has not sent in credentials
 // even if a cook with information is found
 // since the request object is blank when the user comes to the page without loggin in
-app.get('/check', createCookie, (req, res, next) => {
-  console.log('req.body', req.body);
+app.get('/loginRouter', createCookie, (req, res, next) => {
   if (!req.user) {
     res.redirect('/login');
   }
-  console.log(req.session);
-  console.log("User", req.user);
   res.sendFile(path.join(__dirname + '/../client/index.html'));
 });
-
 
 app.get('/', isLoggedIn, (req, res) => {
   res.sendFile(path.join(__dirname + '/../client/index.html'));
