@@ -8,12 +8,21 @@ let bodyParser = require('body-parser');
 // flash depend on session module to set temp values that persist briefly so we can set a value, kick off a new request, then have that value accessible on the request
 const flash = require('express-flash');
 const cookieParser = require('cookie-parser');
+const path = require('path');
 
-const { generateToken } = require('./authentication/generateToken');
+const { createToken } = require('./helpers');
 
 const port = process.env.PORT || 8080;
 
-// app.use(express.static(__dirname + "/client"));
+const isLoggedIn = (req, res, next) => {
+  if (req.isAuthenticated() && (req.user)) {
+    return next();
+  } else {
+
+    /* Go to login page */
+    res.redirect('/check');
+  }
+}
 
 app.set('models', require('../sequelize/models'));
 
@@ -22,12 +31,13 @@ app.set('models', require('../sequelize/models'));
 // Begin middleware stack
 // Inject session persistence into middleware stack
 app.use(session({
-  secret: 'keyboard cat',
+  secret: '254bd6709c025dc4044c08290386ec60',
   resave: true,
   saveUninitialized: true
 })); // session secret
 
 app.use(cookieParser());
+
 //execute passport strategies file
 require('./authentication/passport-strat.js');
 app.use(passport.initialize());
@@ -43,6 +53,8 @@ app.use((req, res, next) => {
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(flash());
+
+
 
 app.get('/logout', (req, res) => {
   req.session.destroy(function (err) {
@@ -82,52 +94,60 @@ app.post('/register', (req, res, next) => {
   }
 });
 
-// TOOD: Look into failure rediret.  That might be one of the issues.
-app.post('/login', passport.authenticate('local-signin', { failureRedirect: '/error', failureFlash: true }),
-  function (req, res, next) {
-    // issue a remember me cookie if the option was checked
-    if (!req.body.remember_me) { return next(); }
+const createCookie = (req, res, next) => {
+  console.log('CHECK IF REMEMBER ME', req.body);
+  // issue a remember me cookie if the option was checked
+  // if (!req.body.remember_me) { return next(); }
 
-    const { Token } = req.app.get('models');
+  const { Token } = req.app.get('models');
+  console.log('GONNA CREATE IT');
+  createToken(req.user).then((newToken, _) => {
 
-    const twoWeeksFromNow = new Date(Date.now() + 12096e5).getTime();
-    const token = generateToken(64);
-    Token.create({
-      value: token,
-      expire_date: twoWeeksFromNow,
-      user_email: req.user.email,
-    }).then((newToken, _) => {
-
-      // TODO: make sure that tokens are deleted after they are used.  How should this be done/
-      // Somehow by default a token is generated and the consume route is not taken, which 
-      // creates more tokens.
-      console.log('GENERATE TOKEN FROM req.login', token);
-      res.cookie('remember_me', token, { path: '/', httpOnly: true, maxAge: 604800000 }); // 7 days
-      res.status(201).send('Login Success');
-    });
-  },
-  function (req, res) {
-    console.log('Already logged in?');
-    console.log(req.user);
-    res.redirect('/');
+    // TODO: make sure that tokens are deleted after they are used.  How should this be done/
+    // Somehow by default a token is generated and the consume route is not taken, which 
+    // creates more tokens.
+    console.log('GENERATE TOKEN FROM req.login', newToken.value);
+    res.cookie('remember_me', newToken.value, { path: '/', httpOnly: true, maxAge: 604800000 }); // 7 days
+    next()
   });
+};
 
-app.get('/', (req, res, next) => {
-  res.status(201).send('Logged in but no remember me');
-});
-
-// TODO: Right now if you login with a cookie, it goes to error.  How can i do this differently?
-// Possibly have a middleware that checks if login failed but if req.user has info on it?
-app.get('/error', (req, res) => {
-  console.log("Error", req.user);
-  res.status(201).send('Went to get /login');
-});
+const alreadyLoggedIn = (req, res, next) => {
+  console.log('Already logged in');
+  console.log(req.user);
+  next();
+};
 
 app.get('/login',
   (req, res, next) => {
-    console.log("GET /LOGIN USER", req.user);
-    res.status(201).send('Went to get /login');
+    res.sendFile(path.join(__dirname + '/../client/login.html'));
   });
+
+// TOOD: Look into failure rediret.  That might be one of the issues.
+app.post('/', passport.authenticate('local-signin', { successRedirect: '/check', failureRedirect: '/check', failureFlash: true }));
+
+
+// TODO: Right now if you login with a cookie, it goes to check.  How can i do this differently?
+// Possibly have a middleware that checks if login failed but if req.user has info on it?
+
+// '/check' is used to see if a user is logged in instead of built in express because
+// express hijacks remmeber-me and says the user has not sent in credentials
+// even if a cook with information is found
+// since the request object is blank when the user comes to the page without loggin in
+app.get('/check', createCookie, (req, res, next) => {
+  console.log('req.body', req.body);
+  if (!req.user) {
+    res.redirect('/login');
+  }
+  console.log(req.session);
+  console.log("User", req.user);
+  res.sendFile(path.join(__dirname + '/../client/index.html'));
+});
+
+
+app.get('/', isLoggedIn, (req, res) => {
+  res.sendFile(path.join(__dirname + '/../client/index.html'));
+});
 
 app.listen(port, () => {
   console.log(`listening on port ${port}`);

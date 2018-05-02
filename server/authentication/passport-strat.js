@@ -8,7 +8,7 @@ const passport = require("passport");
 
 const { Strategy: RememberMeStrategy } = require('passport-remember-me-extended');
 const { hashSync, genSaltSync, compareSync } = require('bcrypt-nodejs');
-const { generateToken } = require('./generateToken');
+const { createToken } = require('../helpers');
 
 
 // initialize the passport-local strategy
@@ -96,13 +96,20 @@ const LoginStrategy = new Strategy(
         // console.log("username stuff", user);
 
         if (!user) {
-          return done(new Error("Can't find a uswer with those credentials."), false);
+          return done(null, false, {
+            message:
+              "Can't find a user with those credentials. Please try again"
+          });
         }
         if (req.body.username != user.username) {
-          return done(new Error("Wrong username. Please try again"), false);
+          return done(null, false, {
+            message: "Wrong username. Please try again"
+          });
         }
         if (!isValidPassword(user.password, password)) {
-          return done(new Error("Incorrect password"), false);
+          return done(null, false, {
+            message: "Incorrect password."
+          });
         }
         const userinfo = user.get(); // get returns the data about the object, separate from the rest of the instance Sequelize gives us after calling 'findOne()' above. Could also have added {raw: true} to the query to achieve the same thing
 
@@ -110,7 +117,9 @@ const LoginStrategy = new Strategy(
       })
       .catch(err => {
         console.log("Error:", err);
-        return done(new Error('message: "Something went wrong with your sign in'), false);
+        return done(null, false, {
+          message: "Something went wrong with your sign in"
+        });
       });
   }
 );
@@ -152,6 +161,7 @@ passport.use(new RememberMeStrategy(
     // // CHeck if token is there and then delete it and create a new one.
     Token.findOne({ where: { value: token }, raw: true })
       .then(foundToken => {
+
         console.log('foundToken', foundToken);
         if (foundToken) {
           User.findOne({ where: { email: foundToken.user_email }, raw: true })
@@ -164,34 +174,31 @@ passport.use(new RememberMeStrategy(
                     value: token
                   }
                 }).then(success => {
+
                   console.log('WAS TOKEN DELETED?', success);
                   return done(null, user);
                 });
               } else {
+
                 console.log('NO USER ASSOCIATED WITH TOKEN')
-                return done(new Error("No User Associated With Token"), false);
+                return done(null, false, {
+                  message: "No User Associated With Token"
+                });
               }
             });
         } else {
           console.log('ELSE TOKEN', token)
-          return done(new Error('No associated token found'), false);
+          return done(null, false, {
+            message: "No associated token found"
+          });
         }
       });
-    // console.log('TOKEN', token)
-    // return done(null, { email: 'a@a.com', id: 1 });
   },
   (user, done) => {
     console.log('user in generate token', user);
-
-    const twoWeeksFromNow = new Date(Date.now() + 12096e5).getTime();
-    const token = generateToken(64);
-    Token.create({
-      value: token,
-      expire_date: twoWeeksFromNow,
-      user_email: user.email,
-    }).then((newToken, _) => {
-      console.log('GENERATE TOKEN', token);
-      return done(null, token);
+    createToken(user).then((newToken, _) => {
+      console.log('GENERATE TOKEN', newToken.value);
+      return done(null, newToken.value);
     });
   }
 ));
