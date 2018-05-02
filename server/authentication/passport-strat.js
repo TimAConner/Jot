@@ -37,7 +37,7 @@ const RegistrationStrategy = new Strategy(
   },
   // arg2 callback, handle storing a user's details.
   (req, email, password, done) => {
-    console.log("local   strat callback: password", email);
+    console.log("local strat callback: password", email);
 
     // using the Sequelize user model we initialized earlier as User, we check to see if the user already exists, and if not we add them.
     User.findOne({
@@ -89,26 +89,20 @@ const LoginStrategy = new Strategy(
       // hashes the passed-in password and then compares it to the hashed password fetched from the db
       return bCrypt.compareSync(password, userpass);
     };
+    console.log('In Login Strategy');
 
     User.findOne({ where: { email } })
       .then(user => {
         // console.log("username stuff", user);
 
         if (!user) {
-          return done(null, false, {
-            message:
-              "Can't find a user with those credentials. Please try again"
-          });
+          return done(new Error("Can't find a uswer with those credentials."), false);
         }
         if (req.body.username != user.username) {
-          return done(null, false, {
-            message: "Wrong username. Please try again"
-          });
+          return done(new Error("Wrong username. Please try again"), false);
         }
         if (!isValidPassword(user.password, password)) {
-          return done(null, false, {
-            message: "Incorrect password."
-          });
+          return done(new Error("Incorrect password"), false);
         }
         const userinfo = user.get(); // get returns the data about the object, separate from the rest of the instance Sequelize gives us after calling 'findOne()' above. Could also have added {raw: true} to the query to achieve the same thing
 
@@ -116,9 +110,7 @@ const LoginStrategy = new Strategy(
       })
       .catch(err => {
         console.log("Error:", err);
-        return done(null, false, {
-          message: "Something went wrong with your sign in"
-        });
+        return done(new Error('message: "Something went wrong with your sign in'), false);
       });
   }
 );
@@ -131,7 +123,7 @@ const LoginStrategy = new Strategy(
 // req.session.passport.user
 passport.serializeUser((user, done) => {
   // console.log("hello, serialize");
-
+  console.log("serialize user", user);
   // This saves the whole user obj into the session cookie,
   // but typically you will see just user.id passed in.
   done(null, user);
@@ -140,6 +132,7 @@ passport.serializeUser((user, done) => {
 // deserialize user
 // We use Sequelize's findById to get the user. Then we use the Sequelize getter function, user.get(), to pass the user data to the 'done' function as an object, stripped of the sequelize instance methods, etc.
 passport.deserializeUser(({ id }, done) => {
+  console.log("deserialize user", id);
   User.findById(id).then(user => {
     if (user) {
       done(null, user.get());
@@ -154,8 +147,8 @@ passport.deserializeUser(({ id }, done) => {
 passport.use("local-signup", RegistrationStrategy);
 passport.use("local-signin", LoginStrategy);
 passport.use(new RememberMeStrategy(
-  function (token, done) {
-
+  (token, done) => {
+    console.log('consume token', token);
     // // CHeck if token is there and then delete it and create a new one.
     Token.findOne({ where: { value: token }, raw: true })
       .then(foundToken => {
@@ -163,6 +156,7 @@ passport.use(new RememberMeStrategy(
         if (foundToken) {
           User.findOne({ where: { email: foundToken.user_email }, raw: true })
             .then(user => {
+
               console.log('token user', user);
               if (user) {
                 Token.destroy({
@@ -170,8 +164,7 @@ passport.use(new RememberMeStrategy(
                     value: token
                   }
                 }).then(success => {
-                  console.log('DELETED  TOKEN AND SEND NEW TOKEN', user);
-                  // return done(null, { id: 1, email: "a@a.com" });
+                  console.log('WAS TOKEN DELETED?', success);
                   return done(null, user);
                 });
               } else {
@@ -181,13 +174,13 @@ passport.use(new RememberMeStrategy(
             });
         } else {
           console.log('ELSE TOKEN', token)
-          return done(null, false);
+          return done(new Error('No associated token found'), false);
         }
       });
     // console.log('TOKEN', token)
     // return done(null, { email: 'a@a.com', id: 1 });
   },
-  function (user, done) {
+  (user, done) => {
     console.log('user in generate token', user);
 
     const twoWeeksFromNow = new Date(Date.now() + 12096e5).getTime();
