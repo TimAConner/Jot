@@ -40,14 +40,23 @@ const createCookie = (req, res, next) => {
 router.get('/logout', logout);
 router.post('/register', register);
 router.get('/login', renderLogin);
+
+// When you go to /, it will run the passport authenticatoin code
 router.post('/', authenticate());
+router.get('/', authenticate());
+router.get('/loginRouter', isLoggedIn, createCookie, renderHome);
 
 // '/loginRouter' is used to see if a user is logged in instead of built in express because
 // express hijacks remmeber-me and says the user has not sent in credentials
 // even if a cook with information is found
 // since the request object is blank when the user comes to the page without loggin in
 // TODO: Change login router to say something else in search bar
-router.get('/loginRouter', isLoggedIn, createCookie, renderHome);
-router.get('/', authenticate());
+// router.get('/notes', isLoggedIn, createCookie, (req, res, next) => {
+
+//   console.log(req.user);
+//   res.status(200).json({
+//     "value": "25"
+//   });
+// });
 
 module.exports = router;

@@ -3,8 +3,9 @@
 const express = require('express');
 const app = express();
 const passport = require('passport')
-var session = require('express-session');
-let bodyParser = require('body-parser');
+const session = require('express-session');
+const bodyParser = require('body-parser');
+
 // flash depend on session module to set temp values that persist briefly so we can set a value, kick off a new request, then have that value accessible on the request
 const flash = require('express-flash');
 const cookieParser = require('cookie-parser');
@@ -22,9 +23,7 @@ app.use(session({
   resave: true,
   saveUninitialized: true
 }));
-
 app.use(cookieParser());
-
 
 require('./authentication/passport-strat.js');
 app.use(passport.initialize());
@@ -41,17 +40,8 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(flash());
 
-
 // note that this needs to be after the above stuff
 app.use(routes);
-
-
-// app.get('/notes', isLoggedIn, (req, res, next) => {
-//   console.log(req.user);
-//   res.status(200).json({
-//     "value": "25"
-//   });
-// });
 
 app.listen(port, () => {
   console.log(`listening on port ${port}`);

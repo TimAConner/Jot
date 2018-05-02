@@ -49,6 +49,5 @@ module.exports.renderHome = (req, res, next) => {
 };
 
 module.exports.authenticate = () => {
-  console.log('in authenticate');
   return passport.authenticate('local-signin', { successRedirect: '/loginRouter', failureRedirect: '/loginRouter', failureFlash: true });
 }
