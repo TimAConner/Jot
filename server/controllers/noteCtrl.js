@@ -88,24 +88,43 @@ module.exports.saveNote = (req, res, next) => {
       }));
     })
     .then(created => {
+      return new Promise((resolve, reject) => {
 
-      // CREATE NEW KEYWORDS
-      if (selectedKeywords) {
-        const keywordPromiseArray = selectedKeywords.map(keyword => {
-          return (Keyword.create({
-            keyword,
-            user_selected: true,
-            note_id: noteId,
-          }));
+        // CREATE NEW KEYWORDS
+        if (selectedKeywords) {
+          const keywordPromiseArray = selectedKeywords.map(keyword => {
+            return (Keyword.create({
+              keyword,
+              user_selected: true,
+              note_id: noteId,
+            }));
+          });
+
+          Promise.all(keywordPromiseArray).then(success => {
+            console.log(success)
+            resolve(success);
+          })
+            .catch(err => next(err));
+        } else {
+
+          // TODO: Add watson generate keywords
+
+        }
+      });
+    })
+    .then((_) => {
+      const currentDate = (Date.now() / 1000.0);
+      sequelize.query(`
+      INSERT INTO note_dates (edit_date, note_id)
+      SELECT to_timestamp(${currentDate}), ${noteId}
+      WHERE NOT EXISTS (
+            SELECT edit_date
+            FROM note_dates
+            WHERE edit_date >= to_timestamp(${currentDate}) - interval '1 day'
+              and edit_date <= to_timestamp(${currentDate}) 
+        );`).then(([_, rowsInserted]) => {
+          res.status(200).send();
         });
-
-        Promise.all(keywordPromiseArray).then(success => {
-          res.status(200).json(success);
-        })
-          .catch(err => next(err));;
-      } else {
-
-      }
     })
     .catch(err => next(err));
 
