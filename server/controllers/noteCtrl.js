@@ -1,5 +1,24 @@
 'use strict';
 
+const { generateKeywords } = require('./watsonCtrl');
+
+const saveKeywords = ({ KeywordModel, keywords, noteId, userSelected }) => {
+  return new Promise((resolve, reject) => {
+    const keywordPromiseArray = keywords.map(keyword => {
+      return (KeywordModel.create({
+        keyword,
+        user_selected: userSelected,
+        note_id: noteId,
+      }));
+    });
+
+    Promise.all(keywordPromiseArray).then(success => {
+      resolve(success);
+    })
+      .catch(err => next(err));
+  });
+};
+
 module.exports.getOneNote = (req, res, next) => {
   const { Note, Keyword, Note_Date } = req.app.get('models');
 
@@ -65,7 +84,9 @@ module.exports.saveNote = (req, res, next) => {
   const { Note, Keyword, Date_Edit, sequelize } = req.app.get('models');
 
   const noteId = req.params.id;
-  const text = req.body.text;
+
+  // Escape ' characterse since that is how postgres holds strings
+  const text = req.body.text.replace("'", "''");
   const userId = req.user.id;
   const selectedKeywords = req.body.keywords;
 
@@ -88,31 +109,31 @@ module.exports.saveNote = (req, res, next) => {
       }));
     })
     .then(created => {
-      return new Promise((resolve, reject) => {
 
-        // CREATE NEW KEYWORDS
-        if (selectedKeywords) {
-          const keywordPromiseArray = selectedKeywords.map(keyword => {
-            return (Keyword.create({
-              keyword,
-              user_selected: true,
-              note_id: noteId,
-            }));
+      // User has not selected keywords
+      // Watson will select keywords
+      if (!selectedKeywords) {
+        generateKeywords(text).then(keywords => {
+          return saveKeywords({
+            KeywordModel: Keyword,
+            keywords,
+            noteId,
+            userSelected: false,
           });
+        });
+      }
 
-          Promise.all(keywordPromiseArray).then(success => {
-            console.log(success)
-            resolve(success);
-          })
-            .catch(err => next(err));
-        } else {
-
-          // TODO: Add watson generate keywords
-
-        }
-      });
+      // User has selected keywords
+      if (selectedKeywords) {
+        return saveKeywords({
+          KeywordModel: Keyword,
+          keywords: selectedKeywords,
+          noteId,
+          userSelected: true
+        });
+      }
     })
-    .then((_) => {
+    .then(() => {
       const currentDate = (Date.now() / 1000.0);
       sequelize.query(`
       INSERT INTO note_dates (edit_date, note_id)
@@ -127,6 +148,4 @@ module.exports.saveNote = (req, res, next) => {
         });
     })
     .catch(err => next(err));
-
-
 };

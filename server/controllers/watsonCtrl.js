@@ -1,9 +1,9 @@
 'use strict';
 const NaturalLanguageUnderstandingV1 = require('watson-developer-cloud/natural-language-understanding/v1.js');
-const watsonCredentials = require('./config/watsonConfig.js');
+const watsonCredentials = require('../config/watsonConfig.js');
 const watson = new NaturalLanguageUnderstandingV1(watsonCredentials);
 
-module.exports.getKeywords = noteText => {
+module.exports.generateKeywords = noteText => {
   return new Promise((resolve, reject) => {
     watson.analyze({
       html: noteText,
@@ -11,9 +11,10 @@ module.exports.getKeywords = noteText => {
         keywords: {},
       },
     },
-      (err, response) => {
+      (err, { keywords = [] }) => {
         if (err) return reject(err);
-        resolve(JSON.stringify(response));
+        const keywordArray = keywords.map(({ text }) => text).slice(0, 5);
+        resolve(keywordArray);
       },
     );
   });
