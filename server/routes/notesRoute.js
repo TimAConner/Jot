@@ -6,9 +6,11 @@ const passport = require('passport');
 const { isLoggedIn } = require('./routeHelpers');
 
 const {
-  getNote,
+  getOneNote,
+  getAllNotes,
 } = require('../controllers/noteCtrl.js');
 
-router.get('/note/:id', isLoggedIn, getNote);
+router.get('/notes/:id', isLoggedIn, getOneNote);
+router.get('/notes/', isLoggedIn, getAllNotes);
 
 module.exports = router;

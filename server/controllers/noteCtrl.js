@@ -1,8 +1,7 @@
 'use strict';
 
-module.exports.getNote = (req, res, next) => {
+module.exports.getOneNote = (req, res, next) => {
   const { Note, Keyword, Note_Date } = req.app.get('models');
-  // if (!req.body.noteId) return next();
 
   const noteId = req.params.id;
   Note.findAll({
@@ -18,7 +17,29 @@ module.exports.getNote = (req, res, next) => {
     },
   })
     .then(note => {
-      note ? res.status(200).json(note) : res.status(204).sends();
+      res.status(200).json(note);
+    })
+    .catch(err => next(err))
+};
+
+module.exports.getAllNotes = (req, res, next) => {
+  const { Note, Keyword, Note_Date } = req.app.get('models');
+
+  const userId = req.user.id;
+  Note.findAll({
+    include: [{
+      model: Keyword,
+    }, {
+      model: Note_Date,
+      limit: 1,
+      order: [['edit_date', 'DESC']],
+    }],
+    where: {
+      user_id: userId,
+    },
+  })
+    .then(notes => {
+      res.status(200).json(notes);
     })
     .catch(err => next(err))
 };
