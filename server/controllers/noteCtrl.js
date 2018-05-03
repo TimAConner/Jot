@@ -19,6 +19,42 @@ const saveKeywords = ({ KeywordModel, keywords, noteId, userSelected }) => {
   });
 };
 
+const insertNoteOrCreateNote = ({ sequelize, noteId, text, userId }) => {
+  return (sequelize.query(` 
+  INSERT INTO notes (id, text, user_id)
+  VALUES (${noteId},'${text}', ${userId})
+  ON CONFLICT (id) DO UPDATE
+    SET text = '${text}';`, {
+      type: sequelize.QueryTypes.INSERT
+    }));
+};
+
+const createDateIfNew = ({ sequelize, noteId }) => {
+  return new Promise((resolve, reject) => {
+    const currentDate = (Date.now() / 1000.0);
+    sequelize.query(`
+    INSERT INTO note_dates (edit_date, note_id)
+    SELECT to_timestamp(${currentDate}), ${noteId}
+    WHERE NOT EXISTS (
+          SELECT edit_date
+          FROM note_dates
+          WHERE edit_date >= to_timestamp(${currentDate}) - interval '1 day'
+            and edit_date <= to_timestamp(${currentDate}) 
+      );`).then(([_, rowsInserted]) => {
+        resolve();
+      });
+  });
+
+};
+
+const clearOldKeywords = ({ Keyword, noteId }) => {
+  return (Keyword.destroy({
+    where: {
+      note_id: noteId,
+    },
+  }));
+};
+
 module.exports.getOneNote = (req, res, next) => {
   const { Note, Keyword, Note_Date } = req.app.get('models');
 
@@ -90,23 +126,14 @@ module.exports.saveNote = (req, res, next) => {
   const userId = req.user.id;
   const selectedKeywords = req.body.keywords;
 
-  sequelize.query(` 
-  INSERT INTO notes (id, text, user_id)
-  VALUES (${noteId},'${text}', ${userId})
-  ON CONFLICT (id) DO UPDATE
-    SET text = '${text}';`, {
-      type: sequelize.QueryTypes.INSERT
-    }).then(([_, success]) => {
+  insertNoteOrCreateNote({ sequelize, noteId, userId, text })
+    .then(([_, success]) => {
 
       // Delete all previous keywords with this note.  
       // This needs to be done since a user can update a note
       // and select 3 keywords instead of 5.
       // The extra 2 would not be updated if they only sent in three.
-      return (Keyword.destroy({
-        where: {
-          note_id: noteId,
-        },
-      }));
+      return clearOldKeywords({ Keyword, noteId });
     })
     .then(created => {
 
@@ -134,18 +161,10 @@ module.exports.saveNote = (req, res, next) => {
       }
     })
     .then(() => {
-      const currentDate = (Date.now() / 1000.0);
-      sequelize.query(`
-      INSERT INTO note_dates (edit_date, note_id)
-      SELECT to_timestamp(${currentDate}), ${noteId}
-      WHERE NOT EXISTS (
-            SELECT edit_date
-            FROM note_dates
-            WHERE edit_date >= to_timestamp(${currentDate}) - interval '1 day'
-              and edit_date <= to_timestamp(${currentDate}) 
-        );`).then(([_, rowsInserted]) => {
-          res.status(200).send();
-        });
+      return createDateIfNew({ sequelize, noteId })
+    })
+    .then(() => {
+      res.status(200).send();
     })
     .catch(err => next(err));
 };
