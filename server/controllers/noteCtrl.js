@@ -43,3 +43,20 @@ module.exports.getAllNotes = (req, res, next) => {
     })
     .catch(err => next(err))
 };
+
+module.exports.deleteNote = (req, res, next) => {
+  const { Note } = req.app.get('models');
+
+  // Only the note has to be deleted,
+  // becasue the database is setup to cascade delete.
+  const noteId = req.params.id;
+  Note.destroy({
+    where: {
+      id: noteId,
+    },
+  })
+    .then(rowsDestroyed => {
+      res.status(200).json(rowsDestroyed);
+    })
+    .catch(err => next(err))
+};
