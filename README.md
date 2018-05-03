@@ -4,7 +4,7 @@ Jot is my back-end capstone built while at [Nashville Software School](http://na
 ## API Endpoints
 These endpoints are here for developer access and not open to the public.  To access most of these endpoints, you must be logged into the application.
 ### /notes
-/notes/
+GET /notes/
 Returns all given user's notes with all keyords and each note's most recent edit date.
 ```
 [
@@ -36,7 +36,7 @@ Returns all given user's notes with all keyords and each note's most recent edit
   }
 ]
 ```
-/notes/:id 
+GET /notes/:id 
 Returns given note with all keywords and it's most recent edit date.
 ```
 [
@@ -67,5 +67,10 @@ Returns given note with all keywords and it's most recent edit date.
     ]
   }
 ]
+```
+DELETE /notes/:id
+Deletes the specified note.  Returns the number of rows deleted.  If none were deleted, 0 is returned.
+```
+1
 ```
 ___
