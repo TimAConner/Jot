@@ -40,8 +40,12 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(flash());
 
-// note that this needs to be after the above stuff
 app.use(routes);
+
+app.use((err, req, res, next) => {
+  err = err || new Error("Internal Server Error");
+  res.status(err.status || 500).json({ error: err.message });
+});
 
 app.listen(port, () => {
   console.log(`listening on port ${port}`);
