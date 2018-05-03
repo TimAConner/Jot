@@ -1,7 +1,7 @@
 'use strict';
 module.exports = (sequelize, DataTypes) => {
   var Note = sequelize.define('Note', {
-    text: DataTypes.STRING
+    text: DataTypes.TEXT
   }, { tableName: 'notes', timestamps: false });
   Note.associate = function (models) {
     Note.belongsTo(models.User, {
