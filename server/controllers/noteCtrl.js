@@ -75,37 +75,39 @@ module.exports.saveNote = (req, res, next) => {
   ON CONFLICT (id) DO UPDATE
     SET text = '${text}';`, {
       type: sequelize.QueryTypes.INSERT
-    }).then(([_, completed]) => {
-      res.status(200).json(completed);
+    }).then(([_, success]) => {
+
+      // Delete all previous keywords with this note.  
+      // This needs to be done since a user can update a note
+      // and select 3 keywords instead of 5.
+      // The extra 2 would not be updated if they only sent in three.
+      return (Keyword.destroy({
+        where: {
+          note_id: noteId,
+        },
+      }));
+    })
+    .then(created => {
+
+      // CREATE NEW KEYWORDS
+      if (selectedKeywords) {
+        const keywordPromiseArray = selectedKeywords.map(keyword => {
+          return (Keyword.create({
+            keyword,
+            user_selected: true,
+            note_id: noteId,
+          }));
+        });
+
+        Promise.all(keywordPromiseArray).then(success => {
+          res.status(200).json(success);
+        })
+          .catch(err => next(err));;
+      } else {
+
+      }
     })
     .catch(err => next(err));
 
-  // TODO: Save all keywords, overwriting others if there.
-  // TOOD: Save the current edit date if not already in the database.
-  // Keyword.destroy({
-  //   where: {
-  //     note_id: noteId,
-  //   },
-  // });
-
-  // if (selectedKeywords) {
-  //   for (let keyword of selectedKeywords) {
-  //     Keyword.upsert({
-  //       keyword,
-  //       user_selected: true,
-  //     },
-  //       {
-  //         where: {
-  //           note_id: noteId,
-  //         },
-  //       })
-  //       .then(created => {
-  //         res.status(200).json(created);
-  //       })
-  //       .catch(err => next(err));
-  //   }
-  // } else {
-
-  // }
 
 };
