@@ -4,8 +4,8 @@ Jot is my back-end capstone built while at [Nashville Software School](http://na
 ## API Endpoints
 These endpoints are here for developer access and not open to the public.  To access most of these endpoints, you must be logged into the application.
 ### /notes
-GET /notes/
-Returns all given user's notes with all keyords and each note's most recent edit date.
+#### GET /notes/
+Returns all given user's notes with all keywords and each note's most recent edit date.
 ```
 [
   {
@@ -36,8 +36,8 @@ Returns all given user's notes with all keyords and each note's most recent edit
   }
 ]
 ```
-GET /notes/:id 
-Returns given note with all keywords and it's most recent edit date.
+#### GET /notes/:id 
+Returns given note with all keywords and its most recent edit date.
 ```
 [
   {
@@ -68,9 +68,21 @@ Returns given note with all keywords and it's most recent edit date.
   }
 ]
 ```
-DELETE /notes/:id
+#### DELETE /notes/:id
 Deletes the specified note.  Returns the number of rows deleted.  If none were deleted, 0 is returned.
 ```
 1
 ```
+
+#### PUT /notes/:id
+Creates or edits the note at the given id, escaping single quotes in the note; creates the keywords from the keyword array, or if no keyword array is sent, it uses watson to generate them; and finally adds a new date_edit entry if it has not been edited within the last 24 hours.
+##### Example Request Body:
+```
+{
+  "text": "This is a note",
+  "keywords": ['this', 'note']
+}
+```
+
+Returns 200 if succesful.
 ___
