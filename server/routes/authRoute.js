@@ -13,16 +13,7 @@ const {
 } = require('../controllers/authCtrl.js');
 
 const { createToken } = require('../helpers');
-
-const isLoggedIn = (req, res, next) => {
-
-  if (typeof req.user === "undefined") {
-    return res.redirect('/login');
-  }
-
-  console.log('is logged in', req.user);
-  next();
-}
+const { isLoggedIn } = require('./routeHelpers');
 
 const createCookie = (req, res, next) => {
   const { Token } = req.app.get('models');
