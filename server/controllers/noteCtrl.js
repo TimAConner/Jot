@@ -62,16 +62,22 @@ module.exports.getOneNote = (req, res, next) => {
   Note.findAll({
     include: [{
       model: Keyword,
+      attributes: {
+        exclude: ['id', 'note_id'],
+      },
     }, {
       model: Note_Date,
       limit: 1,
       order: [['edit_date', 'DESC']],
+      attributes: {
+        exclude: ['id'],
+      },
     }],
     where: {
       id: noteId,
     },
   })
-    .then(note => {
+    .then(([note]) => {
       res.status(200).json(note);
     })
     .catch(err => next(err))
@@ -84,6 +90,9 @@ module.exports.getAllNotes = (req, res, next) => {
   Note.findAll({
     include: [{
       model: Keyword,
+      attributes: {
+        exclude: ['id', 'note_id'],
+      },
     }, {
       model: Note_Date,
       limit: 1,
