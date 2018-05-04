@@ -10,19 +10,18 @@ module.exports.logout = (req, res) => {
 }
 
 module.exports.register = (req, res, next) => {
-  if (req.body.password === req.body.confirmation) {
-    console.log('Trying to register new user');
+  if (req.body.password === req.body.confirm) {
 
     // first argument is name of the passport strategy we created in passport-strat.js
     passport.authenticate('local-signup', (err, user, msgObj) => {
-      console.log('Where are we? session.js', user);
 
       if (err) {
-        console.log(err);
-      } //or return next(err)
+        err.status = 400;
+        return next(err);
+      }
       if (!user) {
-        res.status(400).send('No user');
-        // return res.render('register', msgObj);
+        const error = new Error('User could not be logged in after creation.');
+        return next(error);
       }
 
       // Go ahead and login the new user once they are signed up
@@ -30,13 +29,13 @@ module.exports.register = (req, res, next) => {
         if (err) {
           return next(err);
         }
-        console.log('authenticated. Rerouting to welcome page!');
-
         res.redirect('/loginRouter');
       });
     })(req, res, next);
   } else {
-    res.status(400).send('Password & password confirmation do not match');
+    const error = new Error('Passwords did not match.');
+    error.status = 400;
+    return next(error);
   }
 }
 
@@ -46,6 +45,10 @@ module.exports.renderLogin = (req, res, next) => {
 
 module.exports.renderHome = (req, res, next) => {
   res.sendFile(path.join(__dirname + '/../../client/index.html'));
+};
+
+module.exports.renderRegister = (req, res, next) => {
+  res.sendFile(path.join(__dirname + '/../../client/register.html'));
 };
 
 module.exports.authenticate = () => {

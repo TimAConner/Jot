@@ -44,28 +44,20 @@ const RegistrationStrategy = new Strategy(
       where: { email } // remember, this is object literal shorthand. Same as { email: email}
     }).then(user => {
       if (user) {
-        console.log("user found, oops");
-
-        return done(null, false, {
-          message: "That email is already taken"
-        });
+        return done(new Error('Email is already taken'), false);
       } else {
-        console.log("in the else");
         const userPassword = module.exports.generateHash(password); //function we defined above
-        const data =
-          // values come from the req.body, added by body-parser when register form request is submitted
-          {
-            email,
-            password: userPassword,
-            display_name: req.body.display_name,
-          };
-        // create() is a Sequelize method
+        const data = {
+          email,
+          password: userPassword,
+          display_name: req.body.display_name,
+        };
+
         User.create(data).then((newUser, created) => {
           if (!newUser) {
-            return done(null, false);
+            return done(new Error('User could not be created.  Please try again later.'), false);
           }
           if (newUser) {
-            console.log("newUser", newUser);
             return done(null, newUser);
           }
         });
@@ -86,30 +78,22 @@ const LoginStrategy = new Strategy(
   (req, email, password, done) => {
 
     const isValidPassword = (userpass, password) => {
+
       // hashes the passed-in password and then compares it to the hashed password fetched from the db
       return bCrypt.compareSync(password, userpass);
     };
-    console.log('In Login Strategy');
 
     User.findOne({ where: { email } })
       .then(user => {
-        // console.log("username stuff", user);
 
         if (!user) {
-          return done(null, false, {
-            message:
-              "Can't find a user with those credentials. Please try again"
-          });
+          return done(new Error('Can not find a user with those credentials. Please try again.'), false);
         }
         if (req.body.username != user.username) {
-          return done(null, false, {
-            message: "Wrong username. Please try again"
-          });
+          return done(new Error('Wrong email.  Please try again.'), false);
         }
         if (!isValidPassword(user.password, password)) {
-          return done(null, false, {
-            message: "Incorrect password."
-          });
+          return done(new Error('Incorrect password'), false);
         }
         const userinfo = user.get(); // get returns the data about the object, separate from the rest of the instance Sequelize gives us after calling 'findOne()' above. Could also have added {raw: true} to the query to achieve the same thing
 
@@ -117,9 +101,7 @@ const LoginStrategy = new Strategy(
       })
       .catch(err => {
         console.log("Error:", err);
-        return done(null, false, {
-          message: "Something went wrong with your sign in"
-        });
+        return done(new Error('Please try again later.'), false);
       });
   }
 );
@@ -146,7 +128,7 @@ passport.deserializeUser(({ id }, done) => {
     if (user) {
       done(null, user.get());
     } else {
-      done(user.errors, null);
+      done(new Error('Deserialization error.  Please try again later'), null);
     }
   });
 });

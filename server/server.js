@@ -42,9 +42,8 @@ app.use(flash());
 
 app.use(routes);
 
-app.use((err, req, res, next) => {
-  err = err || new Error("Internal Server Error");
-  res.status(err.status || 500).json({ error: err.message });
+app.use(({ status = 500, message = "Internal Server Error" }, req, res, next) => {
+  res.status(status).json(message);
 });
 
 app.listen(port, () => {
