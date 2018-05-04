@@ -9,10 +9,13 @@ const {
   getOneNote,
   getAllNotes,
   deleteNote,
+  saveNote,
 } = require('../controllers/noteCtrl.js');
 
 router.get('/notes/:id', isLoggedIn, getOneNote);
-router.get('/notes/', isLoggedIn, getAllNotes);
 router.delete('/notes/:id', isLoggedIn, deleteNote);
+router.put('/notes/:id', isLoggedIn, saveNote);
+
+router.get('/notes/', isLoggedIn, getAllNotes);
 
 module.exports = router;
