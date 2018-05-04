@@ -97,6 +97,9 @@ module.exports.getAllNotes = (req, res, next) => {
       model: Note_Date,
       limit: 1,
       order: [['edit_date', 'DESC']],
+      attributes: {
+        exclude: ['id'],
+      },
     }],
     where: {
       user_id: userId,
