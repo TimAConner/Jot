@@ -88,31 +88,59 @@ module.exports.getOneNote = (req, res, next) => {
 // When trying to exclude note_id from Note_Date, sequelize throws an error.  
 // Excluding note_id when limiting doesn't work right now in sequelize.
 module.exports.getAllNotes = (req, res, next) => {
-  const { Note, Keyword, Note_Date } = req.app.get('models');
+  const { Note, Keyword, Note_Date, sequelize } = req.app.get('models');
 
   const userId = req.user.id;
-  Note.findAll({
-    include: [{
-      model: Keyword,
-      attributes: {
-        exclude: ['id', 'note_id'],
-      },
-    }, {
-      model: Note_Date,
+  const shouldSortByDate = req.query.dates;
+  if (shouldSortByDate) {
+    Note_Date.findAll({
       order: [['edit_date', 'DESC']],
-      limit: 1,
-      attributes: {
-        exclude: ['id'],
-      },
-    }],
-    where: {
-      user_id: userId,
-    },
-  })
-    .then(notes => {
-      res.status(200).json(notes);
+      include: [
+        {
+          model: Note,
+          attributes: {
+            exclude: ['id'],
+          },
+          where: {
+            user_id: userId,
+          },
+          include: [{
+            model: Keyword,
+            attributes: {
+              exclude: ['id', 'note_id'],
+            },
+          }]
+        }
+      ]
     })
-    .catch(err => next(err));
+      .then(notes => {
+        res.status(200).json(notes);
+      })
+      .catch(err => next(err));
+  } else {
+    Note.findAll({
+      include: [{
+        model: Keyword,
+        attributes: {
+          exclude: ['id', 'note_id'],
+        },
+      }, {
+        model: Note_Date,
+        order: [['edit_date', 'DESC']],
+        limit: 1,
+        attributes: {
+          exclude: ['id'],
+        },
+      }],
+      where: {
+        user_id: userId,
+      },
+    })
+      .then(notes => {
+        res.status(200).json(notes);
+      })
+      .catch(err => next(err));
+  }
 };
 
 module.exports.deleteNote = (req, res, next) => {
