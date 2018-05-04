@@ -55,6 +55,8 @@ const clearOldKeywords = ({ Keyword, noteId }) => {
   }));
 };
 
+// When trying to exclude note_id from Note_Date, sequelize throws an error.  
+// Excluding note_id when limiting doesn't work right now in sequelize.
 module.exports.getOneNote = (req, res, next) => {
   const { Note, Keyword, Note_Date } = req.app.get('models');
 
@@ -83,6 +85,8 @@ module.exports.getOneNote = (req, res, next) => {
     .catch(err => next(err))
 };
 
+// When trying to exclude note_id from Note_Date, sequelize throws an error.  
+// Excluding note_id when limiting doesn't work right now in sequelize.
 module.exports.getAllNotes = (req, res, next) => {
   const { Note, Keyword, Note_Date } = req.app.get('models');
 
@@ -95,8 +99,8 @@ module.exports.getAllNotes = (req, res, next) => {
       },
     }, {
       model: Note_Date,
-      limit: 1,
       order: [['edit_date', 'DESC']],
+      limit: 1,
       attributes: {
         exclude: ['id'],
       },
