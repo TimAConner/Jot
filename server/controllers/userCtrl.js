@@ -51,7 +51,7 @@ module.exports.updateOption = (req, res, next) => {
       user_id: userId,
     },
   })
-    .then(rowsUpdated => {
+    .then(([rowsUpdated]) => {
       res.status(200).json(rowsUpdated);
     })
     .catch(err => next(err));
