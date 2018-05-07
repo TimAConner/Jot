@@ -20,6 +20,15 @@ const saveKeywords = ({ KeywordModel, keywords, noteId, userSelected }) => {
 };
 
 const insertNoteOrCreateNote = ({ sequelize, noteId, text, userId }) => {
+  if (typeof noteId === "undefined") {
+    return (sequelize.query(` 
+    INSERT INTO notes (text, user_id)
+    VALUES ('${text}', ${userId})
+    RETURNING id;`, {
+        type: sequelize.QueryTypes.INSERT
+      }));
+  }
+
   return (sequelize.query(` 
   INSERT INTO notes (id, text, user_id)
   VALUES (${noteId},'${text}', ${userId})
@@ -27,6 +36,7 @@ const insertNoteOrCreateNote = ({ sequelize, noteId, text, userId }) => {
     SET text = '${text}';`, {
       type: sequelize.QueryTypes.INSERT
     }));
+
 };
 
 const createDateIfNew = ({ sequelize, noteId }) => {
@@ -36,10 +46,11 @@ const createDateIfNew = ({ sequelize, noteId }) => {
     INSERT INTO note_dates (edit_date, note_id)
     SELECT to_timestamp(${currentDate}), ${noteId}
     WHERE NOT EXISTS (
-          SELECT edit_date
+          SELECT edit_date, note_id
           FROM note_dates
           WHERE edit_date >= to_timestamp(${currentDate}) - interval '1 day'
-            and edit_date <= to_timestamp(${currentDate}) 
+            AND edit_date <= to_timestamp(${currentDate})
+            AND note_id = ${noteId}
       );`).then(([_, rowsInserted]) => {
         resolve();
       });
@@ -92,7 +103,84 @@ module.exports.getAllNotes = (req, res, next) => {
 
   const userId = req.user.id;
   const shouldSortByDate = req.query.dates;
-  if (shouldSortByDate) {
+  const shouldGroupByKeyword = req.query.weekView;
+
+  if (shouldGroupByKeyword) {
+    return sequelize.query(` 
+    SELECT k.keyword, 
+    ARRAY_AGG(k.note_id) as notes, DATE_TRUNC('week', nd.edit_date) AS week
+    FROM keywords AS k
+      LEFT JOIN (
+          SELECT * 
+          FROM note_dates
+          ORDER BY edit_date DESC
+        ) AS nd
+        ON nd.note_id = k.note_id
+      LEFT JOIN notes as n
+      ON n.id = k.note_id
+    WHERE n.user_id = ${userId}
+    GROUP BY week, k.keyword
+    ORDER BY week DESC;`, {
+        type: sequelize.QueryTypes.SELECT
+      })
+      .then(keywords => {
+
+        const noteIdsInKeywords = [];
+
+        // Extract the note ids from keywords
+        keywords.map(({ notes }) => {
+          notes.map(noteId => {
+
+            // To cut down on selects to database
+            // Add the note id only if it is not in the array yet
+            if (!noteIdsInKeywords.includes(noteId)) {
+              noteIdsInKeywords.push(noteId);
+            }
+          });
+        });
+
+        const notePromises = [];
+
+        // Find information on each note referenced 
+        // in the keywords found
+        noteIdsInKeywords.map(noteId => {
+          notePromises.push(
+            Note.findAll({
+              include: [{
+                model: Keyword,
+                attributes: {
+                  exclude: ['id', 'note_id'],
+                },
+              }, {
+                model: Note_Date,
+                order: [['edit_date', 'DESC']],
+                limit: 1,
+                attributes: {
+                  exclude: ['id'],
+                },
+              }],
+              where: {
+                id: noteId,
+              },
+            }));
+        });
+
+        // Map the note information onto the keyword results
+        Promise.all(notePromises).then(noteInfo => {
+          keywords = keywords.map(keyword => {
+            keyword.notes = keyword.notes.map(noteId => {
+              return noteInfo.find(([obj]) => obj.id == noteId);
+            });
+            return keyword;
+          });
+
+          res.status(200).json(keywords);
+        })
+          .catch(err => next(err));
+      })
+      .catch(err => next(err));
+  }
+  else if (shouldSortByDate) {
     Note_Date.findAll({
       order: [['edit_date', 'DESC']],
       include: [
@@ -163,7 +251,7 @@ module.exports.deleteNote = (req, res, next) => {
 module.exports.saveNote = (req, res, next) => {
   const { Note, Keyword, Date_Edit, sequelize } = req.app.get('models');
 
-  const noteId = req.params.id;
+  let noteId = req.params.id;
 
   // Escape ' characterse since that is how postgres holds strings
   const text = req.body.text.replace("'", "''");
@@ -171,7 +259,13 @@ module.exports.saveNote = (req, res, next) => {
   const selectedKeywords = req.body.keywords;
 
   insertNoteOrCreateNote({ sequelize, noteId, userId, text })
-    .then(([_, success]) => {
+    .then(([[anonymousNewNoteObj], success]) => {
+
+      // Use the new note id 
+      // if no noteId has been passed into req params
+      if (typeof anonymousNewNoteObj !== "undefined") {
+        noteId = anonymousNewNoteObj.id;
+      }
 
       // Delete all previous keywords with this note.  
       // This needs to be done since a user can update a note
