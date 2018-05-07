@@ -20,6 +20,15 @@ const saveKeywords = ({ KeywordModel, keywords, noteId, userSelected }) => {
 };
 
 const insertNoteOrCreateNote = ({ sequelize, noteId, text, userId }) => {
+  if (typeof noteId === "undefined") {
+    return (sequelize.query(` 
+    INSERT INTO notes (text, user_id)
+    VALUES ('${text}', ${userId})
+    RETURNING id;`, {
+        type: sequelize.QueryTypes.INSERT
+      }));
+  }
+
   return (sequelize.query(` 
   INSERT INTO notes (id, text, user_id)
   VALUES (${noteId},'${text}', ${userId})
@@ -27,6 +36,7 @@ const insertNoteOrCreateNote = ({ sequelize, noteId, text, userId }) => {
     SET text = '${text}';`, {
       type: sequelize.QueryTypes.INSERT
     }));
+
 };
 
 const createDateIfNew = ({ sequelize, noteId }) => {
@@ -163,7 +173,7 @@ module.exports.deleteNote = (req, res, next) => {
 module.exports.saveNote = (req, res, next) => {
   const { Note, Keyword, Date_Edit, sequelize } = req.app.get('models');
 
-  const noteId = req.params.id;
+  let noteId = req.params.id;
 
   // Escape ' characterse since that is how postgres holds strings
   const text = req.body.text.replace("'", "''");
@@ -171,7 +181,13 @@ module.exports.saveNote = (req, res, next) => {
   const selectedKeywords = req.body.keywords;
 
   insertNoteOrCreateNote({ sequelize, noteId, userId, text })
-    .then(([_, success]) => {
+    .then(([[anonymousNewNoteObj], success]) => {
+
+      // Use the new note id 
+      // if no noteId has been passed into req params
+      if (typeof anonymousNewNoteObj !== "undefined") {
+        noteId = anonymousNewNoteObj.id;
+      }
 
       // Delete all previous keywords with this note.  
       // This needs to be done since a user can update a note
