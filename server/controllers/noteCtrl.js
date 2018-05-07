@@ -114,9 +114,9 @@ module.exports.getAllNotes = (req, res, next) => {
       ON nd.note_id = k.note_id
       LEFT JOIN notes as n
       ON n.id = k.note_id
+    WHERE n.user_id = ${userId}
     GROUP BY week, k.keyword
-    ORDER BY week DESC;
-    `, {
+    ORDER BY week DESC;`, {
         type: sequelize.QueryTypes.SELECT
       })
       .then(keywords => {
