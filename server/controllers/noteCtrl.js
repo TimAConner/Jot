@@ -110,8 +110,12 @@ module.exports.getAllNotes = (req, res, next) => {
     SELECT k.keyword, 
     ARRAY_AGG(k.note_id) as notes, DATE_TRUNC('week', nd.edit_date) AS week
     FROM keywords AS k
-      LEFT JOIN note_dates AS nd
-      ON nd.note_id = k.note_id
+      LEFT JOIN (
+          SELECT * 
+          FROM note_dates
+          ORDER BY edit_date DESC
+        ) AS nd
+        ON nd.note_id = k.note_id
       LEFT JOIN notes as n
       ON n.id = k.note_id
     WHERE n.user_id = ${userId}
