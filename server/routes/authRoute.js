@@ -10,6 +10,7 @@ const {
   renderLogin,
   renderHome,
   authenticate,
+  renderRegister,
 } = require('../controllers/authCtrl.js');
 
 const { createToken } = require('../helpers');
@@ -30,6 +31,7 @@ const createCookie = (req, res, next) => {
 // new user
 router.get('/logout', logout);
 router.post('/register', register);
+router.get('/register', renderRegister);
 router.get('/login', renderLogin);
 
 // When you go to /, it will run the passport authenticatoin code
