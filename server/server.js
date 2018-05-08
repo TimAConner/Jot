@@ -17,6 +17,12 @@ const port = process.env.PORT || 8080;
 
 app.set('models', require('../sequelize/models'));
 
+app.use((req, res, next) => {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  next();
+});
+
 // Begin middleware stack
 app.use(session({
   secret: '254bd6709c025dc4044c08290386ec60',
@@ -41,6 +47,9 @@ app.use(bodyParser.json());
 app.use(flash());
 
 app.use(routes);
+
+app.use(express.static(path.join(__dirname, '../build')));
+
 
 app.use(({ status = 500, message = "Internal Server Error" }, req, res, next) => {
   res.status(status).json(message);

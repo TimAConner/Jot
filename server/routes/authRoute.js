@@ -37,9 +37,9 @@ router.get('/login', renderLogin);
 // When you go to /, it will run the passport authenticatoin code
 router.post('/', authenticate());
 router.get('/', authenticate());
-router.get('/loginRouter', isLoggedIn, createCookie, renderHome);
+router.get('/jot', isLoggedIn, createCookie, renderHome);
 
-// '/loginRouter' is used to see if a user is logged in instead of built in express because
+// '/jot' is used to see if a user is logged in instead of built in express because
 // express hijacks remmeber-me and says the user has not sent in credentials
 // even if a cook with information is found
 // since the request object is blank when the user comes to the page without loggin in

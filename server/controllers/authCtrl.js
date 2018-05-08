@@ -29,7 +29,7 @@ module.exports.register = (req, res, next) => {
         if (err) {
           return next(err);
         }
-        res.redirect('/loginRouter');
+        res.redirect('/jot');
       });
     })(req, res, next);
   } else {
@@ -40,17 +40,17 @@ module.exports.register = (req, res, next) => {
 }
 
 module.exports.renderLogin = (req, res, next) => {
-  res.sendFile(path.join(__dirname + '/../../client/login.html'));
+  res.sendFile(path.join(__dirname + '/../../build/login.html'));
 };
 
 module.exports.renderHome = (req, res, next) => {
-  res.sendFile(path.join(__dirname + '/../../client/index.html'));
+  res.sendFile(path.join(__dirname + '/../../build/index.html'));
 };
 
 module.exports.renderRegister = (req, res, next) => {
-  res.sendFile(path.join(__dirname + '/../../client/register.html'));
+  res.sendFile(path.join(__dirname + '/../../build/register.html'));
 };
 
 module.exports.authenticate = () => {
-  return passport.authenticate('local-signin', { successRedirect: '/loginRouter', failureRedirect: '/loginRouter', failureFlash: true });
+  return passport.authenticate('local-signin', { successRedirect: '/jot', failureRedirect: '/jot', failureFlash: true });
 }
