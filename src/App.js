@@ -14,8 +14,6 @@ class App extends Component {
   render() {
     return (
       <div className="App">
-      
-
         <BrowserRouter>
           <Switch>
             <Route path='/login' component={Login} />
@@ -36,7 +34,6 @@ class App extends Component {
             }} />
           </Switch>
         </BrowserRouter>
-
       </div>
     );
   }

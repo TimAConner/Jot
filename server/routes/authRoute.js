@@ -7,10 +7,8 @@ const passport = require('passport');
 const {
   logout,
   register,
-  renderLogin,
-  renderHome,
+  loginSuccess,
   authenticate,
-  renderRegister,
 } = require('../controllers/authCtrl.js');
 
 const { createToken } = require('../helpers');
@@ -29,15 +27,13 @@ const createCookie = (req, res, next) => {
 };
 
 // new user
-router.get('/logout', logout);
+router.post('/logout', logout);
 router.post('/register', register);
-router.get('/register', renderRegister);
-router.get('/login', renderLogin);
 
 // When you go to /, it will run the passport authenticatoin code
-router.post('/', authenticate());
-router.get('/', authenticate());
-router.get('/jot', isLoggedIn, createCookie, renderHome);
+router.post('/login', authenticate());
+router.get('/login', authenticate());
+router.get('/loginRouter', isLoggedIn, createCookie, loginSuccess);
 
 // '/jot' is used to see if a user is logged in instead of built in express because
 // express hijacks remmeber-me and says the user has not sent in credentials

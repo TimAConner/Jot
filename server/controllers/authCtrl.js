@@ -2,10 +2,12 @@
 const passport = require('passport');
 const path = require('path');
 
-module.exports.logout = (req, res) => {
+
+
+module.exports.logout = (req, res, next) => {
   req.session.destroy(function (err) {
     res.clearCookie('remember_me');
-    res.redirect('/login');
+    module.exports.loginFailure(req, res, next);
   });
 }
 
@@ -29,7 +31,7 @@ module.exports.register = (req, res, next) => {
         if (err) {
           return next(err);
         }
-        res.redirect('/jot');
+        res.redirect('/loginRouter');
       });
     })(req, res, next);
   } else {
@@ -39,18 +41,17 @@ module.exports.register = (req, res, next) => {
   }
 }
 
-module.exports.renderLogin = (req, res, next) => {
-  res.sendFile(path.join(__dirname + '/../../build/login.html'));
+module.exports.loginFailure = (req, res, next) => {
+  const error = new Error('Please login');
+  error.status = 401;
+  next(error);
 };
 
-module.exports.renderHome = (req, res, next) => {
-  res.sendFile(path.join(__dirname + '/../../build/index.html'));
-};
-
-module.exports.renderRegister = (req, res, next) => {
-  res.sendFile(path.join(__dirname + '/../../build/register.html'));
+module.exports.loginSuccess = (req, res, next) => {
+  const { password, creation_date, ...rest } = req.user;
+  res.status(200).json(rest);
 };
 
 module.exports.authenticate = () => {
-  return passport.authenticate('local-signin', { successRedirect: '/jot', failureRedirect: '/jot', failureFlash: true });
+  return passport.authenticate('local-signin', { successRedirect: '/loginRouter', failureRedirect: '/loginRouter', failureFlash: true });
 }

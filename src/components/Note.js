@@ -7,5 +7,6 @@ const Note = ({ noteId, keywords, date, text, viewNote, deleteNote}) => (
     <h3 className='note__date'>{date}</h3>
     <p className='note__text'>{text}</p>
   </div>
-)
+);
+
 export default Note;

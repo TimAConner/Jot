@@ -7,6 +7,6 @@ const Login = () => (
     Password: <input type="password" name="password" /><br />
     <input type="submit" value="Submit" />
   </div>
-)
+);
 
 export default Login;
