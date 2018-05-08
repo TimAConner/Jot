@@ -4,6 +4,7 @@ import axios from 'axios';
 
 import { Switch, Route, Redirect, BrowserRouter } from 'react-router-dom';
 
+import { isLoggedIn } from './helpers';
 
 import Note from './components/Note';
 import Login from './components/Login';
@@ -18,7 +19,7 @@ class App extends Component {
           <Switch>
             <Route path='/login' component={Login} />
             <Route exact path='/' render={props => {
-              if (true) { // Is logged in?
+              if (isLoggedIn()) { // Is logged in?
                 return (
                   <Jot />
                 );
