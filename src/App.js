@@ -1,14 +1,15 @@
 import React, { Component } from 'react';
-import axios from 'axios';
+// import axios from 'axios';
 // import axios from "axios";
 
-import { Switch, Route, Redirect, BrowserRouter } from 'react-router-dom';
+import { Switch, Route, BrowserRouter } from 'react-router-dom';
 
-import { isLoggedIn } from './helpers';
+// import { isLoggedIn } from './helpers';
 
-import Note from './components/Note';
+// import Note from './components/Note';
 import Login from './components/Login';
 import Jot from './components/Jot';
+import NoteEditor from './components/NoteEditor';
 
 class App extends Component {
 
@@ -18,21 +19,8 @@ class App extends Component {
         <BrowserRouter>
           <Switch>
             <Route path='/login' component={Login} />
-            <Route exact path='/' render={props => {
-              if (isLoggedIn()) { // Is logged in?
-                return (
-                  <Jot />
-                );
-              } else {
-                console.log('else');
-                return (
-                  <Redirect to={{
-                    pathname: '/login',
-                    state: { from: props.location }
-                  }} />
-                );
-              }
-            }} />
+            <Route path='/noteEditor' component={NoteEditor} />
+            <Route exact path='/'component={Jot}/>
           </Switch>
         </BrowserRouter>
       </div>

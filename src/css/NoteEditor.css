@@ -1,0 +1,54 @@
+.inputBox {
+  border: none;
+  width: 100%;
+  height: 100vh;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+}
+
+.bold {
+  font-weight: bold;
+}
+
+.italic {
+  font-style: italic;
+}
+
+.inputBox {
+  color: transparent;
+  caret-color: rgba(0, 0, 0, 1);
+  white-space: pre-wrap;
+}
+
+/* Will not work on ios safari */
+.inputBox::-moz-selection {
+  color: transparent;
+  background-color: #3297FD;
+}
+
+.inputBox::selection {
+  color: transparent;
+  background-color: #3297FD;
+}
+
+.top {
+  z-index: 1;
+}
+
+.visualBox {
+  z-index: -1;
+  position: absolute;
+  left: 0;
+  top: 0;
+  border: none;
+  width: 100%;
+  height: 100vh;
+  margin: 0;
+  padding: 0;
+  white-space: pre-wrap;
+}
