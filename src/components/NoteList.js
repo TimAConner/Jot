@@ -18,8 +18,8 @@ class NoteList extends React.Component {
   }
 
   viewNote(id) {
-    console.log("View", id);
-    // Set note editor to current note and scroll to note
+    console.log('View', id);
+    this.props.setNote(this.props.notes.find(note => note.id === id));
   }
   deleteNote(id) {
     console.log("Delete", id);

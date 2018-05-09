@@ -8,8 +8,9 @@ export function mapEditorStateToProps(state) {
 
 export function mapEditoreDispatchToProps(dispatch) {
   return {
-    saveEditor: (note) => {
-      dispatch({ type: "set_editor_text", payload: note });
+    saveNote: note => {
+      dispatch({ type: "save_note_pending"});
+      // post note to server.
     },
   }
 };

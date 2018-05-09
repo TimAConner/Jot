@@ -4,6 +4,7 @@ export function mapNoteListStateToProps(state) {
   // This is what is taken out of the store!
   return {
     notes: [...state.noteList.notes],
+    editor: { ...state.editor },
   }
 }
 
@@ -21,6 +22,9 @@ export function mapNoteListDispatchToProps(dispatch) {
         .catch((response) => {
           dispatch({ type: 'view_notes_failed', payload: response });
         })
+    },
+    setNote: noteId => {
+      dispatch({ type: "set_editor_note", payload: noteId });
     },
   }
 };

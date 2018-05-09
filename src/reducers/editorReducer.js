@@ -20,10 +20,10 @@ export default function reducer(state = {
   ]
 }, action) {
   switch (action.type) {
-    case 'set_editor_text': {
+    case 'set_editor_note': {
       return {
         ...state,
-        ...action.payload,
+        ...action.payload
       }
     }
     default: {

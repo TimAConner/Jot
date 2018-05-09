@@ -1,45 +1,67 @@
 import React from 'react';
 import { connect } from "react-redux";
 
-import { mapNoteStateToProps, mapDispatchToProps } from '../actions/noteActions';
+import { Redirect } from 'react-router-dom';
 
-import Note from './Note';
+// import { mapNoteStateToProps, mapNoteDispatchToProps } from '../actions/noteActions';
+import { mapUserStateToProps, mapUserDispatchToProps } from '../actions/userActions';
+
+import NoteList from './NoteList';
+import NoteEditor from './NoteEditor';
+import Loader from './Loader';
 
 class Jot extends React.Component {
-  viewNote(id) {
-    console.log("View", id);
-  }
-  deleteNote(id) {
-    console.log("Delete", id);
-  }
 
   constructor(props) {
-    super(props); 
+    super(props);
 
-    this.viewNote = this.viewNote.bind(this);
-    this.deleteNote = this.deleteNote.bind(this);
+    this.props.isLoggedIn();
+
+  
   }
 
+
+
+  // isLoggedIn()
+  // .then(user => {
+  //   if (user !== false) { // Is logged in?
+  //     return (
+  //       <Jot />
+  //     );
+  //   } else {
+  //     return (
+  //       <Redirect to={{
+  //         pathname: '/login',
+  //         state: { from: props.location }
+  //       }} />
+  //     );
+  //   }
+  // });
 
   render() {
     return (
       <div className='Jot'>
-        <h1>Jot</h1>
+        {/* <h1>Jot</h1> */}
 
-        {console.log(this.props)}
-        {this.props.notes.notes.map(({ noteId, keywords, date, text }) => <Note
-          noteId={noteId}
-          keywords={keywords}
-          date={date}
-          text={text}
-          viewNote={this.viewNote}
-          deleteNote={this.deleteNote}
-          key={noteId}
-        />)}
-        <button onClick={() => this.props.viewAllNotes()}>Load Notes</button>
+        <NoteEditor />
+        <NoteList />
+        
+        {/* LOADING START */}
+        {/* {this.props.user.isLoading ? <Loader /> : null}
+
+        {!this.props.user.isLoading && typeof this.props.user.id === "undefined" ? (<Redirect to={{
+          pathname: '/login',
+          state: { from: this.props.location }
+        }} />) : null} */}
+        {/* LOADING END */}
+
+      
+        
+        {/* <button onClick={() => this.props.viewAllNotes()}>Load Notes</button> */}
       </div>
     );
   }
 };
 
-export default connect(mapNoteStateToProps, mapDispatchToProps)(Jot);
+// export default connect(mapNoteStateToProps, mapNoteDispatchToProps)(Jot);
+export default connect(mapUserStateToProps, mapUserDispatchToProps)(Jot);

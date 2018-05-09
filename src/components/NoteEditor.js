@@ -20,43 +20,33 @@ class NoteEditor extends React.Component {
     //   text: this.props.editor.text,
     // };
 
+    this.saveNote = this.saveNote.bind(this);
 
-  }
+    // this.inputBox = this.refs.inputBox;
+    // this.visualBox = this.refs.visualBox
+    this.inputBox = React.createRef();
+    this.visualBox = React.createRef();
 
-  componentDidMount() {
-    'use strict';
-    const inputBox = document.querySelector('#inputBox');
-    const visualBox = document.querySelector('#visualBox');
+    this.autoSelectedWords = [];
+    this.userSelectedWords = [];
 
-    let autoSelectedWords = [];
-    let userSelectedWords = [];
+    this.otherWordClass = 'otherWord';
+    this.automatedKeywordClass = 'italic';
+    this.selectedKeywordClass = 'bold';
 
-    this.props.editor.Keywords.map(({keyword, user_selected}) => {
-      if(user_selected){
-        userSelectedWords.push(keyword);
-      }
+    this.updateHtml = () => {
 
-      autoSelectedWords.push(keyword);
-    });
-
-    // Will need to be set to the users preferences.
-    const otherWordClass = 'otherWord';
-    const automatedKeywordClass = 'italic';
-    const selectedKeywordClass = 'bold';
-
-    // Modify to deal with hard returns
-    const updateHtml = () => {
-
-      let totalText = inputBox.innerText;
+      console.log('THIS INPUT BOX', this.inputBox);
+      let totalText = this.inputBox.current.innerText;
 
 
       // Add span around other words
       const whichArray = () => {
-        return userSelectedWords.length !== 0 ? userSelectedWords : autoSelectedWords;
+        return this.userSelectedWords.length !== 0 ? this.userSelectedWords : this.autoSelectedWords;
       };
 
       const whichBoldOrItalic = () => {
-        return userSelectedWords.length === 0 ? automatedKeywordClass : selectedKeywordClass;
+        return this.userSelectedWords.length === 0 ? this.automatedKeywordClass : this.selectedKeywordClass;
       };
 
 
@@ -75,7 +65,7 @@ class NoteEditor extends React.Component {
       splitOnSpan = splitOnSpan.map(string => {
         if (stringRegex.exec(string) === null) {
           const wordRegex = new RegExp(`\\b(\\w+)\\b`, 'gi');
-          const wordWithSpan = string.replace(wordRegex, `<span class="${otherWordClass}">$1</span>`);
+          const wordWithSpan = string.replace(wordRegex, `<span class="${this.otherWordClass}">$1</span>`);
           return wordWithSpan;
         } else {
           return string;
@@ -85,8 +75,25 @@ class NoteEditor extends React.Component {
       // Re put togethor note string
       splitOnSpan = splitOnSpan.reduce((acc, val) => acc + val);
 
-      visualBox.innerHTML = splitOnSpan;
+      this.visualBox.current.innerHTML = splitOnSpan;
     };
+  }
+
+  componentDidMount() {
+    console.log("INPUT BOX", this.inputBox.current);
+
+    this.props.editor.Keywords.map(({ keyword, user_selected }) => {
+      if (user_selected) {
+        this.userSelectedWords.push(keyword);
+      }
+
+      this.autoSelectedWords.push(keyword);
+    });
+
+    // Will need to be set to the users preferences.
+
+    // Modify to deal with hard returns
+
 
     const simulateDoubleClick = (x, y) => {
       const clickEvent = document.createEvent('MouseEvents');
@@ -98,50 +105,61 @@ class NoteEditor extends React.Component {
       document.elementFromPoint(x, y).dispatchEvent(clickEvent);
     }
 
-    visualBox.addEventListener('dblclick', obj => {
+    this.visualBox.current.addEventListener('dblclick', obj => {
       const targetWord = obj.target.innerText;
       // Toggle Click
-      if (userSelectedWords.includes(targetWord)) {
-        userSelectedWords = userSelectedWords.filter(string => string !== targetWord);
+      if (this.userSelectedWords.includes(targetWord)) {
+        this.userSelectedWords = this.userSelectedWords.filter(string => string !== targetWord);
       } else {
-        userSelectedWords.push(obj.target.innerText);
+        this.userSelectedWords.push(obj.target.innerText);
       }
-      inputBox.focus();
-      updateHtml();
+      this.inputBox.current.focus();
+      this.updateHtml();
     });
 
-    inputBox.addEventListener('dblclick', event => {
-      visualBox.style.zIndex = 1;
-      inputBox.style.zIndex = -1;
+    this.inputBox.current.addEventListener('dblclick', event => {
+      this.visualBox.current.style.zIndex = 1;
+      this.inputBox.current.style.zIndex = -1;
       simulateDoubleClick(event.clientX, event.clientY);
-      visualBox.style.zIndex = -1;
-      inputBox.style.zIndex = 1;
+      this.visualBox.current.style.zIndex = -1;
+      this.inputBox.current.style.zIndex = 1;
     });
 
-    inputBox.addEventListener('keyup', () => {
-      updateHtml();
+    this.inputBox.current.addEventListener('keyup', () => {
+      this.updateHtml();
     });
 
     // To force paste without formatting
-    inputBox.addEventListener("paste", function (event) {
+    this.inputBox.current.addEventListener("paste", function (event) {
       event.preventDefault();
       let text = event.clipboardData.getData("text/plain");
       document.execCommand("insertHTML", false, text);
     });
 
-    inputBox.focus();
+    this.inputBox.current.focus();
 
     // Call once to set the overlay box
-    updateHtml();
+    this.updateHtml();
+  }
+
+  componentDidUpdate(){
+    this.updateHtml();
+  }
+
+  saveNote(event) {
+    // save keywords if generated through user
+    // save text
+    // when done, get new watson keywords
   }
 
   render() {
+    
     return (
       <div className='note-editor'>
-        <div id="visualBox" className="visualBox"></div>
-        <div id="inputBox"
+        <div ref={this.visualBox}  id="visualBox" className="visualBox"></div>
+        <div ref={this.inputBox} id="inputBox"
           type="text"
-          // onChange={() => this.props.saveEditor(this.props.text)}
+          onInput={event => this.saveNote(event)}
           className="inputBox"
           contentEditable="true">{this.props.editor.text}</div>
       </div>
