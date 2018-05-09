@@ -12,12 +12,12 @@ const {
   saveNote,
 } = require('../controllers/noteCtrl.js');
 
-router.get('/notes/:id', isLoggedIn, getOneNote);
-router.delete('/notes/:id', isLoggedIn, deleteNote);
-router.put('/notes/:id', isLoggedIn, saveNote);
+router.get('/notes/:id', isLoggedIn(), getOneNote);
+router.delete('/notes/:id', isLoggedIn(), deleteNote);
+router.put('/notes/:id', isLoggedIn(), saveNote);
 
-router.get('/notes/', isLoggedIn, getAllNotes);
-router.put('/notes/', isLoggedIn, saveNote);
+router.get('/notes/', isLoggedIn(), getAllNotes);
+router.put('/notes/', isLoggedIn(), saveNote);
 
 
 module.exports = router;

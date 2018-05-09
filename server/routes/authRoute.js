@@ -14,20 +14,20 @@ const {
   authenticate,
 } = require('../controllers/authCtrl.js');
 
-const { createToken } = require('../helpers');
+// const { createToken } = require('../helpers');
 const { isLoggedIn } = require('./routeHelpers');
 
-const createCookie = (req, res, next) => {
-  const { Token } = req.app.get('models');
-  createToken(req.user).then((newToken, _) => {
+// const createCookie = (req, res, next) => {
+//   const { Token } = req.app.get('models');
+//   createToken(req.user).then((newToken, _) => {
 
-    // TODO: make sure that tokens are deleted after they are used.  How should this be done/
-    // Somehow by default a token is generated and the consume route is not taken, which 
-    // creates more tokens.
-    res.cookie('remember_me', newToken.value, { path: '/', httpOnly: true, maxAge: 604800000 }); // 7 days
-    next()
-  });
-};
+//     // TODO: make sure that tokens are deleted after they are used.  How should this be done/
+//     // Somehow by default a token is generated and the consume route is not taken, which 
+//     // creates more tokens.
+//     res.cookie('remember_me', newToken.value, { path: '/', httpOnly: true, maxAge: 604800000 }); // 7 days
+//     next()
+//   });
+// };
 
 // new user
 router.post('/logout', logout);
@@ -51,11 +51,9 @@ router.post('/login', function (req, res, next) {
   })(req, res);
 });
 
-
-
-router.get('/user', passport.authenticate('jwt', {session: false}), (req, res, next) =>  {
-  res.json(200).json('YOURE IN USER');
-});
+// router.get('/user', passport.authenticate('jwt', {session: false}), (req, res, next) =>  {
+//   res.json(200).json('YOURE IN USER');
+// });
 
 
 // router.get('/loginRouter', (req, res, next) => {
