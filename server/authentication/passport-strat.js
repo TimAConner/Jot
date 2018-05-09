@@ -1,10 +1,9 @@
 const passport = require('passport');
-const LocalStrategy = require('passport-local').Strategy;
+const { Strategy: LocalStrategy } = require('passport-local');
 const { hashSync, genSaltSync, compareSync } = require('bcrypt-nodejs');
 
 const passportJWT = require("passport-jwt");
-const JWTStrategy = passportJWT.Strategy;
-const ExtractJWT = passportJWT.ExtractJwt;
+const { Strategy: JWTStrategy, ExtractJwt: ExtractJWT } = passportJWT;
 
 const { User, Token } = require('../../sequelize/models/');
 
