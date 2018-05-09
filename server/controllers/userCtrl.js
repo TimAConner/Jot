@@ -1,6 +1,7 @@
 'use strict';
 
 module.exports.getUserInfo = (req, res, next) => {
+  console.log('jwt_payload.sub', req.user);
   const { User, Option } = req.app.get('models');
 
   const userId = req.user.id;

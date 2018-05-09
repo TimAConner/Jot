@@ -53,5 +53,5 @@ module.exports.loginSuccess = (req, res, next) => {
 };
 
 module.exports.authenticate = () => {
-  return passport.authenticate('local-signin', { successRedirect: '/loginRouter', failureRedirect: '/loginRouter', failureFlash: true });
+  return passport.authenticate('local-signin', { successRedirect: '/loginRouter', failureRedirect: '/loginRouterB', failureFlash: true });
 }

@@ -3,6 +3,9 @@
 const { Router } = require('express');
 const router = Router();
 const passport = require('passport');
+const jwt = require('jsonwebtoken');
+
+
 // const
 const {
   logout,
@@ -31,9 +34,44 @@ router.post('/logout', logout);
 router.post('/register', register);
 
 // When you go to /, it will run the passport authenticatoin code
-router.post('/login', authenticate());
-router.get('/login', authenticate());
-router.get('/loginRouter', isLoggedIn, createCookie, loginSuccess);
+router.post('/login', function (req, res, next) {
+  passport.authenticate('local', { session: false }, (err, user, info) => {
+    if (err || !user) {
+      return res.status(400).json({
+        message: 'Something is not right',
+        user: user
+      });
+    }
+    req.login(user, { session: false }, (err) => {
+      if (err) {
+        res.send(err);
+      }
+      // generate a signed son web token with the contents of user object and return it in the response
+      const token = jwt.sign(user, 'your_jwt_secret');
+      return res.json({ user, token });
+    });
+  })(req, res);
+});
+
+
+
+router.get('/user', passport.authenticate('jwt', {session: false}), (req, res, next) =>  {
+  res.json(200).json('YOURE IN USER');
+});
+
+
+// router.get('/loginRouter', (req, res, next) => {
+//   console.log('success login from passport');
+//   console.log(req.body, req.user);
+//   console.log('req.session', req.session);
+//   next();
+// }, isLoggedIn, createCookie, loginSuccess);
+// router.get('/loginRouterB', (req, res, next) => {
+//   console.log('failure login from passport');
+//   console.log(req.body, req.user);
+//   console.log('req.session', req.session);
+//   next();
+// }, isLoggedIn, createCookie, loginSuccess);
 
 // '/jot' is used to see if a user is logged in instead of built in express because
 // express hijacks remmeber-me and says the user has not sent in credentials

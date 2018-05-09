@@ -1,10 +1,6 @@
-const { loginFailure } = require('../controllers/authCtrl');
+'use strict';
 
-module.exports.isLoggedIn = (req, res, next) => {
+const passport = require('passport');
+const jwt = require('jsonwebtoken');
 
-  if (typeof req.user === "undefined") {
-    return loginFailure(req, res, next);
-  }
-
-  next();
-};
+module.exports.isLoggedIn = () => passport.authenticate('jwt', {session: false});

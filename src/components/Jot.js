@@ -14,10 +14,7 @@ class Jot extends React.Component {
 
   constructor(props) {
     super(props);
-
     this.props.isLoggedIn();
-
-  
   }
 
 
@@ -47,12 +44,12 @@ class Jot extends React.Component {
         <NoteList />
         
         {/* LOADING START */}
-        {/* {this.props.user.isLoading ? <Loader /> : null}
+        {this.props.user.isLoading ? <Loader /> : null}
 
-        {!this.props.user.isLoading && typeof this.props.user.id === "undefined" ? (<Redirect to={{
+        {!this.props.user.isLoading && this.props.user.user === null ? (<Redirect to={{
           pathname: '/login',
           state: { from: this.props.location }
-        }} />) : null} */}
+        }} />) : null}
         {/* LOADING END */}
 
       
