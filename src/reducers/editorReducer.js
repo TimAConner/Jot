@@ -1,29 +1,32 @@
 export default function reducer(state = {
-  "id": 1,
-  "text": "This is an example note.  A word, a phrase. A phrase, a phrase.",
-  "user_id": 1,
-  "Keywords": [
-    {
-      "keyword": "example",
-      "user_selected": true
-    },
-    {
-      "keyword": "note",
-      "user_selected": true
-    }
-  ],
-  "Note_Dates": [
-    {
-      "edit_date": "2018-04-30T21:27:14.209Z",
-      "note_id": 1
-    }
-  ]
+  noteLoaded: false,
+  saving: false,
 }, action) {
   switch (action.type) {
     case 'set_editor_note': {
       return {
         ...state,
-        ...action.payload
+        ...action.payload,
+        noteLoaded: true,
+      }
+    }
+    case 'save_note_pending': {
+      return {
+        ...state,
+        saving: true,
+      };
+    }
+    case 'save_note_failed': {
+      return {
+        ...state,
+        saving: false,
+      };
+    }
+    case 'save_note_fulfilled': {
+      return {
+        ...state,
+        ...action.payload,
+        saving: false,
       }
     }
     default: {

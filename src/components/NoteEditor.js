@@ -5,25 +5,16 @@ import { mapEditorStateToProps, mapEditoreDispatchToProps } from '../actions/edi
 
 import '../css/NoteEditor.css';
 
-
+import Loader from './Loader';
 
 class NoteEditor extends React.Component {
 
 
   constructor(props) {
     super(props);
-
-    console.log(this.props);
-    console.log(this.props.editor.text);
-
-    // this.state = {
-    //   text: this.props.editor.text,
-    // };
-
     this.saveNote = this.saveNote.bind(this);
+    this.setKeywords = this.setKeywords.bind(this);
 
-    // this.inputBox = this.refs.inputBox;
-    // this.visualBox = this.refs.visualBox
     this.inputBox = React.createRef();
     this.visualBox = React.createRef();
 
@@ -35,10 +26,7 @@ class NoteEditor extends React.Component {
     this.selectedKeywordClass = 'bold';
 
     this.updateHtml = () => {
-
-      console.log('THIS INPUT BOX', this.inputBox);
       let totalText = this.inputBox.current.innerText;
-
 
       // Add span around other words
       const whichArray = () => {
@@ -79,17 +67,33 @@ class NoteEditor extends React.Component {
     };
   }
 
+  // There are multiples in the keyworrds array so they get wrapped several times.
+  // When you press save, keywords are being reset because of this.  The new keywords need to be sent back.
+  setKeywords() {
+    if (this.props.noteLoaded) {
+      console.log("this.props.editor.Keywords", this.props.editor.Keywords);
+      this.userSelectedWords = [];
+      this.autoSelectedWords = [];
+      this.props.editor.Keywords.map(({ keyword, user_selected }) => {
+        if (user_selected) {
+          if(!this.userSelectedWords.includes(keyword)){
+            this.userSelectedWords.push(keyword);
+          }
+        } else {
+          if(!this.autoSelectedWords.includes(keyword)){
+            this.autoSelectedWords.push(keyword);
+          }
+        }
+      });
+    }
+    console.log('this.userSelectedWords', this.userSelectedWords);
+  }
+
   componentDidMount() {
     console.log("INPUT BOX", this.inputBox.current);
 
-    this.props.editor.Keywords.map(({ keyword, user_selected }) => {
-      if (user_selected) {
-        this.userSelectedWords.push(keyword);
-      }
 
-      this.autoSelectedWords.push(keyword);
-    });
-
+    this.setKeywords();
     // Will need to be set to the users preferences.
 
     // Modify to deal with hard returns
@@ -142,26 +146,33 @@ class NoteEditor extends React.Component {
     this.updateHtml();
   }
 
-  componentDidUpdate(){
+  componentDidUpdate() {
+
+    //  When words are being saved they are being wrapped in bold span again.
+    this.setKeywords();
     this.updateHtml();
   }
 
   saveNote(event) {
-    // save keywords if generated through user
-    // save text
-    // when done, get new watson keywords
+    console.log('Save Note');
+    console.log("this.userSelectedWords", this.userSelectedWords);
+    this.props.saveNote(1, this.inputBox.current.innerText, this.userSelectedWords);
   }
 
   render() {
-    
+
     return (
       <div className='note-editor'>
-        <div ref={this.visualBox}  id="visualBox" className="visualBox"></div>
+        <div ref={this.visualBox} id="visualBox" className="visualBox"></div>
         <div ref={this.inputBox} id="inputBox"
           type="text"
-          onInput={event => this.saveNote(event)}
+          // onInput={event => this.saveNote(event)}
           className="inputBox"
           contentEditable="true">{this.props.editor.text}</div>
+        <button onClick={() => this.saveNote()}>Save</button>
+        {this.props.saving ? <Loader
+          text="Saving"
+        /> : null}
       </div>
     );
   }

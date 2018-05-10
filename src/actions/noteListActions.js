@@ -9,21 +9,19 @@ export function mapNoteListStateToProps(state) {
 }
 
 export function mapNoteListDispatchToProps(dispatch) {
-  const header = new Headers({ 'Content-Type': 'application/json' });
   return {
     viewAllNotes: () => {
-      dispatch({ type: "view_notes_pending" });
-      axios.get("http://localhost:8080/notes/",
-        { header })
+      dispatch({ type: 'view_notes_pending' });
+      axios.get('http://localhost:8080/notes/')
         .then(response => {
-          dispatch({ type: "view_notes_fulfilled", payload: response.data });
+          dispatch({ type: 'view_notes_fulfilled', payload: response.data });
         })
         .catch((response) => {
           dispatch({ type: 'view_notes_failed', payload: response });
         })
     },
-    setNote: noteId => {
-      dispatch({ type: "set_editor_note", payload: noteId });
+    setNote: note => {
+      dispatch({ type: 'set_editor_note', payload: note });
     },
   }
 };

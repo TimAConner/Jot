@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { backendUrl } from '../helpers';
+import { backendUrl, putPostHeaders } from '../helpers';
 
 export function mapUserStateToProps(state) {
   return {
@@ -22,14 +22,7 @@ export function mapUserDispatchToProps(dispatch) {
       axios.post(`${backendUrl}/login`, JSON.stringify({
         "email": email,
         "password": password
-      }), {
-          headers: {
-            'Content-Type': 'application/json',
-            'dataType': 'JSON',
-            'contentType': 'application/json; charset=utf-8'
-          },
-          credentials: "include",
-        })
+      }), putPostHeaders)
         .then(response => {
           if (typeof response.data.token === "undefined" || typeof response.data.user.id === "undefined") {
             dispatch({ type: 'login_user_failed', payload: response });
