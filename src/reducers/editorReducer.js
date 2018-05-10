@@ -25,8 +25,10 @@ export default function reducer(state = {
     case 'save_note_fulfilled': {
       return {
         ...state,
-        ...action.payload,
+        Keywords: [...action.payload.Keywords],
+        id: action.payload.id,
         saving: false,
+        noteLoaded: true,
       }
     }
     default: {

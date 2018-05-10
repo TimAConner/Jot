@@ -23,7 +23,7 @@ class NoteList extends React.Component {
   }
   deleteNote(id) {
     console.log("Delete", id);
-    // Send delete to database
+    this.props.deleteNote(id);
   }
 
   componentDidMount(){
@@ -35,13 +35,13 @@ class NoteList extends React.Component {
     return (
       <div className="noteList">
         <h1>NoteList</h1>
-        <button>Sort by Keyword</button>
+        <button >Sort by Keyword</button>
         <button>Sort by Edit Date</button>
         <button>Sort by Week</button>
         {this.props.notes.map(({ id, Keywords: keywords, Note_Dates: [{ edit_date: date }], text }) => {
           return (<Note
             noteId={id}
-            keywords={keywords.map(keywordObj => keywordObj.keyword).reduce((acc, cv) => acc + ", " + cv)}
+            keywords={keywords.length > 0 ? keywords.map(keywordObj => keywordObj.keyword).reduce((acc, cv) => acc + ", " + cv) : []}
             date={date}
             text={text}
             viewNote={this.viewNote}

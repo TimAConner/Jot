@@ -23,5 +23,16 @@ export function mapNoteListDispatchToProps(dispatch) {
     setNote: note => {
       dispatch({ type: 'set_editor_note', payload: note });
     },
+    deleteNote: id => {
+      dispatch({ type: 'delete_note_pending' });
+
+      axios.delete(`http://localhost:8080/notes/${id}`)
+        .then(response => {
+          dispatch({ type: 'delete_note_fulfilled', payload: id });
+        })
+        .catch((response) => {
+          dispatch({ type: 'delete_note_failed', payload: response });
+        })
+    },
   }
 };

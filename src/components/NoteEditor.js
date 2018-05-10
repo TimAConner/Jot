@@ -159,21 +159,21 @@ class NoteEditor extends React.Component {
     this.updateHtml();
   }
 
-  saveNote(event) {
+  saveNote() {
     console.log('Save Note');
     console.log("this.userSelectedWords", this.userSelectedWords);
     console.log(this.props.editor.id);
-    this.props.saveNote(this.props.editor.id, this.inputBox.current.innerText, this.userSelectedWords);
+    this.props.saveNote(this.props.saving, this.props.editor.id, this.inputBox.current.innerText, this.userSelectedWords);
   }
 
   render() {
-
     return (
       <div className='note-editor'>
         <div ref={this.visualBox} id="visualBox" className="visualBox"></div>
         <div ref={this.inputBox} id="inputBox"
           type="text"
-          // onInput={event => this.saveNote(event)}
+          onInput={() => this.saveNote()}
+          onDoubleClick={() => this.saveNote()}
           className="inputBox"
           contentEditable="true">{this.props.editor.text}</div>
         <button onClick={() => this.saveNote()}>Save</button>

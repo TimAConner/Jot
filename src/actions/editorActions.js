@@ -11,39 +11,43 @@ export function mapEditorStateToProps(state) {
 
 export function mapEditoreDispatchToProps(dispatch) {
   return {
-    saveNote: (id, text, keywords) => {
-      dispatch({ type: 'save_note_pending' });
+    saveNote: (isSaving, id, text, keywords) => {
+      if (!isSaving) {
+        dispatch({ type: 'save_note_pending' });
+        
+        const requestObject = {
+          text,
+        };
 
-      // text = JSON.stringify(text);
+        // Only add in a keywords field if there are keywords
+        if (keywords.length > 0) {
+          requestObject.keywords = keywords;
+        }
 
-      console.log(text);
+        // If no id provided, post note as a new note.
+        // If id provided, post note to that existing note.
+        let createNoteUrl = typeof id !== "undefined"
+          ? `${backendUrl}/notes/${id}`
+          : `${backendUrl}/notes/`;
 
-      const requestObject = {
-        text,
-      };
+        axios.put(createNoteUrl, JSON.stringify(requestObject), putPostHeaders)
+          .then(response => {
+            dispatch({ type: 'save_note_fulfilled', payload: response.data });
 
-      // Only add in a keywords field if there are keywords
-      if (keywords.length > 0) {
-        requestObject.keywords = keywords;
+            dispatch({ type: 'view_notes_pending' });
+            axios.get('http://localhost:8080/notes/')
+              .then(response => {
+                dispatch({ type: 'view_notes_fulfilled', payload: response.data });
+              })
+              .catch((response) => {
+                dispatch({ type: 'view_notes_failed', payload: response });
+              })
+
+          })
+          .catch((response) => {
+            dispatch({ type: 'save_note_failed', payload: response });
+          });
       }
-
-      axios.put(`${backendUrl}/notes/${id}`, JSON.stringify(requestObject), putPostHeaders)
-        .then(response => {
-          dispatch({ type: 'save_note_fulfilled', payload: response.data });
-
-          dispatch({ type: 'view_notes_pending' });
-          axios.get('http://localhost:8080/notes/')
-            .then(response => {
-              dispatch({ type: 'view_notes_fulfilled', payload: response.data });
-            })
-            .catch((response) => {
-              dispatch({ type: 'view_notes_failed', payload: response });
-            })
-
-        })
-        .catch((response) => {
-          dispatch({ type: 'save_note_failed', payload: response });
-        });
     },
   }
 };

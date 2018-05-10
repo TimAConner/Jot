@@ -259,6 +259,11 @@ module.exports.saveNote = (req, res, next) => {
   const userId = req.user.id;
   const selectedKeywords = req.body.keywords;
 
+  if(text.trim() === ''){
+    const error = new Error('Note text is empty');
+    return next(error);
+  }
+
   insertNoteOrCreateNote({ sequelize, noteId, userId, text })
     .then(([[anonymousNewNoteObj], success]) => {
 
@@ -300,7 +305,7 @@ module.exports.saveNote = (req, res, next) => {
       }
     })
     .then(() => {
-      return createDateIfNew({ sequelize, noteId })
+      return createDateIfNew({ sequelize, noteId });
     })
     .then(() => {
       

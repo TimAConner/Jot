@@ -15,7 +15,7 @@ module.exports.generateKeywords = noteText => {
         keywords: {},
       },
     },
-      (err, { keywords = [] }) => {
+      (err, { keywords = [] } = { keywords }) => {
         if (err) return reject(err);
         const keywordArray = keywords.map(({ text }) => text).slice(0, 5);
         resolve(keywordArray);
