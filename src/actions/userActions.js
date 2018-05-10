@@ -15,7 +15,6 @@ export function mapUserDispatchToProps(dispatch) {
 
   return {
     logUserIn: (email, password) => {
-
       // Remove token if present
       localStorage.removeItem('jotToken');
 
