@@ -250,7 +250,7 @@ module.exports.deleteNote = (req, res, next) => {
 };
 
 module.exports.saveNote = (req, res, next) => {
-  const { Note, Keyword, Date_Edit, sequelize } = req.app.get('models');
+  const { Note, Keyword, Note_Date, sequelize } = req.app.get('models');
 
   let noteId = req.params.id;
 
@@ -279,7 +279,7 @@ module.exports.saveNote = (req, res, next) => {
       // User has not selected keywords
       // Watson will select keywords
       if (!selectedKeywords) {
-        generateKeywords(text).then(keywords => {
+        return generateKeywords(text).then(keywords => {
           return saveKeywords({
             KeywordModel: Keyword,
             keywords,
@@ -303,7 +303,29 @@ module.exports.saveNote = (req, res, next) => {
       return createDateIfNew({ sequelize, noteId })
     })
     .then(() => {
-      res.status(200).send();
+      
+      // Return newly put note
+      return Note.findAll({
+        include: [{
+          model: Keyword,
+          attributes: {
+            exclude: ['id', 'note_id'],
+          },
+        }, {
+          model: Note_Date,
+          limit: 1,
+          order: [['edit_date', 'DESC']],
+          attributes: {
+            exclude: ['id'],
+          },
+        }],
+        where: {
+          id: noteId,
+        },
+      });
+    })
+    .then(note => {
+      res.status(200).json(note);
     })
     .catch(err => next(err));
 };

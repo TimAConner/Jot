@@ -6,7 +6,7 @@ const watson = new NaturalLanguageUnderstandingV1(watsonCredentials);
 module.exports.generateKeywords = noteText => {
 
   // Sanitize jsonified text so watson does not think newlines are keywords
-  noteText = noteText.replace(/(\\r\\n\\t|\\n|\\r\\t|\.|\,)/gm, ' ');
+  noteText = noteText.replace(/(\\r\\n\\t|\\n|\\r\\t)/gm, ' ');
 
   return new Promise((resolve, reject) => {
     watson.analyze({
