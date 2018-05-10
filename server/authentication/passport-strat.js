@@ -6,7 +6,7 @@ const passportJWT = require("passport-jwt");
 const { Strategy: JWTStrategy, ExtractJwt: ExtractJWT } = passportJWT;
 const { webTokenSecret } = require('../helpers');
 
-const { User, Token } = require('../../sequelize/models/');
+const { User, Token, Option, sequelize } = require('../../sequelize/models/');
 
 const generateHash = password => {
   return hashSync(password, genSaltSync(8));
@@ -31,6 +31,7 @@ const RegistrationStrategy = new Strategy({
         email,
         password: userPassword,
         display_name: req.body.display_name,
+        creation_date: sequelize.fn('NOW')
       };
 
       User.create(data).then((newUser, created) => {
@@ -38,7 +39,17 @@ const RegistrationStrategy = new Strategy({
           return done(new Error('User could not be created.  Please try again later.'), false);
         }
         if (newUser) {
-          return done(null, newUser.get());
+
+          // Add option entry associated with user
+          Option.create({
+            "user_id": newUser.get().id,
+            "font_size": 8,
+            "font_style": "sans-serif",
+            "auto_keyword_style": "italic",
+            "user_keyword_style": "bold"
+          }).then(option => {
+            return done(null, newUser.get());
+          });
         }
       });
     }
