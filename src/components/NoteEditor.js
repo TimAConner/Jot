@@ -44,10 +44,16 @@ class NoteEditor extends React.Component {
         totalText = totalText.replace(regex, `<span class="${whichBoldOrItalic()}">$1</span>`);
       }
 
+      // If word does not exist in note, remove from keyword array.
+      this.userSelectedWords = this.userSelectedWords.filter(word => {
+        const regex = new RegExp(`(?<![a-zA-Z])(${word}{1})(?![a-zA-Z])`, 'gi');
+        if(totalText.match(regex)){
+          return word;
+        }
+      });
+
       const stringRegex = new RegExp(`(<span class="${whichBoldOrItalic()}">.*?<\/span>)`);
       let splitOnSpan = totalText.split(stringRegex);
-
-      // Check for spaces and default cursor to focused.
 
       // Replace non-keywords with otherWord class
       splitOnSpan = splitOnSpan.map(string => {
