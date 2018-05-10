@@ -5,6 +5,9 @@ import { Redirect } from 'react-router-dom';
 
 import { mapUserStateToProps, mapUserDispatchToProps } from '../actions/userActions';
 
+import Error from './Error';
+
+
 class Login extends React.Component {
 
   constructor(props) {
@@ -17,6 +20,7 @@ class Login extends React.Component {
 
     this.handleEmailChange = this.handleEmailChange.bind(this);
     this.handlePasswordChange = this.handlePasswordChange.bind(this);
+    this.submit = this.submit.bind(this);
   }
 
   handleEmailChange(event) {
@@ -27,10 +31,19 @@ class Login extends React.Component {
     this.setState({ password: event.target.value });
   }
 
+  submit(event) {
+    event.preventDefault();
+    this.props.logUserIn(this.state.email, this.state.password);
+  }
+
   render() {
 
     return (
-      <div className='login'>
+      <form onSubmit={this.submit} className='login'>
+
+        {/* Show error if error from login */}
+        {this.props.error !== null ? <Error error={this.props.error.response.data} /> : null}
+
 
         {/* Redirect if logged in */}
         {this.props.user.user !== null ? (<Redirect to={{
@@ -39,10 +52,10 @@ class Login extends React.Component {
         }} />) : null}
 
         <h1>Login</h1>
-        Email: <input type="text" value={this.state.email} onChange={this.handleEmailChange} /><br />
-        Password: <input type="password" value={this.state.password} onChange={this.handlePasswordChange} /><br />
-        <input type="submit" value="Login" onClick={() => this.props.logUserIn(this.state.email, this.state.password)} />
-      </div>
+        Email: <input type="text" value={this.state.email} onChange={this.handleEmailChange} required /><br />
+        Password: <input type="password" value={this.state.password} onChange={this.handlePasswordChange} required /><br />
+        <input type="submit" value="Login" />
+      </form>
     );
   }
 }

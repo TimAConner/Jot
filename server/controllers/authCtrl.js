@@ -15,11 +15,11 @@ module.exports.logout = (req, res, next) => {
 module.exports.login = function (req, res, next) {
   passport.authenticate('login', { session: false }, (err, user, info) => {
     if (err || !user) {
-      next(err);
+      return next(err);
     }
     req.login(user, { session: false }, (err) => {
-      if (err) {
-        res.send(err);
+      if (err || !user) {
+        return next(err);
       }
       // generate a signed son web token with the contents of user object and return it in the response
       const token = jwt.sign(user, "363F73AF69F990568B3F5BA68C89546B66BB86BD462465283A08C51AABB7C06");

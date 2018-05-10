@@ -25,23 +25,21 @@ class Jot extends React.Component {
   render() {
     return (
       <div className='Jot'>
-        {/* <h1>Jot</h1> */}
-
-        <button onClick={() => this.logout()}>Logout</button>
-        
+      
         <NoteEditor />
         <NoteList />
-        
-        {/* LOADING START */}
+
+        {/* Show loading screen while loading */}
         {this.props.user.isLoading ? <Loader /> : null}
 
+        {/* Reroute to login if not logged in */}
         {!this.props.user.isLoading && this.props.user.user === null ? (<Redirect to={{
           pathname: '/login',
           state: { from: this.props.location }
         }} />) : null}
-        {/* LOADING END */}
 
       
+        <button onClick={() => this.logout()}>Logout</button>
         
         {/* <button onClick={() => this.props.viewAllNotes()}>Load Notes</button> */}
       </div>

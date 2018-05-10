@@ -1,6 +1,7 @@
 export default function reducer(state = {
   user: null,
   isLoading: false,
+  error: null,
 }, action) {
   switch (action.type) {
     case 'login_user_pending': {
@@ -12,13 +13,14 @@ export default function reducer(state = {
       console.log("Error", action.payload);
       return {
         ...state,
+        error: action.payload,
       };
     }
     case 'login_user_fulfilled': {
       return {
         ...state,
         user: {
-          ...action.payload
+          ...action.payload,
         },
       }
     }
@@ -42,7 +44,7 @@ export default function reducer(state = {
       return {
         ...state,
         user: {
-          ...action.payload
+          ...action.payload,
         },
         isLoading: false,
       }
