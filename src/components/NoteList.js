@@ -35,6 +35,9 @@ class NoteList extends React.Component {
     return (
       <div className="noteList">
         <h1>NoteList</h1>
+        <button>Sort by Keyword</button>
+        <button>Sort by Edit Date</button>
+        <button>Sort by Week</button>
         {this.props.notes.map(({ id, Keywords: keywords, Note_Dates: [{ edit_date: date }], text }) => {
           return (<Note
             noteId={id}

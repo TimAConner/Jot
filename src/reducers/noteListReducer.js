@@ -13,11 +13,16 @@ export default function reducer(state = {
       };
     }
     case 'view_notes_fulfilled': {
+
+      // Merge new notes with olds versions of the note.
+      const mergedNotes = [
+        ...state.notes,
+        ...action.payload,
+      ].reverse().filter((uniqueNote, index, array) => array.indexOf(array.find(note => note.id = uniqueNote.id)) === index);
+
       return {
         ...state,
-        notes: [
-          ...action.payload,
-        ],
+        notes: [...mergedNotes],
       }
     }
     default: {

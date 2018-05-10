@@ -162,7 +162,8 @@ class NoteEditor extends React.Component {
   saveNote(event) {
     console.log('Save Note');
     console.log("this.userSelectedWords", this.userSelectedWords);
-    this.props.saveNote(1, this.inputBox.current.innerText, this.userSelectedWords);
+    console.log(this.props.editor.id);
+    this.props.saveNote(this.props.editor.id, this.inputBox.current.innerText, this.userSelectedWords);
   }
 
   render() {
