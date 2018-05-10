@@ -2,44 +2,55 @@
 
 const { Router } = require('express');
 const router = Router();
-const passport = require('passport');
+
 // const
 const {
   logout,
   register,
-  renderLogin,
-  renderHome,
-  authenticate,
-  renderRegister,
+  login,
 } = require('../controllers/authCtrl.js');
 
-const { createToken } = require('../helpers');
+// const { createToken } = require('../helpers');
 const { isLoggedIn } = require('./routeHelpers');
 
-const createCookie = (req, res, next) => {
-  const { Token } = req.app.get('models');
-  createToken(req.user).then((newToken, _) => {
+// const createCookie = (req, res, next) => {
+//   const { Token } = req.app.get('models');
+//   createToken(req.user).then((newToken, _) => {
 
-    // TODO: make sure that tokens are deleted after they are used.  How should this be done/
-    // Somehow by default a token is generated and the consume route is not taken, which 
-    // creates more tokens.
-    res.cookie('remember_me', newToken.value, { path: '/', httpOnly: true, maxAge: 604800000 }); // 7 days
-    next()
-  });
-};
+//     // TODO: make sure that tokens are deleted after they are used.  How should this be done/
+//     // Somehow by default a token is generated and the consume route is not taken, which 
+//     // creates more tokens.
+//     res.cookie('remember_me', newToken.value, { path: '/', httpOnly: true, maxAge: 604800000 }); // 7 days
+//     next()
+//   });
+// };
 
 // new user
-router.get('/logout', logout);
+router.post('/logout', logout);
 router.post('/register', register);
-router.get('/register', renderRegister);
-router.get('/login', renderLogin);
 
 // When you go to /, it will run the passport authenticatoin code
-router.post('/', authenticate());
-router.get('/', authenticate());
-router.get('/loginRouter', isLoggedIn, createCookie, renderHome);
+router.post('/login', login);
 
-// '/loginRouter' is used to see if a user is logged in instead of built in express because
+// router.get('/user', passport.authenticate('jwt', {session: false}), (req, res, next) =>  {
+//   res.json(200).json('YOURE IN USER');
+// });
+
+
+// router.get('/loginRouter', (req, res, next) => {
+//   console.log('success login from passport');
+//   console.log(req.body, req.user);
+//   console.log('req.session', req.session);
+//   next();
+// }, isLoggedIn, createCookie, loginSuccess);
+// router.get('/loginRouterB', (req, res, next) => {
+//   console.log('failure login from passport');
+//   console.log(req.body, req.user);
+//   console.log('req.session', req.session);
+//   next();
+// }, isLoggedIn, createCookie, loginSuccess);
+
+// '/jot' is used to see if a user is logged in instead of built in express because
 // express hijacks remmeber-me and says the user has not sent in credentials
 // even if a cook with information is found
 // since the request object is blank when the user comes to the page without loggin in

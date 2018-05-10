@@ -215,7 +215,7 @@ module.exports.getAllNotes = (req, res, next) => {
       }, {
         model: Note_Date,
         order: [['edit_date', 'DESC']],
-        limit: 1,
+        // limit: 1,
         attributes: {
           exclude: ['id'],
         },
@@ -223,6 +223,7 @@ module.exports.getAllNotes = (req, res, next) => {
       where: {
         user_id: userId,
       },
+      order: [[Note_Date, 'edit_date', 'DESC']],
     })
       .then(notes => {
         res.status(200).json(notes);
@@ -249,7 +250,7 @@ module.exports.deleteNote = (req, res, next) => {
 };
 
 module.exports.saveNote = (req, res, next) => {
-  const { Note, Keyword, Date_Edit, sequelize } = req.app.get('models');
+  const { Note, Keyword, Note_Date, sequelize } = req.app.get('models');
 
   let noteId = req.params.id;
 
@@ -257,6 +258,11 @@ module.exports.saveNote = (req, res, next) => {
   const text = req.body.text.replace("'", "''");
   const userId = req.user.id;
   const selectedKeywords = req.body.keywords;
+
+  if(text.trim() === ''){
+    const error = new Error('Note text is empty');
+    return next(error);
+  }
 
   insertNoteOrCreateNote({ sequelize, noteId, userId, text })
     .then(([[anonymousNewNoteObj], success]) => {
@@ -278,7 +284,7 @@ module.exports.saveNote = (req, res, next) => {
       // User has not selected keywords
       // Watson will select keywords
       if (!selectedKeywords) {
-        generateKeywords(text).then(keywords => {
+        return generateKeywords(text).then(keywords => {
           return saveKeywords({
             KeywordModel: Keyword,
             keywords,
@@ -299,10 +305,33 @@ module.exports.saveNote = (req, res, next) => {
       }
     })
     .then(() => {
-      return createDateIfNew({ sequelize, noteId })
+      return createDateIfNew({ sequelize, noteId });
     })
     .then(() => {
-      res.status(200).send();
+      
+      // Return newly put note
+      return Note.findAll({
+        include: [{
+          model: Keyword,
+          attributes: {
+            exclude: ['id', 'note_id'],
+          },
+        }, {
+          model: Note_Date,
+          limit: 1,
+          order: [['edit_date', 'DESC']],
+          attributes: {
+            exclude: ['id'],
+          },
+        }],
+        where: {
+          id: noteId,
+        },
+      });
+    })
+    .then(([note]) => {
+
+      res.status(200).json(note);
     })
     .catch(err => next(err));
 };

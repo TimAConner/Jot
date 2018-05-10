@@ -6,6 +6,9 @@ These endpoints are here for developer access and not open to the public.  To ac
 ### /notes
 #### GET /notes/
 Returns all given user's notes with all keywords and each note's most recent edit date.
+
+To group by keywords by week add `?weekView=true`
+To sort by all edit dates add `?dates=true`
 ```
 [
   {

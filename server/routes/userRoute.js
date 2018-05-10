@@ -5,12 +5,13 @@ const router = Router();
 const passport = require('passport');
 const { isLoggedIn } = require('./routeHelpers');
 
+
 const {
   getUserInfo,
   updateOption,
 } = require('../controllers/userCtrl.js');
 
-router.get('/currentUser/', isLoggedIn, getUserInfo);
-router.patch('/currentUser/', isLoggedIn, updateOption);
+router.get('/currentUser/', isLoggedIn(), getUserInfo);
+router.patch('/currentUser/', isLoggedIn(), updateOption);
 
 module.exports = router;

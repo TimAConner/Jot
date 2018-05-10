@@ -39,7 +39,7 @@ module.exports.updateOption = (req, res, next) => {
   const updateObject = {
     user_id: userId,
   };
-  
+
   // Only add values to patch object if present on req.body.
   if (typeof font_size !== undefined) updateObject.font_size = font_size;
   if (typeof font_style !== undefined) updateObject.font_style = font_style;

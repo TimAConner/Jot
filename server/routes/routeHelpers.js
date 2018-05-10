@@ -1,8 +1,6 @@
-module.exports.isLoggedIn = (req, res, next) => {
+'use strict';
 
-  if (typeof req.user === "undefined") {
-    return res.redirect('/login');
-  }
+const passport = require('passport');
+const jwt = require('jsonwebtoken');
 
-  next();
-};
+module.exports.isLoggedIn = () => passport.authenticate('jwt', {session: false});
