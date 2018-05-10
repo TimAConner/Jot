@@ -16,8 +16,7 @@ export function mapNoteListDispatchToProps(dispatch) {
       axios.get("http://localhost:8080/notes/",
         { header })
         .then(response => {
-          console.log('resonse', response);
-          dispatch({ type: "view_notes_fulfilled", payload: response.notes });
+          dispatch({ type: "view_notes_fulfilled", payload: response.data });
         })
         .catch((response) => {
           dispatch({ type: 'view_notes_failed', payload: response });

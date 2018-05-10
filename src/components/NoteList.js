@@ -26,6 +26,9 @@ class NoteList extends React.Component {
     // Send delete to database
   }
 
+  componentDidMount(){
+    this.props.viewAllNotes();
+  }
 
   render() {
     console.log(this.props);

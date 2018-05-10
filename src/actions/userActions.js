@@ -43,29 +43,23 @@ export function mapUserDispatchToProps(dispatch) {
         });
     },
     authenticate: () => {
-      // Check if local storage has a token
-      if (localStorage.getItem('jotToken')) {
-        axios.defaults.headers.common.Authorization = `Bearer ${localStorage.getItem('jotToken')}`;
-        console.log(axios.defaults.headers.common.Authorization);
-      } else {
-        dispatch({ type: 'getting_user_failed' });
+
+      if (!localStorage.getItem('jotToken')) {
+        return dispatch({ type: 'getting_user_failed' });
       }
 
+      // Set axios authorization to the current token
+      axios.defaults.headers.common.Authorization = `Bearer ${localStorage.getItem('jotToken')}`;
+
       dispatch({ type: 'getting_user_pending' });
-      axios.get(`${backendUrl}/currentUser`, {
-        headers: {
-          'Authorization': `Bearer ${localStorage.getItem('jotToken')}`,
-        }
-      })
+      axios.get(`${backendUrl}/currentUser`)
         .then(response => {
           dispatch({ type: 'getting_user_fulfilled', payload: response.data });
         })
         .catch(response => {
-          // if (response.status !== 401) {
-          console.log('ERRRO', response);
-          // }
-          dispatch({ type: 'getting_user_failed', payload: response.data });
-        })
+          console.log(response);
+          dispatch({ type: 'getting_user_failed', payload: response });
+        });
     },
   }
 };
