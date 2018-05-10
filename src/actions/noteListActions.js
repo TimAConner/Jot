@@ -5,6 +5,7 @@ export function mapNoteListStateToProps(state) {
   return {
     notes: [...state.noteList.notes],
     editor: { ...state.editor },
+    saving: state.noteList.saving,
   }
 }
 

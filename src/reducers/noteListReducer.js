@@ -1,10 +1,12 @@
 export default function reducer(state = {
   notes: [],
+  saving: false,
 }, action) {
   switch (action.type) {
     case 'delete_note_pending': {
       return {
         ...state,
+        saving: true,
       };
     }
     case 'delete_note_fulfilled': {
@@ -13,11 +15,13 @@ export default function reducer(state = {
       return {
         ...state,
         notes: [...notes],
+        saving: false,
       };
     }
     case 'delete_note_failed': {
       return {
         ...state,
+        saving: false,
       };
     }
     case 'view_notes_failed': {

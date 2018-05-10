@@ -37,12 +37,16 @@ class Login extends React.Component {
   }
 
   render() {
-
+    console.log('RIGHT HERE', this.props.error);
     return (
       <form onSubmit={this.submit} className='login'>
 
         {/* Show error if error from login */}
-        {this.props.error !== null ? <Error error={this.props.error.response.data} /> : null}
+        {this.props.error !== null ? <Error 
+        error={typeof this.props.error.response !== "undefined" 
+          ? this.props.error.response.data
+          : "Please try again later."} 
+        /> : null}
 
 
         {/* Redirect if logged in */}

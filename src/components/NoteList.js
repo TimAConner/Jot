@@ -4,6 +4,7 @@ import { connect } from "react-redux";
 import { mapNoteListStateToProps, mapNoteListDispatchToProps } from '../actions/noteListActions';
 
 import Note from './Note';
+import Loader from './Loader';
 
 class NoteList extends React.Component {
 
@@ -35,6 +36,9 @@ class NoteList extends React.Component {
     return (
       <div className="noteList">
         <h1>NoteList</h1>
+        {this.props.saving ? <Loader
+          text="Saving"
+        /> : null}
         <button >Sort by Keyword</button>
         <button>Sort by Edit Date</button>
         <button>Sort by Week</button>

@@ -176,7 +176,7 @@ class NoteEditor extends React.Component {
           onDoubleClick={() => this.saveNote()}
           className="inputBox"
           contentEditable="true">{this.props.editor.text}</div>
-        <button onClick={() => this.saveNote()}>Save</button>
+        {/* <button onClick={() => this.saveNote()}>Save</button> */}
         {this.props.saving ? <Loader
           text="Saving"
         /> : null}
