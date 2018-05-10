@@ -330,6 +330,7 @@ module.exports.saveNote = (req, res, next) => {
       });
     })
     .then(([note]) => {
+
       res.status(200).json(note);
     })
     .catch(err => next(err));
