@@ -169,7 +169,8 @@ module.exports.getAllNotes = (req, res, next) => {
         Promise.all(notePromises).then(noteInfo => {
           keywords = keywords.map(keyword => {
             keyword.notes = keyword.notes.map(noteId => {
-              return noteInfo.find(([obj]) => obj.id == noteId);
+              const [note] = noteInfo.find(([obj]) => obj.id == noteId)
+              return note;
             });
             return keyword;
           });
