@@ -215,7 +215,7 @@ module.exports.getAllNotes = (req, res, next) => {
       }, {
         model: Note_Date,
         order: [['edit_date', 'DESC']],
-        limit: 1,
+        // limit: 1,
         attributes: {
           exclude: ['id'],
         },
@@ -223,6 +223,7 @@ module.exports.getAllNotes = (req, res, next) => {
       where: {
         user_id: userId,
       },
+      order: [[Note_Date, 'edit_date', 'DESC']],
     })
       .then(notes => {
         res.status(200).json(notes);
