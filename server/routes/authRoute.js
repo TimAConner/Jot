@@ -2,16 +2,12 @@
 
 const { Router } = require('express');
 const router = Router();
-const passport = require('passport');
-const jwt = require('jsonwebtoken');
-
 
 // const
 const {
   logout,
   register,
-  loginSuccess,
-  authenticate,
+  login,
 } = require('../controllers/authCtrl.js');
 
 // const { createToken } = require('../helpers');
@@ -34,22 +30,7 @@ router.post('/logout', logout);
 router.post('/register', register);
 
 // When you go to /, it will run the passport authenticatoin code
-router.post('/login', function (req, res, next) {
-  passport.authenticate('local', { session: false }, (err, user, info) => {
-    console.log(err);
-    if (err || !user) {
-      next(err);
-    }
-    req.login(user, { session: false }, (err) => {
-      if (err) {
-        res.send(err);
-      }
-      // generate a signed son web token with the contents of user object and return it in the response
-      const token = jwt.sign(user, 'your_jwt_secret');
-      return res.json({ user, token });
-    });
-  })(req, res);
-});
+router.post('/login', login);
 
 // router.get('/user', passport.authenticate('jwt', {session: false}), (req, res, next) =>  {
 //   res.json(200).json('YOURE IN USER');
