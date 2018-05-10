@@ -14,32 +14,21 @@ class Jot extends React.Component {
 
   constructor(props) {
     super(props);
-    this.props.isLoggedIn();
+    this.props.authenticate();
   }
 
-
-
-  // isLoggedIn()
-  // .then(user => {
-  //   if (user !== false) { // Is logged in?
-  //     return (
-  //       <Jot />
-  //     );
-  //   } else {
-  //     return (
-  //       <Redirect to={{
-  //         pathname: '/login',
-  //         state: { from: props.location }
-  //       }} />
-  //     );
-  //   }
-  // });
+  logout() {
+    localStorage.removeItem('jotToken');
+    this.props.authenticate();
+  }
 
   render() {
     return (
       <div className='Jot'>
         {/* <h1>Jot</h1> */}
 
+        <button onClick={() => this.logout()}>Logout</button>
+        
         <NoteEditor />
         <NoteList />
         

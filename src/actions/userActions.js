@@ -69,16 +69,14 @@ export function mapUserDispatchToProps(dispatch) {
           dispatch({ type: 'login_user_failed', payload: response });
         });
     },
-    isLoggedIn: () => {
-
+    authenticate: () => {
+      // Check if local storage has a token
       if(localStorage.getItem('jotToken')){
         axios.defaults.headers.common.Authorization = `Bearer ${localStorage.getItem('jotToken')}`;
         console.log(axios.defaults.headers.common.Authorization);
       } else {
         dispatch({ type: 'getting_user_failed' });
       }
-
-      // console.log(email, password);
 
       dispatch({ type: 'getting_user_pending' });
       axios.get(`${backendUrl}/currentUser`, {

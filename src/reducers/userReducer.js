@@ -33,6 +33,7 @@ export default function reducer(state = {
       
       return {
         ...state,
+        user: null,
         isLoading: false,
       };
     }
