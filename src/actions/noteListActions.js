@@ -24,12 +24,22 @@ export function mapNoteListDispatchToProps(dispatch) {
     },
     viewNotesByDates: () => {
       dispatch({ type: 'view_notes_by_date_pending' });
-      axios.get('http://localhost:8080/notes/?dates=true')
+      axios.get('http://localhost:8080/notes/?dateView=true')
         .then(response => {
           dispatch({ type: 'view_notes_by_date_fulfilled', payload: response.data });
         })
         .catch((response) => {
           dispatch({ type: 'view_notes_by_date_failed', payload: response });
+        })
+    },
+    viewNotesByWeek: () => {
+      dispatch({ type: 'view_notes_by_week_pending' });
+      axios.get('http://localhost:8080/notes/?weekView=true')
+        .then(response => {
+          dispatch({ type: 'view_notes_by_week_fulfilled', payload: response.data });
+        })
+        .catch((response) => {
+          dispatch({ type: 'view_notes_by_week_failed', payload: response });
         })
     },
     setNote: note => {

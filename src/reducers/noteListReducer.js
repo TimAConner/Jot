@@ -71,6 +71,23 @@ export default function reducer(state = {
         ...state,
       };
     }
+    case 'view_notes_by_week_pending': {
+      return {
+        ...state,
+      };
+    }
+    case 'view_notes_by_week_fulfilled': {
+      return {
+        ...state,
+        notes: [...action.payload],
+        sortBy: 'week',
+      };
+    }
+    case 'view_notes_by_week_failed': {
+      return {
+        ...state,
+      };
+    }
     default: {
       return state;
     }

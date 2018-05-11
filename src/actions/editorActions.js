@@ -42,7 +42,7 @@ export function mapEditoreDispatchToProps(dispatch) {
             // Reload view notes list below
             // Todo: check for curent list type and send that request.
             console.log(reloadSortBy);
-            
+
             switch (reloadSortBy) {
               case 'notes': {
                 axios.get('http://localhost:8080/notes/')
@@ -63,6 +63,18 @@ export function mapEditoreDispatchToProps(dispatch) {
                   })
                   .catch((response) => {
                     dispatch({ type: 'view_notes_by_date_failed', payload: response });
+                  })
+
+                break;
+              }
+              case 'week': {
+                dispatch({ type: 'view_notes_by_week_pending' });
+                axios.get('http://localhost:8080/notes/?weekView=true')
+                  .then(response => {
+                    dispatch({ type: 'view_notes_by_week_fulfilled', payload: response.data });
+                  })
+                  .catch((response) => {
+                    dispatch({ type: 'view_notes_by_week_failed', payload: response });
                   })
 
                 break;

@@ -77,7 +77,12 @@ class NoteList extends React.Component {
             keywords={keywords.length > 0 ? keywords.map(keywordObj => keywordObj.keyword).reduce((acc, cv) => acc + ", " + cv) : []}
             date={date}
             text={text}
-            viewNote={() => this.viewNote(this.props.notes.find(note => note.id === id))}
+            viewNote={() => this.viewNote({
+              id,
+              Keywords: [...keywords],
+              Note_Dates: [{ edit_date: date }],
+              text
+            })}
             deleteNote={() => this.deleteNote(id)}
             key={id}
           />);
@@ -103,18 +108,46 @@ class NoteList extends React.Component {
 
         break;
       }
-      default: {
-        return this.props.notes.map(({ id, Keywords: keywords, Note_Dates: [{ edit_date: date }], text }) => {
-          return (<Note
-            noteId={id}
-            keywords={keywords.length > 0 ? keywords.map(keywordObj => keywordObj.keyword).reduce((acc, cv) => acc + ", " + cv) : []}
-            date={date}
-            text={text}
-            viewNote={() => this.viewNote(id)}
-            deleteNote={() => this.deleteNote(id)}
-            key={id}
-          />);
+      case 'week': {
+        console.log('IN WEEK', this.props.notes);
+
+        // TODO: Output week break
+        // TODO: Output keeyword break
+        // TODO: output note
+
+        return this.props.notes.map(({ keyword, notes, week }, i, keywordArray) => {
+          return (
+            <div>
+
+              {/* If there should be a week header */}
+              {((i === 0 || (i > 0 && this.props.notes[i].week !== this.props.notes[i - 1].week))
+                ? <h2>{week}</h2>
+                : null)}
+
+              <h3>{keyword}</h3>
+
+              {notes.map(({ id, Keywords: keywords, Note_Dates: [{ edit_date: date }], text }) => {
+                return (<Note
+                  noteId={id}
+                  keywords={keywords.length > 0 ? keywords.map(keywordObj => keywordObj.keyword).reduce((acc, cv) => acc + ", " + cv) : []}
+                  date={date}
+                  text={text}
+                  viewNote={() => this.viewNote({
+                    id,
+                    Keywords: [...keywords],
+                    Note_Dates: [{ edit_date: date }],
+                    text
+                  })}
+                  deleteNote={() => this.deleteNote(id)}
+                  key={id}
+                />);
+              })}
+
+            </div>
+          );
         });
+
+        break;
       }
     }
   }
@@ -134,8 +167,8 @@ class NoteList extends React.Component {
         <input type='text' value={this.state.searchTerm} onChange={this.handleSearchChange} placeholder='Search...' />
 
         <button onClick={() => this.props.viewAllNotes()}>Sort by Note</button>
-        <button onClick={() => this.props.viewNotesByDates()}>Sort by Edit Date</button>
-        <button>Sort by Week</button>
+        <button onClick={() => this.props.viewNotesByDates()}>Sort by All Edit Dates</button>
+        <button onClick={() => this.props.viewNotesByWeek()}>Sort by Week</button>
         {this.generateList()}
       </div>
     );

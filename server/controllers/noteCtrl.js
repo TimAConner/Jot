@@ -102,7 +102,7 @@ module.exports.getAllNotes = (req, res, next) => {
   const { Note, Keyword, Note_Date, sequelize } = req.app.get('models');
 
   const userId = req.user.id;
-  const shouldSortByDate = req.query.dates;
+  const shouldSortByDate = req.query.dateView;
   const shouldGroupByKeyword = req.query.weekView;
 
   if (shouldGroupByKeyword) {
