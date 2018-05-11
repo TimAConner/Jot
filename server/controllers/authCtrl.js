@@ -35,7 +35,7 @@ module.exports.register = (req, res, next) => {
     passport.authenticate('register', { session: false }, (err, user, info) => {
       if (err) {
         err.status = 400;
-        next(err);
+        return next(err);
       }
 
       if (!user) {
@@ -45,7 +45,7 @@ module.exports.register = (req, res, next) => {
 
       req.login(user, { session: false }, (err) => {
         if (err) {
-          next(err);
+          return next(err);
         }
 
         // generate a signed son web token with the contents of user object and return it in the response
