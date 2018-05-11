@@ -18,6 +18,7 @@ class NoteList extends React.Component {
 
     this.handleSearchChange = this.handleSearchChange.bind(this);
     this.keywordMatch = this.keywordMatch.bind(this);
+    this.textMatch = this.textMatch.bind(this);
   }
 
   viewNote(note) {
@@ -47,9 +48,13 @@ class NoteList extends React.Component {
   }
 
   keywordMatch({ keyword }) {
-    console.log(this.state);
-    const keywordMatch = new RegExp(`.*${this.state.searchTerm}.*`, 'i');
-    return keyword.match(keywordMatch);
+    const keywordRegex = new RegExp(`.*${this.state.searchTerm}.*`, 'i');
+    return keyword.match(keywordRegex);
+  }
+
+  textMatch(text) {
+    const textRegex = new RegExp(`.*${this.state.searchTerm}.*`, 'i');
+    return text.match(textRegex);
   }
 
   generateList() {
@@ -62,7 +67,8 @@ class NoteList extends React.Component {
             return note;
           }
 
-          if (note.Keywords.some(this.keywordMatch)) {
+          // If keyword or text of note match the search term
+          if (note.Keywords.some(this.keywordMatch) || this.textMatch(note.text)) {
             return note;
           }
         }).map(({ id, Keywords: keywords, Note_Dates: [{ edit_date: date }], text }) => {

@@ -42,11 +42,11 @@ export default function reducer(state = {
       // Reverse the output (with the most recent notes last in the array) 
       // to have the most recent notes going forward.
       const mergedNotes = [
-        ...state.notes,
         ...action.payload,
-      ].reverse().filter((uniqueNote, index, array) => {
-        return array.indexOf(array.find(note => note.id === uniqueNote.id)) === index;
-      }).reverse();
+      ];
+      // .reverse().filter((uniqueNote, index, array) => {
+      //   return array.indexOf(array.find(note => note.id === uniqueNote.id)) === index;
+      // }).reverse();
 
       return {
         ...state,
