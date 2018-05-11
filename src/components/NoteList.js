@@ -90,7 +90,7 @@ class NoteList extends React.Component {
 
         break;
       }
-      case 'dates': {
+      case 'date': {
         return this.props.notes.map(({ note_id, id, edit_date: date, Note: { Keywords: keywords, text } }) => {
           return (<Note
             noteId={note_id}

@@ -63,7 +63,7 @@ export default function reducer(state = {
       return {
         ...state,
         notes: [...action.payload],
-        sortBy: 'dates',
+        sortBy: 'date',
       };
     }
     case 'view_notes_by_date_failed': {
