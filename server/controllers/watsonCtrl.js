@@ -15,9 +15,15 @@ module.exports.generateKeywords = noteText => {
         keywords: {},
       },
     },
-      (err, { keywords = [] } = { keywords }) => {
-        if (err) return reject(err);
-        const keywordArray = keywords.map(({ text }) => text).slice(0, 5);
+      (err, response) => {
+        if (err) {
+          return reject(err);
+        }
+        if (typeof response === "undefined" || response === null) {
+          return resolve(['Error']);
+        }
+
+        const keywordArray = response.keywords.map(({ text }) => text).slice(0, 5);
         resolve(keywordArray);
       },
     );

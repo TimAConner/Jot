@@ -159,14 +159,19 @@ class NoteEditor extends React.Component {
     this.updateHtml();
   }
 
-  saveNote() {
-    console.log('Save Note');
-    console.log("this.userSelectedWords", this.userSelectedWords);
-    console.log(this.props.editor.id);
-    this.props.saveNote(this.props.saving, this.props.editor.id, this.inputBox.current.innerText, this.userSelectedWords);
+  saveNote() {  
+    if(this.inputBox.current.innerText.trim() === ''){
+      return;
+    }
+
+    this.props.saveNote(this.props.saving, this.props.editor.id, this.inputBox.current.innerText, this.userSelectedWords, this.props.reloadSortBy);
   }
 
   render() {
+    if(this.props.focusOnNote){
+      this.inputBox.current.focus();
+      this.inputBox.current.scrollIntoView();
+    }
     return (
       <div className='note-editor'>
         <div ref={this.visualBox} id="visualBox" className="visualBox"></div>
@@ -174,6 +179,7 @@ class NoteEditor extends React.Component {
           type="text"
           onInput={() => this.saveNote()}
           onDoubleClick={() => this.saveNote()}
+          // onBlur={() => this.saveNote()}
           className="inputBox"
           contentEditable="true">{this.props.editor.text}</div>
         {/* <button onClick={() => this.saveNote()}>Save</button> */}

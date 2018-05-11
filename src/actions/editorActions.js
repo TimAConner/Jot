@@ -6,15 +6,20 @@ export function mapEditorStateToProps(state) {
     editor: state.editor,
     noteLoaded: state.editor.noteLoaded,
     saving: state.editor.saving,
+    focusOnNote: state.editor.focusOnNote,
+    reloadSortBy: state.noteList.sortBy,
   }
 }
 
 export function mapEditoreDispatchToProps(dispatch) {
   return {
-    saveNote: (isSaving, id, text, keywords) => {
+    setFocusToFalse: () => {
+      dispatch({ type: 'set_focus_to_false' });
+    },
+    saveNote: (isSaving, id, text, keywords, reloadSortBy = 'notes') => {
       if (!isSaving) {
         dispatch({ type: 'save_note_pending' });
-        
+
         const requestObject = {
           text,
         };
@@ -34,14 +39,45 @@ export function mapEditoreDispatchToProps(dispatch) {
           .then(response => {
             dispatch({ type: 'save_note_fulfilled', payload: response.data });
 
-            dispatch({ type: 'view_notes_pending' });
-            axios.get('http://localhost:8080/notes/')
-              .then(response => {
-                dispatch({ type: 'view_notes_fulfilled', payload: response.data });
-              })
-              .catch((response) => {
-                dispatch({ type: 'view_notes_failed', payload: response });
-              })
+            // Reload view notes list below
+            // Todo: check for curent list type and send that request.
+            console.log(reloadSortBy);
+            
+            switch (reloadSortBy) {
+              case 'notes': {
+                axios.get('http://localhost:8080/notes/')
+                  .then(response => {
+                    dispatch({ type: 'view_notes_fulfilled', payload: response.data });
+                  })
+                  .catch((response) => {
+                    dispatch({ type: 'view_notes_failed', payload: response });
+                  });
+
+                break;
+              }
+              case 'dates': {
+                dispatch({ type: 'view_notes_by_date_pending' });
+                axios.get('http://localhost:8080/notes/?dates=true')
+                  .then(response => {
+                    dispatch({ type: 'view_notes_by_date_fulfilled', payload: response.data });
+                  })
+                  .catch((response) => {
+                    dispatch({ type: 'view_notes_by_date_failed', payload: response });
+                  })
+
+                break;
+              }
+              default: {
+                axios.get('http://localhost:8080/notes/')
+                  .then(response => {
+                    dispatch({ type: 'view_notes_fulfilled', payload: response.data });
+                  })
+                  .catch((response) => {
+                    dispatch({ type: 'view_notes_failed', payload: response });
+                  });
+
+              }
+            }
 
           })
           .catch((response) => {

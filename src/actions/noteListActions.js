@@ -6,6 +6,7 @@ export function mapNoteListStateToProps(state) {
     notes: [...state.noteList.notes],
     editor: { ...state.editor },
     saving: state.noteList.saving,
+    sortBy: state.noteList.sortBy,
   }
 }
 
@@ -19,6 +20,16 @@ export function mapNoteListDispatchToProps(dispatch) {
         })
         .catch((response) => {
           dispatch({ type: 'view_notes_failed', payload: response });
+        })
+    },
+    viewNotesByDates: () => {
+      dispatch({ type: 'view_notes_by_date_pending' });
+      axios.get('http://localhost:8080/notes/?dates=true')
+        .then(response => {
+          dispatch({ type: 'view_notes_by_date_fulfilled', payload: response.data });
+        })
+        .catch((response) => {
+          dispatch({ type: 'view_notes_by_date_failed', payload: response });
         })
     },
     setNote: note => {

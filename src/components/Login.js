@@ -37,7 +37,6 @@ class Login extends React.Component {
   }
 
   render() {
-    console.log('RIGHT HERE', this.props.error);
     return (
       <form onSubmit={this.submit} className='login'>
 
