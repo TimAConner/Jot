@@ -109,13 +109,19 @@ class NoteList extends React.Component {
         break;
       }
       case 'week': {
-        console.log('IN WEEK', this.props.notes);
 
-        // TODO: Output week break
-        // TODO: Output keeyword break
-        // TODO: output note
+        // Filter by search term then output with map
+        return this.props.notes.filter(keywordObj => {
+          if (this.state.searchTerm.trim() === '') {
+            return keywordObj;
+          }
 
-        return this.props.notes.map(({ keyword, notes, week }, i, keywordArray) => {
+          // If keyword or text of note match the search term
+          if (this.textMatch(keywordObj.keyword)) {
+            return keywordObj;
+          }
+        })
+        .map(({ keyword, notes, week }, i, keywordArray) => {
           return (
             <div>
 
