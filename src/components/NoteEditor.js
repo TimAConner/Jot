@@ -163,6 +163,9 @@ class NoteEditor extends React.Component {
     if(this.inputBox.current.innerText.trim() === ''){
       return;
     }
+    if(this.inputBox.current.innerText.trim() === this.props.editor.text.trim()){
+      return ;
+    }
 
     this.props.saveNote(this.props.saving, this.props.editor.id, this.inputBox.current.innerText, this.userSelectedWords, this.props.reloadSortBy);
   }
@@ -179,7 +182,7 @@ class NoteEditor extends React.Component {
           type="text"
           onInput={() => this.saveNote()}
           onDoubleClick={() => this.saveNote()}
-          // onBlur={() => this.saveNote()}
+          onBlur={() => this.saveNote()}
           className="inputBox"
           contentEditable="true">{this.props.editor.text}</div>
         {/* <button onClick={() => this.saveNote()}>Save</button> */}
