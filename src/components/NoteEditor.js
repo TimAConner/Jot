@@ -174,6 +174,7 @@ class NoteEditor extends React.Component {
     if(this.props.focusOnNote){
       this.inputBox.current.focus();
       this.inputBox.current.scrollIntoView();
+      this.props.setFocusToFalse();
     }
     return (
       <div className='note-editor'>
@@ -182,7 +183,7 @@ class NoteEditor extends React.Component {
           type="text"
           onInput={() => this.saveNote()}
           onDoubleClick={() => this.saveNote()}
-          onBlur={() => this.saveNote()}
+          // onBlur={() => this.saveNote()}
           className="inputBox"
           contentEditable="true">{this.props.editor.text}</div>
         {/* <button onClick={() => this.saveNote()}>Save</button> */}

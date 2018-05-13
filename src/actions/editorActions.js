@@ -43,6 +43,8 @@ export function mapEditoreDispatchToProps(dispatch) {
             // Todo: check for curent list type and send that request.
             console.log(reloadSortBy);
 
+            // TODO: Fix: AFTER EDITING, the editor gets stuck on the current list view.
+            // I believe this happens becuase of the save on blur.
             switch (reloadSortBy) {
               case 'notes': {
                 axios.get('http://localhost:8080/notes/')

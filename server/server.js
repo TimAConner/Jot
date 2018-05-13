@@ -3,14 +3,11 @@
 const express = require('express');
 const app = express();
 const passport = require('passport')
-const session = require('express-session');
 const bodyParser = require('body-parser');
 
 const jwt = require('jsonwebtoken');
 
 // flash depend on session module to set temp values that persist briefly so we can set a value, kick off a new request, then have that value accessible on the request
-const flash = require('express-flash');
-const cookieParser = require('cookie-parser');
 const path = require('path');
 
 const routes = require('./routes');

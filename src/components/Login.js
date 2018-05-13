@@ -32,18 +32,7 @@ class Login extends React.Component {
   }
 
   handleChange(event) {
-    console.log(event.target.name);
-    console.log(event.target.value);
-
     this.setState({ [event.target.name]: event.target.value });
-  }
-
-  handlePasswordChange(event) {
-    this.setState({ password: event.target.value });
-  }
-
-  handleConfirmPasswordChange(event) {
-    this.setState({ confirmPassword: event.target.value });
   }
 
   login(event) {

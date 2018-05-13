@@ -5,6 +5,7 @@ import { mapNoteListStateToProps, mapNoteListDispatchToProps } from '../actions/
 
 import Note from './Note';
 import Loader from './Loader';
+import DateFilter from './DateFilter';
 
 class NoteList extends React.Component {
 
@@ -13,13 +14,17 @@ class NoteList extends React.Component {
     super(props);
 
     this.state = {
-      searchTerm: "",
+      searchTerm: '',
+      minDate: '',
+      maxDate: '',
     };
 
     this.handleSearchChange = this.handleSearchChange.bind(this);
     this.keywordMatch = this.keywordMatch.bind(this);
     this.textMatch = this.textMatch.bind(this);
   }
+
+
 
   viewNote(note) {
     console.log(note);
@@ -57,7 +62,7 @@ class NoteList extends React.Component {
     return text.match(textRegex);
   }
 
-  generateList() {
+  generateNoteList() {
     switch (this.props.sortBy) {
       case 'notes': {
 
@@ -91,7 +96,23 @@ class NoteList extends React.Component {
         break;
       }
       case 'date': {
-        return this.props.notes.map(({ note_id, id, edit_date: date, Note: { Keywords: keywords, text } }) => {
+        // To filter the dates.
+        // new Date("2018-05-14").getTime() > new Date("2018-05-07T00:00:00.000Z".replace(' ', 'T')).getTime();
+
+        return this.props.notes.filter(note => {
+          if (this.state.minDate === '' || this.state.maxDate === '') {
+            return note;
+          }
+
+          // Needed to convert postgresql timestamp to a javascript timestamp
+          const editDate = new Date(note.edit_date.replace(' ', 'T')).getTime();
+          const minDate = new Date(this.state.minDate).getTime();
+          const maxDate = new Date(this.state.maxDate).getTime();
+          
+          if (minDate <= editDate && editDate <= maxDate) {
+            return note;
+          }
+        }).map(({ note_id, id, edit_date: date, Note: { Keywords: keywords, text } }) => {
           return (<Note
             noteId={note_id}
             keywords={keywords.length > 0 ? keywords.map(keywordObj => keywordObj.keyword).reduce((acc, cv) => acc + ", " + cv) : []}
@@ -121,42 +142,54 @@ class NoteList extends React.Component {
             return keywordObj;
           }
         })
-        .map(({ keyword, notes, week }, i, keywordArray) => {
-          return (
-            <div>
+          .map(({ keyword, notes, week }, i, keywordArray) => {
+            return (
+              <div>
 
-              {/* If there should be a week header */}
-              {((i === 0 || (i > 0 && this.props.notes[i].week !== this.props.notes[i - 1].week))
-                ? <h2>{week}</h2>
-                : null)}
+                {/* If there should be a week header */}
+                {((i === 0 || (i > 0 && this.props.notes[i].week !== this.props.notes[i - 1].week))
+                  ? <h2>{week}</h2>
+                  : null)}
 
-              <h3>{keyword}</h3>
+                <h3>{keyword}</h3>
 
-              {notes.map(({ id, Keywords: keywords, Note_Dates: [{ edit_date: date }], text }) => {
-                return (<Note
-                  noteId={id}
-                  keywords={keywords.length > 0 ? keywords.map(keywordObj => keywordObj.keyword).reduce((acc, cv) => acc + ", " + cv) : []}
-                  date={date}
-                  text={text}
-                  viewNote={() => this.viewNote({
-                    id,
-                    Keywords: [...keywords],
-                    Note_Dates: [{ edit_date: date }],
-                    text
-                  })}
-                  deleteNote={() => this.deleteNote(id)}
-                  key={id}
-                />);
-              })}
+                {notes.map(({ id, Keywords: keywords, Note_Dates: [{ edit_date: date }], text }) => {
+                  return (<Note
+                    noteId={id}
+                    keywords={keywords.length > 0 ? keywords.map(keywordObj => keywordObj.keyword).reduce((acc, cv) => acc + ", " + cv) : []}
+                    date={date}
+                    text={text}
+                    viewNote={() => this.viewNote({
+                      id,
+                      Keywords: [...keywords],
+                      Note_Dates: [{ edit_date: date }],
+                      text
+                    })}
+                    deleteNote={() => this.deleteNote(id)}
+                    key={`${id}${i}`}
+                  />);
+                })}
 
-            </div>
-          );
-        });
+              </div>
+            );
+          });
 
         break;
       }
     }
   }
+
+  handleChangeMinDate = (event, date) => {
+    this.setState({
+      minDate: date,
+    });
+  };
+
+  handleChangeMaxDate = (event, date) => {
+    this.setState({
+      maxDate: date,
+    });
+  };
 
   handleSearchChange(event) {
     this.setState({ searchTerm: event.target.value });
@@ -166,16 +199,31 @@ class NoteList extends React.Component {
     return (
       <div className='noteList'>
         <h1>NoteList</h1>
-        {this.props.saving ? <Loader
-          text='Saving'
-        /> : null}
 
-        <input type='text' value={this.state.searchTerm} onChange={this.handleSearchChange} placeholder='Search...' />
+        {this.props.sortBy === 'date'
+          ? <DateFilter
+            handleChangeMinDate={this.handleChangeMinDate}
+            handleChangeMaxDate={this.handleChangeMaxDate}
+          />
+          : <input
+            type='text'
+            value={this.state.searchTerm}
+            onChange={this.handleSearchChange}
+            placeholder='Search...'
+          />}
+
+        {this.props.saving
+          ? <Loader
+            text='Saving'
+          />
+          : null}
 
         <button onClick={() => this.props.viewAllNotes()}>Sort by Note</button>
         <button onClick={() => this.props.viewNotesByDates()}>Sort by All Edit Dates</button>
         <button onClick={() => this.props.viewNotesByWeek()}>Sort by Week</button>
-        {this.generateList()}
+
+        {this.generateNoteList()}
+
       </div>
     );
   }
