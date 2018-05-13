@@ -24,17 +24,6 @@ class NoteList extends React.Component {
     this.textMatch = this.textMatch.bind(this);
   }
 
-
-
-  viewNote(note) {
-    console.log(note);
-    this.props.setNote(note);
-  }
-
-  deleteNote(id) {
-    this.props.deleteNote(id);
-  }
-
   componentDidMount() {
     switch (this.props.sortBy) {
       case 'notes': {
@@ -50,6 +39,15 @@ class NoteList extends React.Component {
         break;
       }
     }
+  }
+
+  viewNote(note) {
+    console.log(note);
+    this.props.setNote(note);
+  }
+
+  deleteNote(id) {
+    this.props.deleteNote(id);
   }
 
   keywordMatch({ keyword }) {
@@ -163,7 +161,7 @@ class NoteList extends React.Component {
                       text
                     })}
                     deleteNote={() => this.deleteNote(id)}
-                    key={`${id}${i}`}
+                    key={`${id}-${i}`}
                   />);
                 })}
 

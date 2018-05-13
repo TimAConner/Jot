@@ -29,19 +29,21 @@ class NoteEditor extends React.Component {
       let totalText = this.inputBox.current.innerText;
 
       // Add span around other words
-      const whichArray = () => {
+      const userOrWatson = () => {
         return this.userSelectedWords.length !== 0 ? this.userSelectedWords : this.autoSelectedWords;
       };
 
-      const whichBoldOrItalic = () => {
+      const highlightClass = () => {
         return this.userSelectedWords.length === 0 ? this.automatedKeywordClass : this.selectedKeywordClass;
       };
 
 
       // Replace keywords in note string
-      for (let word of whichArray()) {
+      for (let word of userOrWatson()) {
         const regex = new RegExp(`(?<![a-zA-Z])(${word}{1})(?![a-zA-Z])`, 'gi');
-        totalText = totalText.replace(regex, `<span class="${whichBoldOrItalic()}">$1</span>`);
+        
+        // To fix issue #36 on github, you may implement a look ahead/behind to check if already in span.
+        totalText = totalText.replace(regex, `<span class="${highlightClass()}">$1</span>`);
       }
 
       // If word does not exist in note, remove from keyword array.
@@ -52,8 +54,8 @@ class NoteEditor extends React.Component {
         }
       });
 
-      const stringRegex = new RegExp(`(<span class="${whichBoldOrItalic()}">.*?<\/span>)`);
-      let splitOnSpan = totalText.split(stringRegex);
+      const stringRegex = new RegExp(`(<span class="${highlightClass()}">.*?<\/span>)`);
+      let splitOnSpan = totalText.split(stringRegex); 
 
       // Replace non-keywords with otherWord class
       splitOnSpan = splitOnSpan.map(string => {
@@ -76,8 +78,9 @@ class NoteEditor extends React.Component {
   // There are multiples in the keyworrds array so they get wrapped several times.
   // When you press save, keywords are being reset because of this.  The new keywords need to be sent back.
   setKeywords() {
-    if (this.props.noteLoaded) {
-      console.log("this.props.editor.Keywords", this.props.editor.Keywords);
+    console.log('OUT HERE', this.props.existingNoteLoaded)
+    if (this.props.existingNoteLoaded) {
+      console.log('IN EST KEYWORDS');
       this.userSelectedWords = [];
       this.autoSelectedWords = [];
       this.props.editor.Keywords.map(({ keyword, user_selected }) => {
@@ -92,18 +95,10 @@ class NoteEditor extends React.Component {
         }
       });
     }
-    console.log('this.userSelectedWords', this.userSelectedWords);
   }
 
   componentDidMount() {
-    console.log("INPUT BOX", this.inputBox.current);
-
-
     this.setKeywords();
-    // Will need to be set to the users preferences.
-
-    // Modify to deal with hard returns
-
 
     const simulateDoubleClick = (x, y) => {
       const clickEvent = document.createEvent('MouseEvents');
@@ -154,6 +149,10 @@ class NoteEditor extends React.Component {
 
   componentDidUpdate() {
 
+    if(this.props.focusOnNote){
+      this.props.setFocusToFalse();
+    }
+
     //  When words are being saved they are being wrapped in bold span again.
     this.setKeywords();
     this.updateHtml();
@@ -174,7 +173,6 @@ class NoteEditor extends React.Component {
     if(this.props.focusOnNote){
       this.inputBox.current.focus();
       this.inputBox.current.scrollIntoView();
-      this.props.setFocusToFalse();
     }
     return (
       <div className='note-editor'>
@@ -186,7 +184,7 @@ class NoteEditor extends React.Component {
           // onBlur={() => this.saveNote()}
           className="inputBox"
           contentEditable="true">{this.props.editor.text}</div>
-        {/* <button onClick={() => this.saveNote()}>Save</button> */}
+        <button onClick={() => this.props.newNote()}>Save</button>
         {this.props.saving ? <Loader
           text="Saving"
         /> : null}

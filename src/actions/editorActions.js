@@ -4,7 +4,7 @@ import { backendUrl, putPostHeaders } from '../helpers';
 export function mapEditorStateToProps(state) {
   return {
     editor: state.editor,
-    noteLoaded: state.editor.noteLoaded,
+    existingNoteLoaded: state.editor.existingNoteLoaded,
     saving: state.editor.saving,
     focusOnNote: state.editor.focusOnNote,
     reloadSortBy: state.noteList.sortBy,
@@ -39,12 +39,6 @@ export function mapEditoreDispatchToProps(dispatch) {
           .then(response => {
             dispatch({ type: 'save_note_fulfilled', payload: response.data });
 
-            // Reload view notes list below
-            // Todo: check for curent list type and send that request.
-            console.log(reloadSortBy);
-
-            // TODO: Fix: AFTER EDITING, the editor gets stuck on the current list view.
-            // I believe this happens becuase of the save on blur.
             switch (reloadSortBy) {
               case 'notes': {
                 axios.get('http://localhost:8080/notes/')
@@ -89,5 +83,8 @@ export function mapEditoreDispatchToProps(dispatch) {
           });
       }
     },
+    newNote: () => {
+      dispatch({ type: 'set_new_note' });
+    },  
   }
 };
