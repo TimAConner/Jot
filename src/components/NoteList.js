@@ -96,9 +96,6 @@ class NoteList extends React.Component {
         break;
       }
       case 'date': {
-        // To filter the dates.
-        // new Date("2018-05-14").getTime() > new Date("2018-05-07T00:00:00.000Z".replace(' ', 'T')).getTime();
-
         return this.props.notes.filter(note => {
           if (this.state.minDate === '' || this.state.maxDate === '') {
             return note;
@@ -108,7 +105,7 @@ class NoteList extends React.Component {
           const editDate = new Date(note.edit_date.replace(' ', 'T')).getTime();
           const minDate = new Date(this.state.minDate).getTime();
           const maxDate = new Date(this.state.maxDate).getTime();
-          
+
           if (minDate <= editDate && editDate <= maxDate) {
             return note;
           }
