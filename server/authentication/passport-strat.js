@@ -47,8 +47,20 @@ const RegistrationStrategy = new Strategy({
             "auto_keyword_style": "italic",
             "user_keyword_style": "bold"
           }).then(option => {
-            return done(null, newUser.get());
-          });
+            return User.findAll(
+              {
+                where: {
+                  email: newUser.get().email
+                },
+                include: [
+                  { model: Option }
+                ],
+              }
+            );
+          })
+            .then(([user]) => {
+              return done(null, user.get());
+            });
         }
       });
     }
