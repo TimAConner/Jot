@@ -46,8 +46,8 @@ class NoteList extends React.Component {
     this.props.setNote(note);
   }
 
-  deleteNote(id) {
-    this.props.deleteNote(id);
+  deleteNote(id, sortBy) {
+    this.props.deleteNote(id, sortBy);
   }
 
   keywordMatch({ keyword }) {
@@ -117,7 +117,7 @@ class NoteList extends React.Component {
               id: note_id,
               ...this.props.notes.find(note => note.note_id === note_id).Note,
             })}
-            deleteNote={() => this.deleteNote(note_id)}
+            deleteNote={() => this.deleteNote(note_id, this.props.sortBy)}
             key={id}
           />);
         });
@@ -160,7 +160,7 @@ class NoteList extends React.Component {
                       Note_Dates: [{ edit_date: date }],
                       text
                     })}
-                    deleteNote={() => this.deleteNote(id)}
+                    deleteNote={() => this.deleteNote(id, this.props.sortBy)}
                     key={`${id}-${i}`}
                   />);
                 })}

@@ -20,7 +20,9 @@ const saveKeywords = ({ KeywordModel, keywords, noteId, userSelected }) => {
 };
 
 const insertNoteOrCreateNote = ({ sequelize, noteId, text, userId }) => {
-  if (typeof noteId === "undefined") {
+  
+  if (typeof noteId === 'undefined' || noteId === null) {
+    console.log('in here');
     return (sequelize.query(` 
     INSERT INTO notes (text, user_id)
     VALUES ('${text}', ${userId})
@@ -36,7 +38,6 @@ const insertNoteOrCreateNote = ({ sequelize, noteId, text, userId }) => {
     SET text = '${text}';`, {
       type: sequelize.QueryTypes.INSERT
     }));
-
 };
 
 const createDateIfNew = ({ sequelize, noteId }) => {

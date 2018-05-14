@@ -2,6 +2,7 @@ export default function reducer(state = {
   existingNoteLoaded: false,
   saving: false,
   focusOnNote: false,
+  id: null,
   text: '',
 }, action) {
   switch (action.type) {

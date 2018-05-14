@@ -36,6 +36,8 @@ export function mapEditoreDispatchToProps(dispatch) {
           ? `${backendUrl}/notes/${id}`
           : `${backendUrl}/notes/`;
 
+          console.log(createNoteUrl);
+
         axios.put(createNoteUrl, JSON.stringify(requestObject), putPostHeaders)
           .then(response => {
             dispatch({ type: 'save_note_fulfilled', payload: response.data });
