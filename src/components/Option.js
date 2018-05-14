@@ -3,6 +3,8 @@ import { connect } from "react-redux";
 
 import { mapOptionStateToProps, mapOptionDispatchToProps } from '../actions/optionActions';
 
+import OptionDropdown from './OptionDropdown';
+
 class Option extends React.Component {
 
   constructor(props) {
@@ -18,7 +20,7 @@ class Option extends React.Component {
   handleOptionChange = e => {
     const value = e.target.value;
     const option = e.target.name;
-    this.props.updateOption({value, option});
+    this.props.updateOption({ value, option });
   };
 
   render() {
@@ -30,64 +32,45 @@ class Option extends React.Component {
 
         <h4>Font Style</h4>
         {this.props.user !== null
-          ? <select name='font_style' onChange={e => this.handleOptionChange(e)}>
-            {console.log('HERE', this.props.user)}
-            {this.state.fontStyleOptions.map(option => {
-              let userFontStyle = this.props.user.Option.font_style;
-
-              if (option === userFontStyle) {
-                return (
-                  <option selected value={option}>{option}</option>
-                );
-              }
-
-              return (
-                <option value={option}>{option}</option>
-              );
-            })}
-          </select>
+          ? <OptionDropdown
+            options={this.state.fontStyleOptions}
+            changeHandler={this.handleOptionChange}
+            styleName='font_style'
+            currentStyle={this.props.user.Option.font_style}
+          />
           : null}
 
         <h4>Font Size</h4>
         {this.props.user !== null
-          ? <select name='font_size' onChange={e => this.handleOptionChange(e)}>
-            {this.state.fontSizeOptions.map(option => {
-              let userFontSize = this.props.user.Option.font_size;
-
-              if (option === userFontSize) {
-                return (
-                  <option selected value={option}>{option}</option>
-                );
-              }
-
-              return (
-                <option value={option}>{option}</option>
-              );
-            })}
-          </select>
+          ? <OptionDropdown
+            options={this.state.fontSizeOptions}
+            changeHandler={this.handleOptionChange}
+            styleName='font_size'
+            currentStyle={this.props.user.Option.font_size}
+          />
           : null}
 
         <h4>Auto Select Style</h4>
         {this.props.user !== null
-          ? <select name='auto_keyword_style' onChange={e => this.handleOptionChange(e)}>
-            {this.state.highlightOptions.map(option => {
-              let autoStyle = this.props.user.Option.auto_keyword_style;
-
-              if (option === autoStyle) {
-                return (
-                  <option selected value={option}>{option}</option>
-                );
-              }
-
-              return (
-                <option value={option}>{option}</option>
-              );
-            })}
-          </select>
+          ? <OptionDropdown
+            options={this.state.highlightOptions}
+            changeHandler={this.handleOptionChange}
+            styleName='auto_keyword_style'
+            currentStyle={this.props.user.Option.auto_keyword_style}
+          />
           : null}
 
         <h4>User Select Style</h4>
         {this.props.user !== null
+          ? <OptionDropdown
+            options={this.state.highlightOptions}
+            changeHandler={this.handleOptionChange}
+            styleName='user_keyword_style'
+            currentStyle={this.props.user.Option.user_keyword_style}
+          />
+          : null}
+
+        {/* {this.props.user !== null
           ? <select name='user_keyword_style' onChange={e => this.handleOptionChange(e)}>
             {this.state.highlightOptions.map(option => {
               let userStyle = this.props.user.Option.user_keyword_style;
@@ -103,11 +86,11 @@ class Option extends React.Component {
               );
             })}
           </select>
-          : null}
+          : null} */}
 
       </div>
     );
   }
 };
 
-export default connect(mapOptionStateToProps, mapOptionDispatchToProps)(Option);
+export default connect(mapOptionStateToProps, mapOptionDispatchToProps)(Option); 
