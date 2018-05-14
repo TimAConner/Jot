@@ -5,6 +5,12 @@ export function mapUserStateToProps(state) {
   return {
     user: state.user,
     error: state.user.error,
+    options: {
+      fontSize: 8,
+      fontStyle: 'sans-serif',
+      autoKeywordStyle: 'italic',
+      userKeywordStyle: 'bold',
+    }
   }
 }
 

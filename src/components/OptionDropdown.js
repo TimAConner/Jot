@@ -6,15 +6,15 @@ import { mapOptionStateToProps, mapOptionDispatchToProps } from '../actions/opti
 const OptionDropdown = ({ options, changeHandler, currentStyle, styleName }) => (
   <div>
     <select name={styleName} onChange={e => changeHandler(e)}>
-      {options.map(option => {
-        if (option === currentStyle) {
+      {options.map(({value, text}) => {
+        if (currentStyle === value) {
           return (
-            <option selected value={option}>{option}</option>
+            <option selected value={value}>{text}</option>
           );
         }
 
         return (
-          <option value={option}>{option}</option>
+          <option value={value}>{text}</option>
         );
       })}
     </select>

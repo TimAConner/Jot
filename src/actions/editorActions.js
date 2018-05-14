@@ -8,6 +8,7 @@ export function mapEditorStateToProps(state) {
     saving: state.editor.saving,
     focusOnNote: state.editor.focusOnNote,
     reloadSortBy: state.noteList.sortBy,
+    options: state.user.options,
   }
 }
 

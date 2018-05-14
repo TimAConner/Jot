@@ -43,7 +43,7 @@ const RegistrationStrategy = new Strategy({
           // Add option entry associated with user
           Option.create({
             "user_id": newUser.get().id,
-            "font_size": 8,
+            "font_size": "small",
             "font_style": "sans-serif",
             "auto_keyword_style": "italic",
             "user_keyword_style": "bold"

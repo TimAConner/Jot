@@ -11,9 +11,27 @@ class Option extends React.Component {
     super(props);
 
     this.state = {
-      highlightOptions: ['bold', 'italic'],
-      fontSizeOptions: [8, 12, 16],
-      fontStyleOptions: ['sans-serif', 'serif', 'Times New Roman'],
+      highlightOptions: [
+        { value: 'bold', text: 'Bold' },
+        { value: 'italic', text: 'Italic' },
+        { value: 'underlined', text: 'Underlined' },
+        { value: 'uppercase', text: 'Uppercase' },
+      ],
+      fontSizeOptions: [
+        { value: 'small', text: 'Small' },
+        { value: 'medium', text: 'Medium' },
+        { value: 'large', text: 'Large' },
+        { value: 'x-large', text: 'Extra Large' },
+      ],
+      fontStyleOptions: [
+        { value: 'sans-serif', text: 'Sans Serif' },
+        { value: 'serif', text: 'Serif' },
+        { value: 'times-new-roman', text: 'Times New Roman' },
+        { value: 'georgia', text: 'Georgia' },
+        { value: 'verdana', text: 'Verdana' },
+        { value: 'arial', text: 'Arial' },
+        { value: 'monospace', text: 'Monospace' },
+      ],
     };
   }
 
