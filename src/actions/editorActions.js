@@ -75,6 +75,17 @@ export function mapEditoreDispatchToProps(dispatch) {
 
                 break;
               }
+              default: {
+                axios.get('http://localhost:8080/notes/')
+                  .then(response => {
+                    dispatch({ type: 'view_notes_fulfilled', payload: response.data });
+                  })
+                  .catch((response) => {
+                    dispatch({ type: 'view_notes_failed', payload: response });
+                  });
+
+                break;
+              }
             }
 
           })
@@ -85,6 +96,6 @@ export function mapEditoreDispatchToProps(dispatch) {
     },
     newNote: () => {
       dispatch({ type: 'set_new_note' });
-    },  
+    },
   }
 };

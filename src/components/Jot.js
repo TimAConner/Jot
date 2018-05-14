@@ -8,6 +8,7 @@ import { mapUserStateToProps, mapUserDispatchToProps } from '../actions/userActi
 
 import NoteList from './NoteList';
 import NoteEditor from './NoteEditor';
+import Option from './Option';
 import Loader from './Loader';
 
 class Jot extends React.Component {
@@ -28,6 +29,7 @@ class Jot extends React.Component {
       
         <NoteEditor />
         <NoteList />
+        <Option />
 
         {/* Show loading screen while loading */}
         {this.props.user.isLoading ? <Loader /> : null}

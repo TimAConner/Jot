@@ -49,6 +49,25 @@ export default function reducer(state = {
         isLoading: false,
       }
     }
+    case 'set_user_options_pending': {
+      return {
+        ...state,
+      };
+    }
+    case 'set_user_options_failed': {
+      return {
+        ...state,
+      };
+    }
+    case 'set_user_options_fulfilled': {
+      return {
+        ...state,
+        user: {
+          ...state.user,
+          Option: action.payload.Option,
+        }
+      };
+    }
     default: {
       return state;
     }
