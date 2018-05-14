@@ -1,10 +1,7 @@
 'use strict';
 
-module.exports.getUserInfo = (req, res, next) => {
-  const { User, Option } = req.app.get('models');
-
-  const userId = req.user.id;
-  User.findAll({
+const getUser = ({ userId, User, Option }) => {
+  return (User.findAll({
     include: [{
       model: Option,
       attributes: {
@@ -17,15 +14,22 @@ module.exports.getUserInfo = (req, res, next) => {
     attributes: {
       exclude: ['password'],
     },
+  }));
+};
+
+module.exports.fetchUser = (req, res, next) => {
+  const { User, Option } = req.app.get('models');
+
+  const userId = req.user.id;
+
+  getUser({ userId, User, Option }).then(([userInfo]) => {
+    res.status(200).json(userInfo);
   })
-    .then(([userInfo]) => {
-      res.status(200).json(userInfo);
-    })
     .catch(err => next(err));
 };
 
 module.exports.updateOption = (req, res, next) => {
-  const { Option } = req.app.get('models');
+  const { User, Option } = req.app.get('models');
 
   const userId = req.user.id;
 
@@ -52,7 +56,10 @@ module.exports.updateOption = (req, res, next) => {
     },
   })
     .then(([rowsUpdated]) => {
-      res.status(200).json(rowsUpdated);
+      getUser({ userId, User, Option }).then(([userInfo]) => {
+        res.status(200).json(userInfo);
+      })
+        .catch(err => next(err));
     })
     .catch(err => next(err));
 };

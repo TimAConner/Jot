@@ -19,7 +19,6 @@ app.set('models', require('../sequelize/models'));
 
 app.use((req, res, next) => {
   console.log('req:', req.method);
-  // req.body = { email: 'a@a.com', password: 'password123' };
   next();
 });
 
