@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { backendUrl, putPostHeaders } from '../helpers';
+import { backendUrl, putPostHeaders, reloadNotes } from '../helpers';
 
 export function mapEditorStateToProps(state) {
   return {
@@ -32,63 +32,18 @@ export function mapEditoreDispatchToProps(dispatch) {
 
         // If no id provided, post note as a new note.
         // If id provided, post note to that existing note.
-        let createNoteUrl = typeof id !== "undefined"
+        let createNoteUrl = id !== null
           ? `${backendUrl}/notes/${id}`
           : `${backendUrl}/notes/`;
 
         axios.put(createNoteUrl, JSON.stringify(requestObject), putPostHeaders)
           .then(response => {
             dispatch({ type: 'save_note_fulfilled', payload: response.data });
-
-            switch (reloadSortBy) {
-              case 'notes': {
-                axios.get('http://localhost:8080/notes/')
-                  .then(response => {
-                    dispatch({ type: 'view_notes_fulfilled', payload: response.data });
-                  })
-                  .catch((response) => {
-                    dispatch({ type: 'view_notes_failed', payload: response });
-                  });
-
-                break;
-              }
-              case 'date': {
-                dispatch({ type: 'view_notes_by_date_pending' });
-                axios.get('http://localhost:8080/notes/?dateView=true')
-                  .then(response => {
-                    dispatch({ type: 'view_notes_by_date_fulfilled', payload: response.data });
-                  })
-                  .catch((response) => {
-                    dispatch({ type: 'view_notes_by_date_failed', payload: response });
-                  })
-
-                break;
-              }
-              case 'week': {
-                dispatch({ type: 'view_notes_by_week_pending' });
-                axios.get('http://localhost:8080/notes/?weekView=true')
-                  .then(response => {
-                    dispatch({ type: 'view_notes_by_week_fulfilled', payload: response.data });
-                  })
-                  .catch((response) => {
-                    dispatch({ type: 'view_notes_by_week_failed', payload: response });
-                  })
-
-                break;
-              }
-              default: {
-                axios.get('http://localhost:8080/notes/')
-                  .then(response => {
-                    dispatch({ type: 'view_notes_fulfilled', payload: response.data });
-                  })
-                  .catch((response) => {
-                    dispatch({ type: 'view_notes_failed', payload: response });
-                  });
-
-                break;
-              }
-            }
-
+            reloadNotes({
+              sortBy: reloadSortBy,
+              dispatch,
+              response,
+            });
           })
           .catch((response) => {
             dispatch({ type: 'save_note_failed', payload: response });

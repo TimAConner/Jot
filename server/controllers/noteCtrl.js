@@ -256,7 +256,7 @@ module.exports.saveNote = (req, res, next) => {
   let noteId = req.params.id;
 
   // Escape ' characterse since that is how postgres holds strings
-  const text = req.body.text.replace("'", "''");
+  const text = req.body.text.replace(/'/g, `''`);
   const userId = req.user.id;
   const selectedKeywords = req.body.keywords;
 

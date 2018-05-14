@@ -86,7 +86,7 @@ class NoteList extends React.Component {
               Note_Dates: [{ edit_date: date }],
               text
             })}
-            deleteNote={() => this.deleteNote(id)}
+            deleteNote={() => this.deleteNote(id, this.props.sortBy)}
             key={id}
           />);
         });

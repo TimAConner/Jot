@@ -25,6 +25,7 @@ export default function reducer(state = {
         existingNoteLoaded: false,
         focusOnNote: true,
         text: '',
+        id: null,
       };
     }
     case 'save_note_pending': {
