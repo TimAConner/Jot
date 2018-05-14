@@ -78,9 +78,7 @@ class NoteEditor extends React.Component {
   // There are multiples in the keyworrds array so they get wrapped several times.
   // When you press save, keywords are being reset because of this.  The new keywords need to be sent back.
   setKeywords() {
-    console.log('OUT HERE', this.props.existingNoteLoaded)
     if (this.props.existingNoteLoaded) {
-      console.log('IN EST KEYWORDS');
       this.userSelectedWords = [];
       this.autoSelectedWords = [];
       this.props.editor.Keywords.map(({ keyword, user_selected }) => {
@@ -168,7 +166,7 @@ class NoteEditor extends React.Component {
     if (this.inputBox.current.innerText.trim() === this.props.editor.text.trim()) {
       return;
     }
-    console.log("SAVE", this.props.editor.id);
+    
     this.props.saveNote(this.props.saving, this.props.editor.id, this.inputBox.current.innerText, this.userSelectedWords, this.props.reloadSortBy);
   }
 
