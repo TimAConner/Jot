@@ -3,14 +3,11 @@
 const express = require('express');
 const app = express();
 const passport = require('passport')
-const session = require('express-session');
 const bodyParser = require('body-parser');
 
 const jwt = require('jsonwebtoken');
 
 // flash depend on session module to set temp values that persist briefly so we can set a value, kick off a new request, then have that value accessible on the request
-const flash = require('express-flash');
-const cookieParser = require('cookie-parser');
 const path = require('path');
 
 const routes = require('./routes');
@@ -22,13 +19,12 @@ app.set('models', require('../sequelize/models'));
 
 app.use((req, res, next) => {
   console.log('req:', req.method);
-  // req.body = { email: 'a@a.com', password: 'password123' };
   next();
 });
 
 app.options("/*", function (req, res, next) {
   res.header('Access-Control-Allow-Origin', '*');
-  res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
+  res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS,PATCH');
   res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With, dataType, contentType');
   res.status(200).json();
 });

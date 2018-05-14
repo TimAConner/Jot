@@ -2,7 +2,7 @@
   "options": [
     {
       "user_id": 1,
-      "font_size": 8,
+      "font_size": "small",
       "font_style": "sans-serif",
       "auto_keyword_style": "italic",
       "user_keyword_style": "bold"

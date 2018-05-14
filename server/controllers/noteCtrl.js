@@ -20,7 +20,9 @@ const saveKeywords = ({ KeywordModel, keywords, noteId, userSelected }) => {
 };
 
 const insertNoteOrCreateNote = ({ sequelize, noteId, text, userId }) => {
-  if (typeof noteId === "undefined") {
+  
+  if (typeof noteId === 'undefined' || noteId === null) {
+    console.log('in here');
     return (sequelize.query(` 
     INSERT INTO notes (text, user_id)
     VALUES ('${text}', ${userId})
@@ -36,7 +38,6 @@ const insertNoteOrCreateNote = ({ sequelize, noteId, text, userId }) => {
     SET text = '${text}';`, {
       type: sequelize.QueryTypes.INSERT
     }));
-
 };
 
 const createDateIfNew = ({ sequelize, noteId }) => {
@@ -102,7 +103,7 @@ module.exports.getAllNotes = (req, res, next) => {
   const { Note, Keyword, Note_Date, sequelize } = req.app.get('models');
 
   const userId = req.user.id;
-  const shouldSortByDate = req.query.dates;
+  const shouldSortByDate = req.query.dateView;
   const shouldGroupByKeyword = req.query.weekView;
 
   if (shouldGroupByKeyword) {
@@ -169,7 +170,8 @@ module.exports.getAllNotes = (req, res, next) => {
         Promise.all(notePromises).then(noteInfo => {
           keywords = keywords.map(keyword => {
             keyword.notes = keyword.notes.map(noteId => {
-              return noteInfo.find(([obj]) => obj.id == noteId);
+              const [note] = noteInfo.find(([obj]) => obj.id == noteId)
+              return note;
             });
             return keyword;
           });
@@ -255,7 +257,7 @@ module.exports.saveNote = (req, res, next) => {
   let noteId = req.params.id;
 
   // Escape ' characterse since that is how postgres holds strings
-  const text = req.body.text.replace("'", "''");
+  const text = req.body.text.replace(/'/g, `''`);
   const userId = req.user.id;
   const selectedKeywords = req.body.keywords;
 

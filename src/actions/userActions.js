@@ -5,6 +5,12 @@ export function mapUserStateToProps(state) {
   return {
     user: state.user,
     error: state.user.error,
+    options: {
+      fontSize: 8,
+      fontStyle: 'sans-serif',
+      autoKeywordStyle: 'italic',
+      userKeywordStyle: 'bold',
+    }
   }
 }
 
@@ -14,14 +20,33 @@ export function mapUserDispatchToProps(dispatch) {
   // axios.defaults.withCredentials = true; 
 
   return {
-    logUserIn: (email, password) => {
+    login: (email, password) => {
       // Remove token if present
       localStorage.removeItem('jotToken');
 
       dispatch({ type: 'login_user_pending' });
       axios.post(`${backendUrl}/login`, JSON.stringify({
-        "email": email,
-        "password": password
+        email,
+        password,
+      }), putPostHeaders)
+        .then(response => {
+          if (typeof response.data.token === "undefined" || typeof response.data.user.id === "undefined") {
+            dispatch({ type: 'login_user_failed', payload: response });
+          } else {
+            localStorage.setItem('jotToken', response.data.token);
+            dispatch({ type: 'login_user_fulfilled', payload: response.data.user });
+          }
+        })
+        .catch(response => {
+          dispatch({ type: 'login_user_failed', payload: response });
+        });
+    },
+    register: (email, password, confirm, displayName) => {
+      axios.post(`${backendUrl}/register`, JSON.stringify({
+        email,
+        password,
+        confirm,
+        "display_name": displayName,
       }), putPostHeaders)
         .then(response => {
           if (typeof response.data.token === "undefined" || typeof response.data.user.id === "undefined") {

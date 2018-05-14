@@ -1,20 +1,26 @@
 import axios from 'axios';
-import { backendUrl, putPostHeaders } from '../helpers';
+import { backendUrl, putPostHeaders, reloadNotes } from '../helpers';
 
 export function mapEditorStateToProps(state) {
   return {
     editor: state.editor,
-    noteLoaded: state.editor.noteLoaded,
+    existingNoteLoaded: state.editor.existingNoteLoaded,
     saving: state.editor.saving,
+    focusOnNote: state.editor.focusOnNote,
+    reloadSortBy: state.noteList.sortBy,
+    options: state.user.options,
   }
 }
 
 export function mapEditoreDispatchToProps(dispatch) {
   return {
-    saveNote: (isSaving, id, text, keywords) => {
+    setFocusToFalse: () => {
+      dispatch({ type: 'set_focus_to_false' });
+    },
+    saveNote: (isSaving, id, text, keywords, reloadSortBy = 'notes') => {
       if (!isSaving) {
         dispatch({ type: 'save_note_pending' });
-        
+
         const requestObject = {
           text,
         };
@@ -26,28 +32,28 @@ export function mapEditoreDispatchToProps(dispatch) {
 
         // If no id provided, post note as a new note.
         // If id provided, post note to that existing note.
-        let createNoteUrl = typeof id !== "undefined"
+        let createNoteUrl = id !== null
           ? `${backendUrl}/notes/${id}`
           : `${backendUrl}/notes/`;
+
+          console.log(createNoteUrl);
 
         axios.put(createNoteUrl, JSON.stringify(requestObject), putPostHeaders)
           .then(response => {
             dispatch({ type: 'save_note_fulfilled', payload: response.data });
-
-            dispatch({ type: 'view_notes_pending' });
-            axios.get('http://localhost:8080/notes/')
-              .then(response => {
-                dispatch({ type: 'view_notes_fulfilled', payload: response.data });
-              })
-              .catch((response) => {
-                dispatch({ type: 'view_notes_failed', payload: response });
-              })
-
+            reloadNotes({
+              sortBy: reloadSortBy,
+              dispatch,
+              response,
+            });
           })
           .catch((response) => {
             dispatch({ type: 'save_note_failed', payload: response });
           });
       }
+    },
+    newNote: () => {
+      dispatch({ type: 'set_new_note' });
     },
   }
 };

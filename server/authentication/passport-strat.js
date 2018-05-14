@@ -43,7 +43,7 @@ const RegistrationStrategy = new Strategy({
           // Add option entry associated with user
           Option.create({
             "user_id": newUser.get().id,
-            "font_size": 8,
+            "font_size": "small",
             "font_style": "sans-serif",
             "auto_keyword_style": "italic",
             "user_keyword_style": "bold"
@@ -67,8 +67,15 @@ const LoginStrategy = new Strategy({
     return compareSync(password, userpass);
   };
 
-  User.findOne({ where: { email } })
-    .then(user => {
+  User.findAll(
+    {
+      where: { email },
+      include: [
+        { model: Option }
+      ],
+    }
+  )
+    .then(([user]) => {
       console.log('user', user);
       if (!user) {
         return cb(new Error('Can not find a user with those credentials. Please try again.'), false);

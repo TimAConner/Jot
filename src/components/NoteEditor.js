@@ -21,45 +21,47 @@ class NoteEditor extends React.Component {
     this.autoSelectedWords = [];
     this.userSelectedWords = [];
 
-    this.otherWordClass = 'otherWord';
-    this.automatedKeywordClass = 'italic';
-    this.selectedKeywordClass = 'bold';
+    this.nonKeywordClass = 'nonKeyword';
 
     this.updateHtml = () => {
       let totalText = this.inputBox.current.innerText;
 
       // Add span around other words
-      const whichArray = () => {
+      const userOrWatson = () => {
         return this.userSelectedWords.length !== 0 ? this.userSelectedWords : this.autoSelectedWords;
       };
 
-      const whichBoldOrItalic = () => {
-        return this.userSelectedWords.length === 0 ? this.automatedKeywordClass : this.selectedKeywordClass;
+      const highlightClass = () => {
+        return this.userSelectedWords.length === 0
+          ? this.props.options.auto_keyword_style || 'italic'
+          : this.props.options.user_keyword_style || 'bold';
       };
 
 
       // Replace keywords in note string
-      for (let word of whichArray()) {
+      for (let word of userOrWatson()) {
         const regex = new RegExp(`(?<![a-zA-Z])(${word}{1})(?![a-zA-Z])`, 'gi');
-        totalText = totalText.replace(regex, `<span class="${whichBoldOrItalic()}">$1</span>`);
+
+        // To fix issue #36 on github, you may implement a look ahead/behind to check if already in span.
+        totalText = totalText.replace(regex, `<span class="${highlightClass()}">$1</span>`);
       }
 
       // If word does not exist in note, remove from keyword array.
       this.userSelectedWords = this.userSelectedWords.filter(word => {
         const regex = new RegExp(`(?<![a-zA-Z])(${word}{1})(?![a-zA-Z])`, 'gi');
-        if(totalText.match(regex)){
+        if (totalText.match(regex)) {
           return word;
         }
       });
 
-      const stringRegex = new RegExp(`(<span class="${whichBoldOrItalic()}">.*?<\/span>)`);
+      const stringRegex = new RegExp(`(<span class="${highlightClass()}">.*?<\/span>)`);
       let splitOnSpan = totalText.split(stringRegex);
 
       // Replace non-keywords with otherWord class
       splitOnSpan = splitOnSpan.map(string => {
         if (stringRegex.exec(string) === null) {
           const wordRegex = new RegExp(`\\b(\\w+)\\b`, 'gi');
-          const wordWithSpan = string.replace(wordRegex, `<span class="${this.otherWordClass}">$1</span>`);
+          const wordWithSpan = string.replace(wordRegex, `<span class="${this.nonKeywordClass}">$1</span>`);
           return wordWithSpan;
         } else {
           return string;
@@ -76,34 +78,25 @@ class NoteEditor extends React.Component {
   // There are multiples in the keyworrds array so they get wrapped several times.
   // When you press save, keywords are being reset because of this.  The new keywords need to be sent back.
   setKeywords() {
-    if (this.props.noteLoaded) {
-      console.log("this.props.editor.Keywords", this.props.editor.Keywords);
+    if (this.props.existingNoteLoaded) {
       this.userSelectedWords = [];
       this.autoSelectedWords = [];
       this.props.editor.Keywords.map(({ keyword, user_selected }) => {
         if (user_selected) {
-          if(!this.userSelectedWords.includes(keyword)){
+          if (!this.userSelectedWords.includes(keyword)) {
             this.userSelectedWords.push(keyword);
           }
         } else {
-          if(!this.autoSelectedWords.includes(keyword)){
+          if (!this.autoSelectedWords.includes(keyword)) {
             this.autoSelectedWords.push(keyword);
           }
         }
       });
     }
-    console.log('this.userSelectedWords', this.userSelectedWords);
   }
 
   componentDidMount() {
-    console.log("INPUT BOX", this.inputBox.current);
-
-
     this.setKeywords();
-    // Will need to be set to the users preferences.
-
-    // Modify to deal with hard returns
-
 
     const simulateDoubleClick = (x, y) => {
       const clickEvent = document.createEvent('MouseEvents');
@@ -154,31 +147,59 @@ class NoteEditor extends React.Component {
 
   componentDidUpdate() {
 
+    // this.autoKeywordClass = this.props.user.Options.auto_keyword_style;
+    // this.userKeywordClass = this.props.user.Options.user_keyword_style;
+
+    if (this.props.focusOnNote) {
+      this.props.setFocusToFalse();
+    }
+
     //  When words are being saved they are being wrapped in bold span again.
     this.setKeywords();
     this.updateHtml();
   }
 
   saveNote() {
-    console.log('Save Note');
-    console.log("this.userSelectedWords", this.userSelectedWords);
-    console.log(this.props.editor.id);
-    this.props.saveNote(this.props.saving, this.props.editor.id, this.inputBox.current.innerText, this.userSelectedWords);
+    if (this.inputBox.current.innerText.trim() === '') {
+      return;
+    }
+    if (this.inputBox.current.innerText.trim() === this.props.editor.text.trim()) {
+      return;
+    }
+    
+    this.props.saveNote(this.props.saving, this.props.editor.id, this.inputBox.current.innerText, this.userSelectedWords, this.props.reloadSortBy);
+  }
+
+  newNote() {
+    this.inputBox.current.innerText = '';
+    this.visualBox.current.innerText = '';
+    this.props.newNote();
   }
 
   render() {
+    if (this.props.focusOnNote) {
+      this.inputBox.current.focus();
+      this.inputBox.current.scrollIntoView();
+    }
+
     return (
       <div className='note-editor'>
-        <div ref={this.visualBox} id="visualBox" className="visualBox"></div>
-        <div ref={this.inputBox} id="inputBox"
-          type="text"
+        <div
+          ref={this.visualBox}
+          id='visualBox'
+          className={`visualBox ${this.props.options.font_style} ${this.props.options.font_size}`}>
+        </div>
+        <div ref={this.inputBox} id='inputBox'
+          type='text'
           onInput={() => this.saveNote()}
           onDoubleClick={() => this.saveNote()}
-          className="inputBox"
-          contentEditable="true">{this.props.editor.text}</div>
-        {/* <button onClick={() => this.saveNote()}>Save</button> */}
+          onBlur={() => this.saveNote()}
+          className={`inputBox ${this.props.options.font_style} ${this.props.options.font_size}`}
+          contentEditable='true'>{this.props.editor.text}
+        </div>
+        <button onClick={() => { this.newNote() }}>New Note</button>
         {this.props.saving ? <Loader
-          text="Saving"
+          text='Saving'
         /> : null}
       </div>
     );

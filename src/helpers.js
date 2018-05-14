@@ -1,3 +1,4 @@
+import axios from 'axios';
 
 export const backendUrl = "http://localhost:8080";
 
@@ -10,26 +11,53 @@ export const putPostHeaders = {
   credentials: "include",
 };
 
-// export function isLoggedIn() {
-//   return new Promise((resolve, reject) => {
-//     const header = new Headers({ 'Content-Type': 'application/json' });
-//     axios.get(`${backendUrl}/currentUser`, { header })
-//       .then(user => {
-//         console.log(user);
-//         if (typeof user.id === 'undefined') {
-//           resolve(false);
-//         }
-//         resolve(user);
-//       })
-//       .catch(err => {
+export const reloadNotes = ({ sortBy, response, dispatch }) => {
+  switch (sortBy) {
+    case 'notes': {
+      axios.get('http://localhost:8080/notes/')
+        .then(response => {
+          dispatch({ type: 'view_notes_fulfilled', payload: response.data });
+        })
+        .catch((response) => {
+          dispatch({ type: 'view_notes_failed', payload: response });
+        });
 
-//         // 401 is the default error for the user
-//         // not being logged in on the server
-//         if (err.status !== 401) {
-//           console.log(err);
-//         }
-//         resolve(false);
-//       })
-//   })
+      break;
+    }
+    case 'date': {
+      dispatch({ type: 'view_notes_by_date_pending' });
+      axios.get('http://localhost:8080/notes/?dateView=true')
+        .then(response => {
+          dispatch({ type: 'view_notes_by_date_fulfilled', payload: response.data });
+        })
+        .catch((response) => {
+          dispatch({ type: 'view_notes_by_date_failed', payload: response });
+        })
 
-// };
+      break;
+    }
+    case 'week': {
+      dispatch({ type: 'view_notes_by_week_pending' });
+      axios.get('http://localhost:8080/notes/?weekView=true')
+        .then(response => {
+          dispatch({ type: 'view_notes_by_week_fulfilled', payload: response.data });
+        })
+        .catch((response) => {
+          dispatch({ type: 'view_notes_by_week_failed', payload: response });
+        })
+
+      break;
+    }
+    default: {
+      axios.get('http://localhost:8080/notes/')
+        .then(response => {
+          dispatch({ type: 'view_notes_fulfilled', payload: response.data });
+        })
+        .catch((response) => {
+          dispatch({ type: 'view_notes_failed', payload: response });
+        });
+
+      break;
+    }
+  }
+};

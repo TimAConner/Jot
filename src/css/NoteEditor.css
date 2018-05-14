@@ -1,3 +1,4 @@
+/* Editor Styling Start */
 .inputBox {
   border: none;
   width: 100%;
@@ -9,14 +10,6 @@
 body {
   margin: 0;
   padding: 0;
-}
-
-.bold {
-  font-weight: bold;
-}
-
-.italic {
-  font-style: italic;
 }
 
 .inputBox {
@@ -51,4 +44,70 @@ body {
   margin: 0;
   padding: 0;
   white-space: pre-wrap;
+}
+/* Editor Styling End */
+
+/* Keyword Highlight Classes */
+.bold {
+  font-weight: bold;
+}
+
+.italic {
+  font-style: italic;
+}
+
+.underlined {
+  text-decoration: underline;
+}
+
+.uppercase {
+  text-transform: uppercase;
+}
+
+/* Note Font Family */
+
+.serif>* {
+  font-family: serif;
+}
+
+.sans-serif>* {
+  font-family: sans-serif;
+}
+
+.times-new-roman>* {
+  font-family: 'Times New Roman';
+}
+
+.georgia>* {
+  font-family: georgia;
+}
+
+.verdana>* {
+  font-family: verdana;
+}
+
+.arial>* {
+  font-family: arial;
+}
+
+.monospace>* {
+  font-family: monospace;
+}
+
+/* Note Font Size */
+
+.small {
+  font-size: 12px;
+}
+
+.medium {
+  font-size: 16px;
+}
+
+.large {
+  font-size: 20px;
+}
+
+.x-large {
+  font-size: 24px;
 }

@@ -1,14 +1,33 @@
 export default function reducer(state = {
-  noteLoaded: false,
+  existingNoteLoaded: false,
   saving: false,
+  focusOnNote: false,
+  id: null,
+  text: '',
 }, action) {
   switch (action.type) {
+    case 'set_focus_to_false': {
+      return {
+        ...state,
+        focusOnNote: false,
+      }
+    }
     case 'set_editor_note': {
       return {
         ...state,
         ...action.payload,
-        noteLoaded: true,
-      }
+        existingNoteLoaded: true,
+        focusOnNote: true,
+      };
+    }
+    case 'set_new_note' : {
+      return {
+        saving: false,
+        existingNoteLoaded: false,
+        focusOnNote: true,
+        text: '',
+        id: null,
+      };
     }
     case 'save_note_pending': {
       return {
@@ -27,8 +46,9 @@ export default function reducer(state = {
         ...state,
         Keywords: [...action.payload.Keywords],
         id: action.payload.id,
+        Note_Dates: [...action.payload.Note_Dates],
         saving: false,
-        noteLoaded: true,
+        existingNoteLoaded: true,
       }
     }
     default: {

@@ -2,6 +2,12 @@ export default function reducer(state = {
   user: null,
   isLoading: false,
   error: null,
+  options: {
+    font_size: 8,
+    font_style: 'sans-serif',
+    auto_keyword_style: 'italic',
+    user_keyword_style: 'bold',
+  },
 }, action) {
   switch (action.type) {
     case 'login_user_pending': {
@@ -21,7 +27,7 @@ export default function reducer(state = {
         ...state,
         user: {
           ...action.payload,
-        },
+        }
       }
     }
     case 'getting_user_pending': {
@@ -32,7 +38,7 @@ export default function reducer(state = {
     }
     case 'getting_user_failed': {
       console.log("Error", action.payload);
-      
+
       return {
         ...state,
         user: null,
@@ -46,8 +52,27 @@ export default function reducer(state = {
         user: {
           ...action.payload,
         },
+        options: {
+          ...action.payload.Option
+        },
         isLoading: false,
       }
+    }
+    case 'set_user_options_pending': {
+      return {
+        ...state,
+      };
+    }
+    case 'set_user_options_failed': {
+      return {
+        ...state,
+      };
+    }
+    case 'set_user_options_fulfilled': {
+      return {
+        ...state,
+        options: { ...action.payload.Option },
+      };
     }
     default: {
       return state;

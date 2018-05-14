@@ -7,11 +7,11 @@ const { isLoggedIn } = require('./routeHelpers');
 
 
 const {
-  getUserInfo,
+  fetchUser,
   updateOption,
 } = require('../controllers/userCtrl.js');
 
-router.get('/currentUser/', isLoggedIn(), getUserInfo);
+router.get('/currentUser/', isLoggedIn(), fetchUser);
 router.patch('/currentUser/', isLoggedIn(), updateOption);
 
 module.exports = router;
