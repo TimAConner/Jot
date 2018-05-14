@@ -67,8 +67,15 @@ const LoginStrategy = new Strategy({
     return compareSync(password, userpass);
   };
 
-  User.findOne({ where: { email } })
-    .then(user => {
+  User.findAll(
+    {
+      where: { email },
+      include: [
+        { model: Option }
+      ],
+    }
+  )
+    .then(([user]) => {
       console.log('user', user);
       if (!user) {
         return cb(new Error('Can not find a user with those credentials. Please try again.'), false);
