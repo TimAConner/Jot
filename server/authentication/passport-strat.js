@@ -1,10 +1,9 @@
 const passport = require('passport');
 const { Strategy } = require('passport-local');
-const { hashSync, genSaltSync, compareSync } = require('bcrypt-nodejs');
-
 const passportJWT = require("passport-jwt");
 const { Strategy: JWTStrategy, ExtractJwt: ExtractJWT } = passportJWT;
-const { webTokenSecret } = require('../helpers');
+
+const { hashSync, genSaltSync, compareSync } = require('bcrypt-nodejs');
 
 const { User, Token, Option, sequelize } = require('../../sequelize/models/');
 
