@@ -1,11 +1,18 @@
+// React & Redux
 import React from 'react';
 import { connect } from "react-redux";
+import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 
+// Redux Store
 import { mapNoteListStateToProps, mapNoteListDispatchToProps } from '../actions/noteListActions';
 
+// Custom Components
 import Note from './Note';
 import Loader from './Loader';
 import DateFilter from './DateFilter';
+
+// CSS
+import '../css/NoteList.css';
 
 class NoteList extends React.Component {
 
@@ -65,31 +72,42 @@ class NoteList extends React.Component {
       case 'notes': {
 
         // filter on search term and then map information to Note component
-        return this.props.notes.filter(note => {
-          if (this.state.searchTerm.trim() === '') {
-            return note;
-          }
+        return (
+          <ReactCSSTransitionGroup
+            transitionName='note'
+            transitionEnterTimeout={500}
+            transitionApplyTimeout={500}
+            transitionLeaveTimeout={300}
+          >
+            {this.props.notes.filter(note => {
+              if (this.state.searchTerm.trim() === '') {
+                return note;
+              }
 
-          // If keyword or text of note match the search term
-          if (note.Keywords.some(this.keywordMatch) || this.textMatch(note.text)) {
-            return note;
-          }
-        }).map(({ id, Keywords: keywords, Note_Dates: [{ edit_date: date }], text }) => {
-          return (<Note
-            noteId={id}
-            keywords={keywords.length > 0 ? keywords.map(keywordObj => keywordObj.keyword).reduce((acc, cv) => acc + ", " + cv) : []}
-            date={date}
-            text={text}
-            viewNote={() => this.viewNote({
-              id,
-              Keywords: [...keywords],
-              Note_Dates: [{ edit_date: date }],
-              text
+              // If keyword or text of note match the search term
+              if (note.Keywords.some(this.keywordMatch) || this.textMatch(note.text)) {
+                return note;
+              }
+            }).map(({ id, Keywords: keywords, Note_Dates: [{ edit_date: date }], text }, index) => {
+              return (
+                <Note
+                  noteId={id}
+                  keywords={keywords.length > 0 ? keywords.map(keywordObj => keywordObj.keyword).reduce((acc, cv) => acc + ", " + cv) : []}
+                  date={date}
+                  text={text}
+                  viewNote={() => this.viewNote({
+                    id,
+                    Keywords: [...keywords],
+                    Note_Dates: [{ edit_date: date }],
+                    text
+                  })}
+                  deleteNote={() => this.deleteNote(id, this.props.sortBy)}
+                  key={id.toString()}
+                />
+              )
             })}
-            deleteNote={() => this.deleteNote(id, this.props.sortBy)}
-            key={id}
-          />);
-        });
+          </ReactCSSTransitionGroup>
+        );
 
         break;
       }
@@ -207,17 +225,17 @@ class NoteList extends React.Component {
             placeholder='Search...'
           />}
 
-        {this.props.saving
-          ? <Loader
-            text='Saving'
-          />
-          : null}
-
         <button onClick={() => this.props.viewAllNotes()}>Sort by Note</button>
         <button onClick={() => this.props.viewNotesByDates()}>Sort by All Edit Dates</button>
         <button onClick={() => this.props.viewNotesByWeek()}>Sort by Week</button>
 
         {this.generateNoteList()}
+
+        {this.props.saving
+          ? <Loader
+            text='Saving'
+          />
+          : null}
 
       </div>
     );

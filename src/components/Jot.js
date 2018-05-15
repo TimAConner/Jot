@@ -51,34 +51,36 @@ class Jot extends React.Component {
         <NoteEditor />
 
         <MuiThemeProvider>
-
-          {/* Note List */}
-          <RaisedButton
-            label="Open Notes"
-            onClick={this.handleNoteListToggle}
-          />
-          <Drawer
-            docked={false}
-            width={'90%'}
-            open={this.state.noteListWindowOpen}
-            onRequestChange={(noteListWindowOpen) => this.setState({ noteListWindowOpen })}
-          >
+          <div>
+            {/* Note List */}
             <RaisedButton
-              label="Open Options"
-              onClick={this.handleOptionToggle}
+              label="Open Notes"
+              onClick={this.handleNoteListToggle}
             />
-            <NoteList closeList={this.handleNoteListClose} />
-          </Drawer>
+            <Drawer
+              docked={false}
+              width={'90%'}
+              open={this.state.noteListWindowOpen}
+              onRequestChange={(noteListWindowOpen) => this.setState({ noteListWindowOpen })}
+            >
+              <RaisedButton
+                label="Open Options"
+                onClick={this.handleOptionToggle}
+              />
+              <NoteList closeList={this.handleNoteListClose} />
+            </Drawer>
 
-          {/* Options */}
-          <Drawer
-            docked={false}
-            width={'90%'}
-            open={this.state.optionWindowOpen}
-            onRequestChange={(optionWindowOpen) => this.setState({ optionWindowOpen })}
-          >
-            <Option />
-          </Drawer>
+            {/* Options */}
+            <Drawer
+              docked={false}
+              width={'85%'}
+              open={this.state.optionWindowOpen}
+              onRequestChange={(optionWindowOpen) => this.setState({ optionWindowOpen })}
+            >
+              <Option />
+            </Drawer>
+          </div>
+
 
         </MuiThemeProvider>
 
