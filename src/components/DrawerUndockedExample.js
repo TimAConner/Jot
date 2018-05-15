@@ -19,7 +19,6 @@ export default class DrawerUndockedExample extends React.Component {
   render() {
     return (
       <div>
-        <MuiThemeProvider>
           <RaisedButton
             label="Open Drawer"
             onClick={this.handleToggle}
@@ -33,7 +32,6 @@ export default class DrawerUndockedExample extends React.Component {
             <MenuItem onClick={this.handleClose}>Menu Item</MenuItem>
             <MenuItem onClick={this.handleClose}>Menu Item 2</MenuItem>
           </Drawer>
-        </MuiThemeProvider>
       </div>
     );
   }

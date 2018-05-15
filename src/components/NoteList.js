@@ -11,6 +11,14 @@ import Note from './Note';
 import Loader from './Loader';
 import DateFilter from './DateFilter';
 
+// Helpers
+import { getMinMaxWeek } from '../helpers';
+
+// Material UI
+import { Tabs, Tab } from 'material-ui/Tabs';
+import Slider from 'material-ui/Slider';
+import TextField from 'material-ui/TextField';
+
 // CSS
 import '../css/NoteList.css';
 
@@ -112,80 +120,102 @@ class NoteList extends React.Component {
         break;
       }
       case 'date': {
-        return this.props.notes.filter(note => {
-          if (this.state.minDate === '' || this.state.maxDate === '') {
-            return note;
-          }
+        return (
+          <ReactCSSTransitionGroup
+            transitionName='note'
+            transitionEnterTimeout={500}
+            transitionApplyTimeout={500}
+            transitionLeaveTimeout={500}
+          >
+            {this.props.notes.filter(note => {
+              if (this.state.minDate === '' || this.state.maxDate === '') {
+                return note;
+              }
 
-          // Needed to convert postgresql timestamp to a javascript timestamp
-          const editDate = new Date(note.edit_date.replace(' ', 'T')).getTime();
-          const minDate = new Date(this.state.minDate).getTime();
-          const maxDate = new Date(this.state.maxDate).getTime();
+              // Needed to convert postgresql timestamp to a javascript timestamp
+              const editDate = new Date(note.edit_date.replace(' ', 'T')).getTime();
+              const minDate = new Date(this.state.minDate).getTime();
+              const maxDate = new Date(this.state.maxDate).getTime();
 
-          if (minDate <= editDate && editDate <= maxDate) {
-            return note;
-          }
-        }).map(({ note_id, id, edit_date: date, Note: { Keywords: keywords, text } }) => {
-          return (<Note
-            noteId={note_id}
-            keywords={keywords.length > 0 ? keywords.map(keywordObj => keywordObj.keyword).reduce((acc, cv) => acc + ", " + cv) : []}
-            date={date}
-            text={text}
-            viewNote={() => this.viewNote({
-              id: note_id,
-              ...this.props.notes.find(note => note.note_id === note_id).Note,
+              if (minDate <= editDate && editDate <= maxDate) {
+                return note;
+              }
+            }).map(({ note_id, id, edit_date: date, Note: { Keywords: keywords, text } }) => {
+              return (<Note
+                noteId={note_id}
+                keywords={keywords.length > 0 ? keywords.map(keywordObj => keywordObj.keyword).reduce((acc, cv) => acc + ", " + cv) : []}
+                date={date}
+                text={text}
+                viewNote={() => this.viewNote({
+                  id: note_id,
+                  ...this.props.notes.find(note => note.note_id === note_id).Note,
+                })}
+                deleteNote={() => this.deleteNote(note_id, this.props.sortBy)}
+                key={id}
+              />);
             })}
-            deleteNote={() => this.deleteNote(note_id, this.props.sortBy)}
-            key={id}
-          />);
-        });
-
+          </ReactCSSTransitionGroup>
+        );
         break;
       }
       case 'week': {
 
         // Filter by search term then output with map
-        return this.props.notes.filter(keywordObj => {
-          if (this.state.searchTerm.trim() === '') {
-            return keywordObj;
-          }
+        return (
+          <ReactCSSTransitionGroup
+            transitionName='note'
+            transitionEnterTimeout={500}
+            transitionApplyTimeout={500}
+            transitionLeaveTimeout={500}
+          >
+            {this.props.notes.filter(keywordObj => {
+              if (this.state.searchTerm.trim() === '') {
+                return keywordObj;
+              }
 
-          // If keyword or text of note match the search term
-          if (this.textMatch(keywordObj.keyword)) {
-            return keywordObj;
-          }
-        })
-          .map(({ keyword, notes, week }, i, keywordArray) => {
-            return (
-              <div>
+              // If keyword or text of note match the search term
+              if (this.textMatch(keywordObj.keyword)) {
+                return keywordObj;
+              }
+            })
+              .map(({ keyword, notes, week }, i, keywordArray) => {
+                return (
+                  <div>
 
-                {/* If there should be a week header */}
-                {((i === 0 || (i > 0 && this.props.notes[i].week !== this.props.notes[i - 1].week))
-                  ? <h2>{week}</h2>
-                  : null)}
+                    {/* If there should be a week header */}
+                    {((i === 0 || (i > 0 && this.props.notes[i].week !== this.props.notes[i - 1].week))
+                      ? <h2 style={{
+                        textAlign: 'center'
+                      }}>{getMinMaxWeek(week)}</h2>
+                      : null)}
 
-                <h3>{keyword}</h3>
+                    <h3 style={{
+                      textAlign: 'center',
+                      textTransform: 'capitalize',
+                    }}>{keyword}</h3>
 
-                {notes.map(({ id, Keywords: keywords, Note_Dates: [{ edit_date: date }], text }) => {
-                  return (<Note
-                    noteId={id}
-                    keywords={keywords.length > 0 ? keywords.map(keywordObj => keywordObj.keyword).reduce((acc, cv) => acc + ", " + cv) : []}
-                    date={date}
-                    text={text}
-                    viewNote={() => this.viewNote({
-                      id,
-                      Keywords: [...keywords],
-                      Note_Dates: [{ edit_date: date }],
-                      text
+                    {notes.map(({ id, Keywords: keywords, Note_Dates: [{ edit_date: date }], text }) => {
+                      return (<Note
+                        noteId={id}
+                        keywords={keywords.length > 0 ? keywords.map(keywordObj => keywordObj.keyword).reduce((acc, cv) => acc + ", " + cv) : []}
+                        date={date}
+                        text={text}
+                        viewNote={() => this.viewNote({
+                          id,
+                          Keywords: [...keywords],
+                          Note_Dates: [{ edit_date: date }],
+                          text
+                        })}
+                        deleteNote={() => this.deleteNote(id, this.props.sortBy)}
+                        key={`${id}-${i}`}
+                      />);
                     })}
-                    deleteNote={() => this.deleteNote(id, this.props.sortBy)}
-                    key={`${id}-${i}`}
-                  />);
-                })}
 
-              </div>
-            );
-          });
+                  </div>
+                );
+              })}
+          </ReactCSSTransitionGroup>
+        );
 
         break;
       }
@@ -210,24 +240,41 @@ class NoteList extends React.Component {
 
   render() {
     return (
-      <div className='window'>
-        <h1>NoteList</h1>
+      <div style={{ backgroundColor: '#FDFDFD', }} className='window'>
+        <h1 style={{ textAlign: 'center', }}>Note List</h1>
 
-        {this.props.sortBy === 'date'
-          ? <DateFilter
-            handleChangeMinDate={this.handleChangeMinDate}
-            handleChangeMaxDate={this.handleChangeMaxDate}
-          />
-          : <input
-            type='text'
-            value={this.state.searchTerm}
-            onChange={this.handleSearchChange}
-            placeholder='Search...'
-          />}
+        {/* Search Bar */}
+        <div
+          style={{ textAlgin: 'center' }}
+        >
+          {this.props.sortBy === 'date'
+            ? <DateFilter
+              handleChangeMinDate={this.handleChangeMinDate}
+              handleChangeMaxDate={this.handleChangeMaxDate}
+            />
+            : <TextField  
+              style={{
+                textAlign: 'center',
+                width: '90%',
+                margin: '0 auto',
+                margin: '1rem',
+              }}
+              type='text'
+              value={this.state.searchTerm}
+              onChange={this.handleSearchChange}
+              hintText="Search..."
+            />}
+        </div>
 
-        <button onClick={() => this.props.viewAllNotes()}>Sort by Note</button>
-        <button onClick={() => this.props.viewNotesByDates()}>Sort by All Edit Dates</button>
-        <button onClick={() => this.props.viewNotesByWeek()}>Sort by Week</button>
+        {/* Search Options */}
+        <Tabs>
+          <Tab onActive={() => this.props.viewAllNotes()} label="Note" >
+          </Tab>
+          <Tab onActive={() => this.props.viewNotesByDates()} label="Edit Dates" >
+          </Tab>
+          <Tab onActive={() => this.props.viewNotesByWeek()} label="Week" >
+          </Tab>
+        </Tabs>
 
         {this.generateNoteList()}
 

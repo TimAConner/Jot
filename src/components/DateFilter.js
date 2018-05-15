@@ -4,8 +4,7 @@ import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
 
 
 const optionsStyle = {
-  maxWidth: 255,
-  marginRight: 'auto',
+  textAlign: 'center',
 };
 
 /**
@@ -27,7 +26,6 @@ export default class DateFilter extends React.Component {
   render() {
     return (
       <div>
-        <MuiThemeProvider>
           <div style={optionsStyle}>
             <DatePicker
               onChange={this.handleChangeMinDate}
@@ -42,7 +40,6 @@ export default class DateFilter extends React.Component {
               disableYearSelection={this.state.disableYearSelection}
             />
           </div>
-        </MuiThemeProvider>
       </div>
     );
   }

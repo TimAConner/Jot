@@ -5,8 +5,10 @@ import React from 'react';
 import Paper from 'material-ui/Paper';
 import FloatingActionButton from 'material-ui/FloatingActionButton';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-import DeleteButton from 'material-ui/svg-icons/content/remove';
+import DeleteIcon from 'material-ui/svg-icons/content/remove';
 
+// Helpers
+import { formatDate } from '../helpers';
 
 const noteBoxStyle = {
   margin: '1rem',
@@ -31,56 +33,40 @@ const noteContainerStyle = {
   position: 'relative',
 };
 
-const formatDate = postgresDate => {
-  const date = new Date(postgresDate.replace(' ', 'T'));
-  return `${date.toLocaleString([], {
-    timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
-    hour12: true,
-    hourCycle: true,
-    year: 'numeric',
-    month: 'numeric',
-    day: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit'
-  })}`;
-};
-
 const Note = ({ noteId, keywords, date, text, viewNote, deleteNote }) => (
-  <MuiThemeProvider>
-    <Paper style={noteBoxStyle} zDepth={1}>
-      <div className='note'>
-        <div
-          id={noteId}
-          onClick={event => {
+  <Paper style={noteBoxStyle} zDepth={1}>
+    <div className='note'>
+      <div
+        id={noteId}
+        onClick={event => {
 
-            // If they click anywhere but the delete button
-            if(!event.target.classList.contains('delete_button')){
-              viewNote(noteId)
-            }
-          }}
-          style={noteContainerStyle}>
+          // If they click anywhere but the delete button
+          if (!event.target.classList.contains('delete_button')) {
+            viewNote(noteId)
+          }
+        }}
+        style={noteContainerStyle}>
 
-          <FloatingActionButton
-            zDepth={1}
-            style={{ zIndex: 1 }}
-            backgroundColor={'red'}
-            mini={true}
-            onClick={() => { deleteNote(noteId) }}
-            className='delete_button'
-          >
-            <DeleteButton className='delete_button'/>
-          </FloatingActionButton>
+        <FloatingActionButton
+          zDepth={1}
+          style={{ zIndex: 1 }}
+          backgroundColor={'#F78888'}
+          mini={true}
+          onClick={() => { deleteNote(noteId) }}
+          className='delete_button'
+        >
+          <DeleteIcon className='delete_button' />
+        </FloatingActionButton>
 
-          <h4 className='note__keywords'>{keywords}</h4>
-          <p style={noteDateStyle}>
-            {formatDate(date)}
-          </p>
-          <div className='note__text' style={noteTextStyle}>{text}</div>
-          {/* Modify to show only first x amount of text?  Possibly set that in the css. */}
-        </div>
+        <h4 className='note__keywords'>{keywords}</h4>
+        <p style={noteDateStyle}>
+          {formatDate(date)}
+        </p>
+        <div className='note__text' style={noteTextStyle}>{text}</div>
+        {/* Modify to show only first x amount of text?  Possibly set that in the css. */}
       </div>
-    </Paper>
-  </MuiThemeProvider>
+    </div>
+  </Paper>
 );
 
 export default Note;

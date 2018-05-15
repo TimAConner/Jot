@@ -12,12 +12,36 @@ import NoteEditor from './NoteEditor';
 import Option from './Option';
 import Loader from './Loader';
 
+// Global Css
+import '../css/Jot.css';
+
 // Material UI Componenets
 import Drawer from 'material-ui/Drawer';
 import MenuItem from 'material-ui/MenuItem';
-import RaisedButton from 'material-ui/RaisedButton';
-import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
+import FloatingActionButton from 'material-ui/FloatingActionButton';
+import ListIcon from 'material-ui/svg-icons/action/list';
+import SettingsIcon from 'material-ui/svg-icons/action/settings';
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+import getMuiTheme from 'material-ui/styles/getMuiTheme';
 
+const muiTheme = getMuiTheme({
+  palette: {
+    primary1Color: '#90CCF4',
+    primary2Color: '#90CCF4',
+    primary3Color: '#90CCF4',
+    accent1Color: '#F3D250',
+    accent2Color: '#F3D250',
+    accent3Color: '#F3D250',
+    pickerHeaderColor: '#90CCF4',
+    clockCircleColor: '#F3D250',
+  }
+});
+
+const menuButtonStyling = {
+  top: '0.3rem',
+  left: '0.3rem',
+  position: 'fixed',
+};
 
 class Jot extends React.Component {
 
@@ -48,25 +72,42 @@ class Jot extends React.Component {
     return (
       <div className='Jot'>
 
-        <NoteEditor />
 
-        <MuiThemeProvider>
+
+        <MuiThemeProvider muiTheme={muiTheme}>
+
+          <NoteEditor />
+
           <div>
+            {/* Open Note List */}
+            <FloatingActionButton
+              zDepth={1}
+              backgroundColor={'#90CCF4'}
+              mini={true}
+              onClick={() => this.handleNoteListToggle()}
+              style={menuButtonStyling}
+            >
+              <ListIcon />
+            </FloatingActionButton>
+
             {/* Note List */}
-            <RaisedButton
-              label="Open Notes"
-              onClick={this.handleNoteListToggle}
-            />
             <Drawer
               docked={false}
               width={'90%'}
               open={this.state.noteListWindowOpen}
               onRequestChange={(noteListWindowOpen) => this.setState({ noteListWindowOpen })}
             >
-              <RaisedButton
-                label="Open Options"
-                onClick={this.handleOptionToggle}
-              />
+              {/* Open Options */}
+              <FloatingActionButton
+                zDepth={1}
+                backgroundColor={'#90CCF4'}
+                mini={true}
+                onClick={() => this.handleOptionToggle()}
+                style={menuButtonStyling}
+              >
+                <SettingsIcon />
+              </FloatingActionButton>
+
               <NoteList closeList={this.handleNoteListClose} />
             </Drawer>
 
@@ -78,6 +119,7 @@ class Jot extends React.Component {
               onRequestChange={(optionWindowOpen) => this.setState({ optionWindowOpen })}
             >
               <Option />
+              <button onClick={() => this.logout()}>Logout</button>
             </Drawer>
           </div>
 
@@ -94,8 +136,6 @@ class Jot extends React.Component {
           state: { from: this.props.location }
         }} />) : null}
 
-
-        <button onClick={() => this.logout()}>Logout</button>
       </div>
     );
   }

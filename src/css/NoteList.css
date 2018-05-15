@@ -9,7 +9,7 @@
   transform: translate(0%);
 }
 .note-leave.note-leave-active {
-  transform: translate(-200%);
+  transform: translate(-110%);
   transition: transform 500ms ease-in-out;
 }
 .note-appear {

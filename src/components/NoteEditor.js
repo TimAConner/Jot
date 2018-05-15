@@ -1,7 +1,6 @@
 // React & Redux
 import React from 'react';
 import { connect } from "react-redux";
-import injectTapEventPlugin from "react-tap-event-plugin"
 
 
 // Redux Store
@@ -12,9 +11,28 @@ import '../css/NoteEditor.css';
 
 // Custom Components
 import Loader from './Loader';
-import isDblTouchTap from '../properties/isDblTouchTap';
 
-injectTapEventPlugin()
+// Material UI
+import AddIcon from 'material-ui/svg-icons/content/add';
+import FloatingActionButton from 'material-ui/FloatingActionButton';
+
+// Must be ran afer importing it to initialize it
+import injectTapEventPlugin from "react-tap-event-plugin"
+import isDblTouchTap from '../properties/isDblTouchTap';
+injectTapEventPlugin();
+
+const editorInputStyling = {
+  position: 'absolute',
+  top: '3rem',
+  width: '100%',
+};
+
+const addButtonStyling = {
+  position: 'fixed',
+  bottom: '1rem',
+  right: '1rem',
+};
+
 class NoteEditor extends React.Component {
 
 
@@ -206,11 +224,11 @@ class NoteEditor extends React.Component {
   render() {
     if (this.props.focusOnNote) {
       this.inputBox.current.focus();
-      this.inputBox.current.scrollIntoView();
+      // this.inputBox.current.scrollIntoView();
     }
 
     return (
-      <div className=''>
+      <div style={editorInputStyling}>
         <div
           ref={this.visualBox}
           id='visualBox'
@@ -226,8 +244,17 @@ class NoteEditor extends React.Component {
         >
           {this.props.editor.text}
         </div>
-        <button onClick={() => this.newNote()}>New Note</button>
-        <button onClick={() => this.showNoteList()}>To List</button>
+
+        <FloatingActionButton
+          zDepth={1}
+          backgroundColor={'#90CCF4'}
+          mini={true}
+          onClick={() => this.newNote()}
+          style={addButtonStyling}
+        >
+          <AddIcon />
+        </FloatingActionButton>
+
         {this.props.saving ? <Loader
           text='Saving'
         /> : null}
