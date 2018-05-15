@@ -171,9 +171,15 @@ class NoteEditor extends React.Component {
   }
 
   newNote() {
-    this.inputBox.current.innerText = '';
-    this.visualBox.current.innerText = '';
-    this.props.newNote();
+    if(!this.props.saving){
+      this.inputBox.current.innerText = '';
+      this.visualBox.current.innerText = '';
+      this.props.newNote();
+    }
+  }
+
+  showNoteList() {
+
   }
 
   render() {
@@ -183,7 +189,7 @@ class NoteEditor extends React.Component {
     }
 
     return (
-      <div className='note-editor'>
+      <div className=''>
         <div
           ref={this.visualBox}
           id='visualBox'
@@ -197,7 +203,8 @@ class NoteEditor extends React.Component {
           className={`inputBox ${this.props.options.font_style} ${this.props.options.font_size}`}
           contentEditable='true'>{this.props.editor.text}
         </div>
-        <button onClick={() => { this.newNote() }}>New Note</button>
+        <button onClick={() => this.newNote()}>New Note</button>
+        <button onClick={() => this.showNoteList()}>To List</button>
         {this.props.saving ? <Loader
           text='Saving'
         /> : null}

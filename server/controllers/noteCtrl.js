@@ -20,7 +20,7 @@ const saveKeywords = ({ KeywordModel, keywords, noteId, userSelected }) => {
 };
 
 const insertNoteOrCreateNote = ({ sequelize, noteId, text, userId }) => {
-  
+
   if (typeof noteId === 'undefined' || noteId === null) {
     return (sequelize.query(` 
     INSERT INTO notes (text, user_id)
@@ -40,9 +40,8 @@ const insertNoteOrCreateNote = ({ sequelize, noteId, text, userId }) => {
 };
 
 const createDateIfNew = ({ sequelize, noteId }) => {
-  return new Promise((resolve, reject) => {
-    const currentDate = (Date.now() / 1000.0);
-    sequelize.query(`
+  const currentDate = (Date.now() / 1000.0);
+  return sequelize.query(`
     INSERT INTO note_dates (edit_date, note_id)
     SELECT to_timestamp(${currentDate}), ${noteId}
     WHERE NOT EXISTS (
@@ -51,11 +50,7 @@ const createDateIfNew = ({ sequelize, noteId }) => {
           WHERE edit_date >= to_timestamp(${currentDate}) - interval '1 day'
             AND edit_date <= to_timestamp(${currentDate})
             AND note_id = ${noteId}
-      );`).then(([_, rowsInserted]) => {
-        resolve();
-      });
-  });
-
+      );`);
 };
 
 const clearOldKeywords = ({ Keyword, noteId }) => {
@@ -260,7 +255,7 @@ module.exports.saveNote = (req, res, next) => {
   const userId = req.user.id;
   const selectedKeywords = req.body.keywords;
 
-  if(text.trim() === ''){
+  if (text.trim() === '') {
     const error = new Error('Note text is empty');
     return next(error);
   }
@@ -308,7 +303,7 @@ module.exports.saveNote = (req, res, next) => {
     .then(() => {
       return createDateIfNew({ sequelize, noteId });
     })
-    .then(() => {
+    .then((values, value) => {
       
       // Return newly put note
       return Note.findAll({
