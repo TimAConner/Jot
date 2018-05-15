@@ -1,12 +1,20 @@
+// React & Redux
 import React from 'react';
 import { connect } from "react-redux";
+import injectTapEventPlugin from "react-tap-event-plugin"
 
+
+// Redux Store
 import { mapEditorStateToProps, mapEditoreDispatchToProps } from '../actions/editorActions';
 
+// CSS
 import '../css/NoteEditor.css';
 
+// Custom Components
 import Loader from './Loader';
+import isDblTouchTap from '../properties/isDblTouchTap';
 
+injectTapEventPlugin()
 class NoteEditor extends React.Component {
 
 
@@ -95,18 +103,27 @@ class NoteEditor extends React.Component {
     }
   }
 
+  simulateDoubleClick = (x, y) => {
+    const clickEvent = document.createEvent('MouseEvents');
+    clickEvent.initMouseEvent(
+      'dblclick', true, true, window, 0,
+      0, 0, x, y, false, false,
+      false, false, 0, null
+    );
+    console.log(x, y);
+    document.elementFromPoint(x, y).dispatchEvent(clickEvent);
+  }
+
+  simulateDoubleClickOnVisualBox = event => {
+    this.visualBox.current.style.zIndex = 1;
+    this.inputBox.current.style.zIndex = -1;
+    this.simulateDoubleClick(event.clientX, event.clientY);
+    this.visualBox.current.style.zIndex = -1;
+    this.inputBox.current.style.zIndex = 1;
+  };
+
   componentDidMount() {
     this.setKeywords();
-
-    const simulateDoubleClick = (x, y) => {
-      const clickEvent = document.createEvent('MouseEvents');
-      clickEvent.initMouseEvent(
-        'dblclick', true, true, window, 0,
-        0, 0, x, y, false, false,
-        false, false, 0, null
-      );
-      document.elementFromPoint(x, y).dispatchEvent(clickEvent);
-    }
 
     this.visualBox.current.addEventListener('dblclick', obj => {
       const targetWord = obj.target.innerText;
@@ -121,11 +138,13 @@ class NoteEditor extends React.Component {
     });
 
     this.inputBox.current.addEventListener('dblclick', event => {
-      this.visualBox.current.style.zIndex = 1;
-      this.inputBox.current.style.zIndex = -1;
-      simulateDoubleClick(event.clientX, event.clientY);
-      this.visualBox.current.style.zIndex = -1;
-      this.inputBox.current.style.zIndex = 1;
+      this.simulateDoubleClickOnVisualBox(event);
+    });
+
+    this.inputBox.current.addEventListener('click', event => {
+      if (isDblTouchTap(event)) {
+        this.simulateDoubleClickOnVisualBox(event);
+      }
     });
 
     this.inputBox.current.addEventListener('keyup', () => {
@@ -166,12 +185,14 @@ class NoteEditor extends React.Component {
     if (this.inputBox.current.innerText.trim() === this.props.editor.text.trim()) {
       return;
     }
-    
+
     this.props.saveNote(this.props.saving, this.props.editor.id, this.inputBox.current.innerText, this.userSelectedWords, this.props.reloadSortBy);
   }
 
   newNote() {
-    if(!this.props.saving){
+
+    //TODO: Add a snackbar for this.
+    if (!this.props.saving) {
       this.inputBox.current.innerText = '';
       this.visualBox.current.innerText = '';
       this.props.newNote();
@@ -201,7 +222,9 @@ class NoteEditor extends React.Component {
           onDoubleClick={() => this.saveNote()}
           onBlur={() => this.saveNote()}
           className={`inputBox ${this.props.options.font_style} ${this.props.options.font_size}`}
-          contentEditable='true'>{this.props.editor.text}
+          contentEditable='true'
+        >
+          {this.props.editor.text}
         </div>
         <button onClick={() => this.newNote()}>New Note</button>
         <button onClick={() => this.showNoteList()}>To List</button>

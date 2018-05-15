@@ -42,7 +42,7 @@ class NoteList extends React.Component {
   }
 
   viewNote(note) {
-    console.log(note);
+    this.props.closeList();
     this.props.setNote(note);
   }
 
@@ -192,7 +192,7 @@ class NoteList extends React.Component {
 
   render() {
     return (
-      <div className='noteList'>
+      <div className='window'>
         <h1>NoteList</h1>
 
         {this.props.sortBy === 'date'

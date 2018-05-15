@@ -43,7 +43,7 @@ class Option extends React.Component {
 
   render() {
     return (
-      <div>
+      <div className='window'>
         <h1>Options</h1>
         <h2>{this.props.user !== null ? this.props.user.display_name : null}</h2>
 
