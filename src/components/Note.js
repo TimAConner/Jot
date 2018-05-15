@@ -33,6 +33,11 @@ const noteContainerStyle = {
   position: 'relative',
 };
 
+const noteKeywordClass = {
+  textTransform: 'Capitalize',
+}
+
+
 const Note = ({ noteId, keywords, date, text, viewNote, deleteNote }) => (
   <Paper style={noteBoxStyle} zDepth={1}>
     <div className='note'>
@@ -58,7 +63,7 @@ const Note = ({ noteId, keywords, date, text, viewNote, deleteNote }) => (
           <DeleteIcon className='delete_button' />
         </FloatingActionButton>
 
-        <h4 className='note__keywords'>{keywords}</h4>
+        <h4 style={noteKeywordClass}>{keywords}</h4>
         <p style={noteDateStyle}>
           {formatDate(date)}
         </p>

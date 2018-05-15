@@ -1,12 +1,25 @@
+// Reacat & Redux
 import React from 'react';
 import { connect } from "react-redux";
-
 import { Redirect } from 'react-router-dom';
 
+// Redux Store
 import { mapUserStateToProps, mapUserDispatchToProps } from '../actions/userActions';
 
+// Custom Components
 import Error from './Error';
 
+// Material UI
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+import TextField from 'material-ui/TextField';
+import RaisedButton from 'material-ui/RaisedButton';
+
+// Custom Css
+import { muiTheme } from '../css/muiTheme';
+
+const loginStyle = {
+  textAlign: 'center',
+};
 
 class Login extends React.Component {
 
@@ -40,46 +53,77 @@ class Login extends React.Component {
     this.props.login(this.state.email, this.state.password);
   }
 
-  register(event){
+  register(event) {
     event.preventDefault();
     this.props.register(this.state.register_email, this.state.register_password, this.state.register_confirm, this.state.display_name)
   }
 
   render() {
     return (
-      <div>
 
-        <form onSubmit={this.login} className='login'>
+      <MuiThemeProvider muiTheme={muiTheme}>
+        <div style={loginStyle}>
 
-          {/* Show error if error from login */}
-          {this.props.error !== null ? <Error
-            error={typeof this.props.error.response !== "undefined"
-              ? this.props.error.response.data
-              : "Please try again later."}
-          /> : null}
+          <form onSubmit={this.login} className='login'>
+
+            {/* Show error if error from login */}
+            {this.props.error !== null ? <Error
+              error={typeof this.props.error.response !== "undefined"
+                ? this.props.error.response.data
+                : "Please try again later."}
+            /> : null}
 
 
-          {/* Redirect if logged in */}
-          {this.props.user.user !== null ? (<Redirect to={{
-            pathname: '/',
-            state: { from: this.props.location }
-          }} />) : null}
+            {/* Redirect if logged in */}
+            {this.props.user.user !== null ? (<Redirect to={{
+              pathname: '/',
+              state: { from: this.props.location }
+            }} />) : null}
 
-          <h1>Login</h1>
-          Email: <input type="text" name="email" value={this.state.email} onChange={this.handleChange} required /><br />
-          Password: <input type="password" name="password" value={this.state.password} onChange={this.handleChange} required /><br />
-          <input type="submit" value="Login" />
-        </form>
+            <h1>Login</h1>
 
-        <form onSubmit={this.register}>
-          <h1>Register</h1>
-          Name: <input type="display_name" name="display_name" value={this.state.display_name} onChange={this.handleChange} required /><br />
-          Email: <input type="text" pattern="[^ @]*@[^ @]*" name="register_email" value={this.state.register_email} onChange={this.handleChange} required /><br />
-          Password: <input type="password" name="register_password" value={this.state.register_password} onChange={this.handleChange} required /><br />
-          Confirm: <input type="password" name="register_confirm" value={this.state.register_confirm} onChange={this.handleChange} required /><br />
-          <input type="submit" value="Login" />
-        </form>
-      </div>
+            <TextField
+              hintText="Email"
+              floatingLabelText="Email"
+              type="text" name="email" value={this.state.email} onChange={this.handleChange} required
+            /><br />
+            <TextField
+              hintText="Password"
+              floatingLabelText="Password"
+              type="password" name="password" value={this.state.password} onChange={this.handleChange} required
+            /><br />
+            <RaisedButton label="Login" type='submit' primary={true} />
+          </form>
+
+          <form onSubmit={this.register}>
+            <h1>Register</h1>
+            <TextField
+              hintText="Name"
+              floatingLabelText="Name"
+              type="display_name" name="display_name" value={this.state.display_name} onChange={this.handleChange} required
+            /><br />
+            <TextField
+              hintText="Email"
+              floatingLabelText="Email"
+              type="text" pattern="[^ @]*@[^ @]*" name="register_email" value={this.state.register_email} onChange={this.handleChange} required
+            /><br />
+
+            <TextField
+              hintText="Password"
+              floatingLabelText="Password"
+              type="password" name="register_password" value={this.state.register_password} onChange={this.handleChange} required
+            /><br />
+
+            <TextField
+              hintText="Password"
+              floatingLabelText="Password"
+              type="password" name="register_confirm" value={this.state.register_confirm} onChange={this.handleChange} required
+            /><br />
+            
+            <RaisedButton label="Register" type='submit' primary={true} />
+          </form>
+        </div>
+      </MuiThemeProvider>
     );
   }
 }

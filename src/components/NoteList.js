@@ -252,7 +252,8 @@ class NoteList extends React.Component {
               handleChangeMinDate={this.handleChangeMinDate}
               handleChangeMaxDate={this.handleChangeMaxDate}
             />
-            : <TextField  
+            : <TextField
+              floatingLabelText="Search..."
               style={{
                 textAlign: 'center',
                 width: '90%',

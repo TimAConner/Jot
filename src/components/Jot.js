@@ -14,6 +14,7 @@ import Loader from './Loader';
 
 // Global Css
 import '../css/Jot.css';
+import { muiTheme } from '../css/muiTheme';
 
 // Material UI Componenets
 import Drawer from 'material-ui/Drawer';
@@ -22,20 +23,6 @@ import FloatingActionButton from 'material-ui/FloatingActionButton';
 import ListIcon from 'material-ui/svg-icons/action/list';
 import SettingsIcon from 'material-ui/svg-icons/action/settings';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-import getMuiTheme from 'material-ui/styles/getMuiTheme';
-
-const muiTheme = getMuiTheme({
-  palette: {
-    primary1Color: '#90CCF4',
-    primary2Color: '#90CCF4',
-    primary3Color: '#90CCF4',
-    accent1Color: '#F3D250',
-    accent2Color: '#F3D250',
-    accent3Color: '#F3D250',
-    pickerHeaderColor: '#90CCF4',
-    clockCircleColor: '#F3D250',
-  }
-});
 
 const menuButtonStyling = {
   top: '0.3rem',
