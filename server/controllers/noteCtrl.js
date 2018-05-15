@@ -2,7 +2,7 @@
 
 const { generateKeywords } = require('./watsonCtrl');
 
-const saveKeywords = ({ KeywordModel, keywords, noteId, userSelected }) => {
+const _saveKeywords = ({ KeywordModel, keywords, noteId, userSelected }) => {
   return new Promise((resolve, reject) => {
     const keywordPromiseArray = keywords.map(keyword => {
       return (KeywordModel.create({
@@ -19,7 +19,7 @@ const saveKeywords = ({ KeywordModel, keywords, noteId, userSelected }) => {
   });
 };
 
-const insertNoteOrCreateNote = ({ sequelize, noteId, text, userId }) => {
+const _insertNoteOrCreateNote = ({ sequelize, noteId, text, userId }) => {
 
   if (typeof noteId === 'undefined' || noteId === null) {
     return (sequelize.query(` 
@@ -39,7 +39,7 @@ const insertNoteOrCreateNote = ({ sequelize, noteId, text, userId }) => {
     }));
 };
 
-const createDateIfNew = ({ sequelize, noteId }) => {
+const _createDateIfNew = ({ sequelize, noteId }) => {
   const currentDate = (Date.now() / 1000.0);
   return sequelize.query(`
     INSERT INTO note_dates (edit_date, note_id)
@@ -53,7 +53,7 @@ const createDateIfNew = ({ sequelize, noteId }) => {
       );`);
 };
 
-const clearOldKeywords = ({ Keyword, noteId }) => {
+const _clearOldKeywords = ({ Keyword, noteId }) => {
   return (Keyword.destroy({
     where: {
       note_id: noteId,
@@ -260,7 +260,7 @@ module.exports.saveNote = (req, res, next) => {
     return next(error);
   }
 
-  insertNoteOrCreateNote({ sequelize, noteId, userId, text })
+  _insertNoteOrCreateNote({ sequelize, noteId, userId, text })
     .then(([[anonymousNewNoteObj], success]) => {
 
       // Use the new note id 
@@ -273,7 +273,7 @@ module.exports.saveNote = (req, res, next) => {
       // This needs to be done since a user can update a note
       // and select 3 keywords instead of 5.
       // The extra 2 would not be updated if they only sent in three.
-      return clearOldKeywords({ Keyword, noteId });
+      return _clearOldKeywords({ Keyword, noteId });
     })
     .then(created => {
 
@@ -281,7 +281,7 @@ module.exports.saveNote = (req, res, next) => {
       // Watson will select keywords
       if (!selectedKeywords) {
         return generateKeywords(text).then(keywords => {
-          return saveKeywords({
+          return _saveKeywords({
             KeywordModel: Keyword,
             keywords,
             noteId,
@@ -292,7 +292,7 @@ module.exports.saveNote = (req, res, next) => {
 
       // User has selected keywords
       if (selectedKeywords) {
-        return saveKeywords({
+        return _saveKeywords({
           KeywordModel: Keyword,
           keywords: selectedKeywords,
           noteId,
@@ -301,7 +301,7 @@ module.exports.saveNote = (req, res, next) => {
       }
     })
     .then(() => {
-      return createDateIfNew({ sequelize, noteId });
+      return _createDateIfNew({ sequelize, noteId });
     })
     .then((values, value) => {
       

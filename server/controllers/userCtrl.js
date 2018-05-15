@@ -1,6 +1,6 @@
 'use strict';
 
-const getUser = ({ userId, User, Option }) => {
+const _getUser = ({ userId, User, Option }) => {
   return (User.findAll({
     include: [{
       model: Option,
@@ -22,7 +22,7 @@ module.exports.fetchUser = (req, res, next) => {
 
   const userId = req.user.id;
 
-  getUser({ userId, User, Option }).then(([userInfo]) => {
+  _getUser({ userId, User, Option }).then(([userInfo]) => {
     res.status(200).json(userInfo);
   })
     .catch(err => next(err));
@@ -56,7 +56,7 @@ module.exports.updateOption = (req, res, next) => {
     },
   })
     .then(([rowsUpdated]) => {
-      getUser({ userId, User, Option }).then(([userInfo]) => {
+      _getUser({ userId, User, Option }).then(([userInfo]) => {
         res.status(200).json(userInfo);
       })
         .catch(err => next(err));
