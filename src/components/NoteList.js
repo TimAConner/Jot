@@ -77,7 +77,7 @@ class NoteList extends React.Component {
             transitionName='note'
             transitionEnterTimeout={500}
             transitionApplyTimeout={500}
-            transitionLeaveTimeout={300}
+            transitionLeaveTimeout={500}
           >
             {this.props.notes.filter(note => {
               if (this.state.searchTerm.trim() === '') {

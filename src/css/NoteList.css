@@ -10,7 +10,7 @@
 }
 .note-leave.note-leave-active {
   transform: translate(-200%);
-  transition: transform 300ms ease-in-out;
+  transition: transform 500ms ease-in-out;
 }
 .note-appear {
   transform: translate(100%);

@@ -15,9 +15,27 @@ const noteBoxStyle = {
 };
 
 const noteTextStyle = {
-  'whiteSpace': 'nowrap',
-  'overflow': 'hidden',
-  'textOverflow': 'ellipsis',
+  whiteSpace: 'nowrap',
+  overflow: 'hidden',
+  textOverflow: 'ellipsis',
+};
+
+const noteDateStyle = {
+  fontSize: '0.8rem',
+};
+
+const formatDate = postgresDate => {
+  const date = new Date(postgresDate.replace(' ', 'T'));
+  return `${date.toLocaleString([], {
+    timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+    hour12: true,
+    hourCycle: true,
+    year: 'numeric',
+    month: 'numeric',
+    day: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit'
+  })}`;
 };
 
 const Note = ({ noteId, keywords, date, text, viewNote, deleteNote }) => (
@@ -25,6 +43,7 @@ const Note = ({ noteId, keywords, date, text, viewNote, deleteNote }) => (
     <Paper style={noteBoxStyle} zDepth={1}>
       <div className='note'>
         <FloatingActionButton
+          zDepth={1}
           backgroundColor={'red'}
           mini={true}
           onClick={() => deleteNote(noteId)}
@@ -33,7 +52,9 @@ const Note = ({ noteId, keywords, date, text, viewNote, deleteNote }) => (
         </FloatingActionButton>
         <div id={noteId} onClick={() => viewNote(noteId)}>
           <h4 className='note__keywords'>{keywords}</h4>
-          <p className='note__date'>{date}</p>
+          <p style={noteDateStyle}>
+            {formatDate(date)}
+          </p>
           <div className='note__text' style={noteTextStyle}>{text}</div>
           {/* Modify to show only first x amount of text?  Possibly set that in the css. */}
         </div>
