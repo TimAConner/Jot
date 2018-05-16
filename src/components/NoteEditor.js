@@ -172,8 +172,8 @@ class NoteEditor extends React.Component {
     // Handles mobile double tap to select keywords
     this.inputBox.current.addEventListener('click', event => {
       if (isDblTouchTap(event)) {
-        this.saveNote();
         this.simulateDoubleClickOnVisualBox(event);
+        this.saveNote();
       }
     });
 
@@ -189,28 +189,41 @@ class NoteEditor extends React.Component {
       document.execCommand("insertHTML", false, text);
     });
 
-    this.inputBox.current.focus();    
+    this.inputBox.current.focus();
     this.updateHtml();
   }
 
-  saveNote() {
+  hasNoteChanged() {
 
-    // If the note has not changed, don't save it.
+    // If keyword has changed
+    const editorKeywords = this.props.editor.Keywords.map(({ keyword }) => keyword);
+    if (this.autoSelectedWords !== editorKeywords) {
+      return true;
+    }
+
+    // If the note  text has changed
     if (this.inputBox.current.innerText.trim() === '') {
-      return;
+      return false;
     }
     if (this.inputBox.current.innerText.trim() === this.props.editor.text.trim()) {
-      return;
+      return false;
     }
 
-    // If the note is being saved already, set final save required to true 
-    // so it will be saved after the current save is complete.
-    if (this.props.saving && !this.props.finalSaveRequired) {
-      return this.props.setFinalSaveRequired(true);
+    return true;
+  }
+
+  saveNote() {
+    if (this.hasNoteChanged()) {
+
+      // If the note is being saved when save not is called,
+      // set final save required to true 
+      // so it will be saved after the current save is complete.
+      if (this.props.saving && !this.props.finalSaveRequired) {
+        return this.props.setFinalSaveRequired(true);
+      }
+
+      this.props.saveNote(this.props.saving, this.props.editor.id, this.inputBox.current.innerText, this.userSelectedWords, this.props.reloadSortBy);
     }
-
-    this.props.saveNote(this.props.saving, this.props.editor.id, this.inputBox.current.innerText, this.userSelectedWords, this.props.reloadSortBy);
-
   }
 
   componentDidUpdate() {
