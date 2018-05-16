@@ -7,6 +7,22 @@ export default function reducer(state = {
   finalSaveRequired: false,
 }, action) {
   switch (action.type) {
+    case 'delete_note_fulfilled': {
+
+      // If deleting the current note,
+      // remove it from the editor.
+      if (action.payload === state.id) {
+        return {
+          ...state,
+          text: '',
+          id: null,
+        };
+      }
+
+      return {
+        ...state,
+      };
+    }
     case 'set_focus_to_false': {
       return {
         ...state,
@@ -21,7 +37,7 @@ export default function reducer(state = {
         focusOnNote: true,
       };
     }
-    case 'set_new_note' : {
+    case 'set_new_note': {
       return {
         saving: false,
         existingNoteLoaded: false,
@@ -52,7 +68,7 @@ export default function reducer(state = {
         existingNoteLoaded: true,
       }
     }
-    
+
     case 'final_save_required': {
       return {
         ...state,

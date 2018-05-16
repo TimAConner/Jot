@@ -13,5 +13,5 @@ export const muiTheme = getMuiTheme({
   },
   snackbar: {
     backgroundColor: '#F78888',
-  }
+  },
 });

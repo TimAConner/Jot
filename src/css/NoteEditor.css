@@ -16,6 +16,7 @@ body {
   color: transparent;
   caret-color: rgba(0, 0, 0, 1);
   white-space: pre-wrap;
+  word-wrap: break-word;
 }
 
 /* Will not work on ios safari */
@@ -44,6 +45,7 @@ body {
   margin: 0;
   padding: 0;
   white-space: pre-wrap;
+  word-wrap: break-word;
 }
 /* Editor Styling End */
 
@@ -97,17 +99,17 @@ body {
 /* Note Font Size */
 
 .small {
-  font-size: 12px;
-}
-
-.medium {
-  font-size: 16px;
-}
-
-.large {
   font-size: 20px;
 }
 
-.x-large {
+.medium {
   font-size: 24px;
+}
+
+.large {
+  font-size: 28px;
+}
+
+.x-large {
+  font-size: 32px;
 }

@@ -63,6 +63,7 @@ class Jot extends React.Component {
   logout() {
     localStorage.removeItem('jotToken');
     this.props.authenticate();
+    window.location.reload();
   }
 
   handleNoteListToggle = () => this.setState({ noteListWindowOpen: !this.state.noteListWindowOpen });

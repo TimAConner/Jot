@@ -195,10 +195,14 @@ class NoteEditor extends React.Component {
 
   hasNoteChanged() {
 
-    // If keyword has changed
-    const editorKeywords = this.props.editor.Keywords.map(({ keyword }) => keyword);
-    if (this.autoSelectedWords !== editorKeywords) {
-      return true;
+    if (typeof this.props.editor.Keywords !== 'undefined') {
+
+      // If keyword has changed
+      // What to do if keywords is blank?
+      const editorKeywords = this.props.editor.Keywords.map(({ keyword }) => keyword);
+      if (this.autoSelectedWords !== editorKeywords) {
+        return true;
+      }
     }
 
     // If the note  text has changed
@@ -234,6 +238,10 @@ class NoteEditor extends React.Component {
       this.saveNote();
     }
 
+    // Needed to delete a note if it's a new note you just created.
+    // if(this.props.id =)
+
+    // If the note input box should be put into focus
     if (this.props.focusOnNote) {
       this.props.setFocusToFalse();
     }
@@ -286,9 +294,10 @@ class NoteEditor extends React.Component {
           <AddIcon />
         </FloatingActionButton>
 
-        {this.props.saving ? <Loader
-          text='Saving'
-        /> : null}
+        <Loader
+          visible={this.props.saving}
+        />
+
       </div>
     );
   }
