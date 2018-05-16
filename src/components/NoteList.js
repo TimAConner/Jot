@@ -278,9 +278,9 @@ class NoteList extends React.Component {
 
         {this.generateNoteList()}
 
-        {/* {this.props.saving
-          ? <Loader />
-          : null} */}
+        <Loader
+          visible={this.props.saving}
+        />
 
       </div>
     );

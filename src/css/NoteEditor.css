@@ -5,18 +5,16 @@
   height: 90vh;
   margin: 0;
   padding: 0;
+  /* line-height: 1em; */
+  color: transparent;
+  caret-color: rgba(0, 0, 0, 1);
+  white-space: pre-wrap;
+  word-wrap: break-word;
 }
 
 body {
   margin: 0;
   padding: 0;
-}
-
-.inputBox {
-  color: transparent;
-  caret-color: rgba(0, 0, 0, 1);
-  white-space: pre-wrap;
-  word-wrap: break-word;
 }
 
 /* Will not work on ios safari */
@@ -46,6 +44,7 @@ body {
   padding: 0;
   white-space: pre-wrap;
   word-wrap: break-word;
+  /* line-height: 1em; */
 }
 /* Editor Styling End */
 
@@ -68,32 +67,39 @@ body {
 
 /* Note Font Family */
 
+.serif,
 .serif>* {
-  font-family: serif;
+  font-family: serif !important;
 }
 
+.sans-serif,
 .sans-serif>* {
-  font-family: sans-serif;
+  font-family: sans-serif !important;
 }
 
-.times-new-roman>* {
-  font-family: 'Times New Roman';
+.times-new-roman, 
+.times-new-roman>*{
+  font-family: 'Times New Roman' !important;
 }
 
+.georgia,
 .georgia>* {
-  font-family: georgia;
+  font-family: georgia !important;
 }
 
+.verdana,
 .verdana>* {
-  font-family: verdana;
+  font-family: verdana !important;
 }
 
+.arial,
 .arial>* {
-  font-family: arial;
+  font-family: arial !important;
 }
 
+.monospace,
 .monospace>* {
-  font-family: monospace;
+  font-family: monospace !important;
 }
 
 /* Note Font Size */

@@ -4,6 +4,9 @@ import React from 'react';
 // Material UI
 import RefreshIndicator from 'material-ui/RefreshIndicator';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+import CircularProgress from 'material-ui/CircularProgress';
+
+
 import { muiTheme } from '../css/muiTheme';
 
 const style = {
@@ -40,14 +43,15 @@ class Loader extends React.Component {
   render() {
     return (<MuiThemeProvider style={muiTheme}>
       <div style={this.state.visible ? style.container : hiddenStyle}>
-        <RefreshIndicator
+        {/* <RefreshIndicator
           size={40}
           left={10}
           top={0}
           status='loading'
           style={style.refresh}
           loadingColor='#F3D250'
-        />
+        /> */}
+        <CircularProgress color='#F3D250' size={40} thickness={2} />
       </div>
     </MuiThemeProvider>);
   }
