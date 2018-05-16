@@ -151,13 +151,13 @@ class NoteEditor extends React.Component {
 
     // Add / remove user selected keyword
     this.visualBox.current.addEventListener('dblclick', obj => {
-      const targetWord = obj.target.innerText;
+      const targetWord = obj.target.innerText.toLowerCase();
 
       // Toggle Click
       if (this.userSelectedWords.includes(targetWord)) {
         this.userSelectedWords = this.userSelectedWords.filter(string => string !== targetWord);
       } else {
-        this.userSelectedWords.push(obj.target.innerText);
+        this.userSelectedWords.push(targetWord);
       }
       this.inputBox.current.focus();
       this.updateHtml();
