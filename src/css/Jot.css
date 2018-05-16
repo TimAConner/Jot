@@ -10,7 +10,7 @@ body {
 
 @media (min-width: 800px) {
   .jot {
-    display: none;
+    display: none;  
   }
   .desktopError {
     text-align: center;

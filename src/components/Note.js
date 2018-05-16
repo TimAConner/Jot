@@ -46,7 +46,7 @@ const Note = ({ noteId, keywords, date, text, viewNote, deleteNote }) => (
         onClick={event => {
 
           // If they click anywhere but the delete button
-          if (!event.target.classList.contains('delete_button')) {
+          if (!event.target.closest('.delete_button')) {
             viewNote(noteId)
           }
         }}
