@@ -30,6 +30,21 @@ const menuButtonStyling = {
   position: 'fixed',
 };
 
+
+
+// const hideJotOnDesktopStyling = {
+//   '@media (min-width: 800px)': {
+//     'jot': {
+//       display: 'none',
+//     }
+//   },
+//   '@media (max-width: 800px)': {
+//     'desktopError': {
+//       display: 'none',
+//     }
+//   },
+// };
+
 class Jot extends React.Component {
 
   constructor(props) {
@@ -57,72 +72,73 @@ class Jot extends React.Component {
 
   render() {
     return (
-      <div className='Jot'>
+      <div>
+        <div className='jot'>
+          <MuiThemeProvider muiTheme={muiTheme}>
 
+            <NoteEditor />
 
-
-        <MuiThemeProvider muiTheme={muiTheme}>
-
-          <NoteEditor />
-
-          <div>
-            {/* Open Note List */}
-            <FloatingActionButton
-              zDepth={1}
-              backgroundColor={'#90CCF4'}
-              mini={true}
-              onClick={() => this.handleNoteListToggle()}
-              style={menuButtonStyling}
-            >
-              <ListIcon />
-            </FloatingActionButton>
-
-            {/* Note List */}
-            <Drawer
-              docked={false}
-              width={'90%'}
-              open={this.state.noteListWindowOpen}
-              onRequestChange={(noteListWindowOpen) => this.setState({ noteListWindowOpen })}
-            >
-              {/* Open Options */}
+            <div>
+              {/* Open Note List */}
               <FloatingActionButton
                 zDepth={1}
                 backgroundColor={'#90CCF4'}
                 mini={true}
-                onClick={() => this.handleOptionToggle()}
+                onClick={() => this.handleNoteListToggle()}
                 style={menuButtonStyling}
               >
-                <SettingsIcon />
+                <ListIcon />
               </FloatingActionButton>
 
-              <NoteList closeList={this.handleNoteListClose} />
-            </Drawer>
+              {/* Note List */}
+              <Drawer
+                docked={false}
+                width={'90%'}
+                open={this.state.noteListWindowOpen}
+                onRequestChange={(noteListWindowOpen) => this.setState({ noteListWindowOpen })}
+              >
+                {/* Open Options */}
+                <FloatingActionButton
+                  zDepth={1}
+                  backgroundColor={'#90CCF4'}
+                  mini={true}
+                  onClick={() => this.handleOptionToggle()}
+                  style={menuButtonStyling}
+                >
+                  <SettingsIcon />
+                </FloatingActionButton>
 
-            {/* Options */}
-            <Drawer
-              docked={false}
-              width={'85%'}
-              open={this.state.optionWindowOpen}
-              onRequestChange={(optionWindowOpen) => this.setState({ optionWindowOpen })}
-            >
-              <Option />
-              <button onClick={() => this.logout()}>Logout</button>
-            </Drawer>
-          </div>
+                <NoteList closeList={this.handleNoteListClose} />
+              </Drawer>
+
+              {/* Options */}
+              <Drawer
+                docked={false}
+                width={'85%'}
+                open={this.state.optionWindowOpen}
+                onRequestChange={(optionWindowOpen) => this.setState({ optionWindowOpen })}
+              >
+                <Option />
+                <button onClick={() => this.logout()}>Logout</button>
+              </Drawer>
+            </div>
 
 
-        </MuiThemeProvider>
+          </MuiThemeProvider>
 
 
-        {/* Show loading screen while loading */}
-        {this.props.user.isLoading ? <Loader /> : null}
+          {/* Show loading screen while loading */}
+          {this.props.user.isLoading ? <Loader /> : null}
 
-        {/* Reroute to login if not logged in */}
-        {!this.props.user.isLoading && this.props.user.user === null ? (<Redirect to={{
-          pathname: '/login',
-          state: { from: this.props.location }
-        }} />) : null}
-
+          {/* Reroute to login if not logged in */}
+          {!this.props.user.isLoading && this.props.user.user === null ? (<Redirect to={{
+            pathname: '/login',
+            state: { from: this.props.location }
+          }} />) : null}
+        </div>
+        <div className='desktopError'>
+          <h2>Please view Jot on mobile.</h2>
+        </div>
       </div>
     );
   }
