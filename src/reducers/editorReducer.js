@@ -11,10 +11,11 @@ export default function reducer(state = {
 
       // If deleting the current note,
       // remove it from the editor.
+      // Also change text value so that the text of the editor will be reset.
       if (action.payload === state.id) {
         return {
           ...state,
-          text: '',
+          text: ' ',
           id: null,
         };
       }

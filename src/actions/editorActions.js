@@ -10,6 +10,7 @@ export function mapEditorStateToProps(state) {
     reloadSortBy: state.noteList.sortBy,
     options: state.user.options,
     finalSaveRequired: state.editor.finalSaveRequired,
+    text: state.editor.text,
   }
 }
 

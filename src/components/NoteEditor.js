@@ -265,7 +265,7 @@ class NoteEditor extends React.Component {
     if (this.props.focusOnNote) {
       this.inputBox.current.focus();
     }
-
+    console.log('--------', this.props)
     return (
       <div style={editorInputStyling}>
         <div
