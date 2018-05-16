@@ -72,6 +72,10 @@ export default function reducer(state = {
       return {
         ...state,
         options: { ...action.payload.Option },
+        user: {
+          ...state.user,
+          Option: { ...action.payload.Option },
+        },
       };
     }
     default: {

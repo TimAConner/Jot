@@ -3,7 +3,7 @@ import React from 'react';
 import { connect } from "react-redux";
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 
-// Redux Store
+// Redux Map To Props
 import { mapNoteListStateToProps, mapNoteListDispatchToProps } from '../actions/noteListActions';
 
 // Custom Components
@@ -16,7 +16,6 @@ import { getMinMaxWeek } from '../helpers';
 
 // Material UI
 import { Tabs, Tab } from 'material-ui/Tabs';
-import Slider from 'material-ui/Slider';
 import TextField from 'material-ui/TextField';
 
 // CSS

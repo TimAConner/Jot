@@ -1,9 +1,9 @@
-// Reacat & Redux
+// React & Redux
 import React from 'react';
 import { connect } from "react-redux";
 import { Redirect } from 'react-router-dom';
 
-// Redux Store
+// Redux Map To Props
 import { mapUserStateToProps, mapUserDispatchToProps } from '../actions/userActions';
 
 // Custom Components
@@ -13,13 +13,24 @@ import Error from './Error';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import TextField from 'material-ui/TextField';
 import RaisedButton from 'material-ui/RaisedButton';
+import Divider from 'material-ui/Divider';
 
 // Custom Css
 import { muiTheme } from '../css/muiTheme';
 
-const loginStyle = {
+const centerStyle = {
   textAlign: 'center',
 };
+
+const formStyle = {
+  marginBottom: '2em',
+};
+
+const dividerStyle = {
+  marginLeft: '1rem',
+  marginRight: '1rem',
+};
+
 
 class Login extends React.Component {
 
@@ -62,9 +73,9 @@ class Login extends React.Component {
     return (
 
       <MuiThemeProvider muiTheme={muiTheme}>
-        <div style={loginStyle}>
-
-          <form onSubmit={this.login} className='login'>
+        <div style={centerStyle}>
+          <h1 style={centerStyle}>Jot</h1>
+          <form style={formStyle} onSubmit={this.login}>
 
             {/* Show error if error from login */}
             {this.props.error !== null ? <Error
@@ -80,7 +91,7 @@ class Login extends React.Component {
               state: { from: this.props.location }
             }} />) : null}
 
-            <h1>Login</h1>
+            <h2>Login</h2>
 
             <TextField
               hintText="Email"
@@ -95,8 +106,10 @@ class Login extends React.Component {
             <RaisedButton label="Login" type='submit' primary={true} />
           </form>
 
-          <form onSubmit={this.register}>
-            <h1>Register</h1>
+          <Divider style={dividerStyle}/>
+
+          <form style={formStyle} onSubmit={this.register}>
+            <h2>Register</h2>
             <TextField
               hintText="Name"
               floatingLabelText="Name"
@@ -115,11 +128,11 @@ class Login extends React.Component {
             /><br />
 
             <TextField
-              hintText="Password"
-              floatingLabelText="Password"
+              hintText="Confirm Password"
+              floatingLabelText="Confirm Password"
               type="password" name="register_confirm" value={this.state.register_confirm} onChange={this.handleChange} required
             /><br />
-            
+
             <RaisedButton label="Register" type='submit' primary={true} />
           </form>
         </div>

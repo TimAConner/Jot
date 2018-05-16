@@ -9,10 +9,10 @@ export function mapOptionStateToProps(state) {
 
 export function mapOptionDispatchToProps(dispatch) {
   return {
-    updateOption: ({value, option}) => {
+    updateOption: ({value, key}) => {
       dispatch({ type: 'set_user_options_pending' });
       axios.patch(`${backendUrl}/currentUser`, JSON.stringify({
-        [option]: value,
+        [key]: value,
       }), putPostHeaders)
         .then(response => {
           dispatch({ type: 'set_user_options_fulfilled', payload: response.data });

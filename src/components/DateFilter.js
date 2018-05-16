@@ -1,6 +1,5 @@
 import React from 'react';
 import DatePicker from 'material-ui/DatePicker';
-import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
 
 
 const optionsStyle = {

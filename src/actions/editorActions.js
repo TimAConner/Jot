@@ -9,6 +9,7 @@ export function mapEditorStateToProps(state) {
     focusOnNote: state.editor.focusOnNote,
     reloadSortBy: state.noteList.sortBy,
     options: state.user.options,
+    finalSaveRequired: state.editor.finalSaveRequired,
   }
 }
 
@@ -36,7 +37,7 @@ export function mapEditoreDispatchToProps(dispatch) {
           ? `${backendUrl}/notes/${id}`
           : `${backendUrl}/notes/`;
 
-          console.log(createNoteUrl);
+        console.log(createNoteUrl);
 
         axios.put(createNoteUrl, JSON.stringify(requestObject), putPostHeaders)
           .then(response => {
@@ -54,6 +55,9 @@ export function mapEditoreDispatchToProps(dispatch) {
     },
     newNote: () => {
       dispatch({ type: 'set_new_note' });
+    },
+    setFinalSaveRequired: value => {
+      dispatch({ type: 'final_save_required', payload: value });
     },
   }
 };

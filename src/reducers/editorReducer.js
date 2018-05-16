@@ -4,6 +4,7 @@ export default function reducer(state = {
   focusOnNote: false,
   id: null,
   text: '',
+  finalSaveRequired: false,
 }, action) {
   switch (action.type) {
     case 'set_focus_to_false': {
@@ -50,6 +51,13 @@ export default function reducer(state = {
         saving: false,
         existingNoteLoaded: true,
       }
+    }
+    
+    case 'final_save_required': {
+      return {
+        ...state,
+        finalSaveRequired: action.payload,
+      };
     }
     default: {
       return state;

@@ -89,7 +89,7 @@ const LoginStrategy = new Strategy({
     .then(([user]) => {
       console.log('user', user);
       if (!user) {
-        return cb(new Error('Can not find a user with those credentials. Please try again.'), false);
+        return cb(new Error('Cannot find a user with those credentials. Please try again.'), false);
       }
       if (req.body.username != user.username) {
         return cb(new Error('Wrong email.  Please try again.'), false);

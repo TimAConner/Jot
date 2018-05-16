@@ -10,5 +10,8 @@ export const muiTheme = getMuiTheme({
     accent3Color: '#F3D250',
     pickerHeaderColor: '#90CCF4',
     clockCircleColor: '#F3D250',
+  },
+  snackbar: {
+    backgroundColor: '#F78888',
   }
 });

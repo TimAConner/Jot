@@ -3,7 +3,7 @@ import React from 'react';
 import { connect } from "react-redux";
 import { Redirect } from 'react-router-dom';
 
-// Redux Store
+// Redux Map To Props
 import { mapUserStateToProps, mapUserDispatchToProps } from '../actions/userActions';
 
 // Custom Components
@@ -18,11 +18,11 @@ import { muiTheme } from '../css/muiTheme';
 
 // Material UI Componenets
 import Drawer from 'material-ui/Drawer';
-import MenuItem from 'material-ui/MenuItem';
 import FloatingActionButton from 'material-ui/FloatingActionButton';
 import ListIcon from 'material-ui/svg-icons/action/list';
 import SettingsIcon from 'material-ui/svg-icons/action/settings';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+import RaisedButton from 'material-ui/RaisedButton';
 
 const menuButtonStyling = {
   top: '0.3rem',
@@ -30,7 +30,11 @@ const menuButtonStyling = {
   position: 'fixed',
 };
 
-
+const logoutButtonStyling = {
+  display: 'flex',
+  justifyContent: 'center',
+  marginTop: '2rem',
+};
 
 // const hideJotOnDesktopStyling = {
 //   '@media (min-width: 800px)': {
@@ -119,7 +123,10 @@ class Jot extends React.Component {
                 onRequestChange={(optionWindowOpen) => this.setState({ optionWindowOpen })}
               >
                 <Option />
-                <button onClick={() => this.logout()}>Logout</button>
+
+                <div style={logoutButtonStyling}>
+                  <RaisedButton color='secondary' onClick={() => this.logout()} label='Logout' secondary={true} />
+                </div>
               </Drawer>
             </div>
 
