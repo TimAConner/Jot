@@ -36,6 +36,7 @@ class Option extends React.Component {
         { value: 'x-large', text: 'Extra Large' },
       ],
       fontStyleOptions: [
+        { value: 'lato', text: 'Lato' },
         { value: 'sans-serif', text: 'Sans Serif' },
         { value: 'serif', text: 'Serif' },
         { value: 'times-new-roman', text: 'Times New Roman' },

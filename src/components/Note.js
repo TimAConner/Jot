@@ -35,7 +35,8 @@ const noteContainerStyle = {
 
 const noteKeywordClass = {
   textTransform: 'Capitalize',
-}
+  fontSize: '1.25rem',
+};
 
 
 const Note = ({ noteId, keywords, date, text, viewNote, deleteNote }) => (

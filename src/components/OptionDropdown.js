@@ -9,23 +9,29 @@ import { mapOptionStateToProps, mapOptionDispatchToProps } from '../actions/opti
 import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
 
+// CSS
+const dropdownStyle = {
+  fontSize: '20px',
+};
+
 const OptionDropdown = ({ options, changeHandler, currentStyle, styleName, floatingLabelText }) => (
   <div>
     <SelectField
       name={styleName}
       floatingLabelText={floatingLabelText}
       value={currentStyle}
+      style={dropdownStyle}
       onChange={(event, index, value) => changeHandler(value, styleName)}
     >
       {options.map(({ value, text }) => {
         if (currentStyle === value) {
           return (
-            <MenuItem value={value} primaryText={text} />
+            <MenuItem style={dropdownStyle} value={value} primaryText={text} />
           );
         }
 
         return (
-          <MenuItem value={value} primaryText={text} />
+          <MenuItem style={dropdownStyle} value={value} primaryText={text} />
         );
       })}
     </SelectField>

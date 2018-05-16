@@ -193,6 +193,7 @@ module.exports.getAllNotes = (req, res, next) => {
             attributes: {
               exclude: ['id', 'note_id'],
             },
+            order: [['id', 'ASC']],
           }]
         }
       ]
@@ -208,6 +209,7 @@ module.exports.getAllNotes = (req, res, next) => {
         attributes: {
           exclude: ['id', 'note_id'],
         },
+        order: [['id', 'ASC']],
       }, {
         model: Note_Date,
         order: [['edit_date', 'DESC']],
@@ -304,7 +306,7 @@ module.exports.saveNote = (req, res, next) => {
       return _createDateIfNew({ sequelize, noteId });
     })
     .then((values, value) => {
-      
+
       // Return newly put note
       return Note.findAll({
         include: [{

@@ -23,7 +23,7 @@ module.exports.generateKeywords = noteText => {
           return resolve(['Error']);
         }
 
-        const keywordArray = response.keywords.map(({ text }) => text).slice(0, 5);
+        const keywordArray = response.keywords.map(({ text }) => text.toLowerCase()).slice(0, 5);
         resolve(keywordArray);
       },
     );

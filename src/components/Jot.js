@@ -98,7 +98,7 @@ class Jot extends React.Component {
               {/* Note List */}
               <Drawer
                 docked={false}
-                width={'90%'}
+                width={'85%'}
                 open={this.state.noteListWindowOpen}
                 onRequestChange={(noteListWindowOpen) => this.setState({ noteListWindowOpen })}
               >
@@ -119,7 +119,7 @@ class Jot extends React.Component {
               {/* Options */}
               <Drawer
                 docked={false}
-                width={'85%'}
+                width={'80%'}
                 open={this.state.optionWindowOpen}
                 onRequestChange={(optionWindowOpen) => this.setState({ optionWindowOpen })}
               >

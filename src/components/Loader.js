@@ -51,7 +51,7 @@ class Loader extends React.Component {
           style={style.refresh}
           loadingColor='#F3D250'
         /> */}
-        <CircularProgress color='#F3D250' size={40} thickness={2} />
+        <CircularProgress color='#F3D250' size={40} thickness={3} />
       </div>
     </MuiThemeProvider>);
   }
