@@ -279,7 +279,7 @@ class NoteList extends React.Component {
         {this.generateNoteList()}
 
         <Loader
-          visible={this.props.saving}
+          visible={this.props.saving || this.props.loading}
         />
 
       </div>

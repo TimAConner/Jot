@@ -8,6 +8,7 @@ export function mapNoteListStateToProps(state) {
     notes: [...state.noteList.notes],
     editor: { ...state.editor },
     saving: state.noteList.saving,
+    loading: state.noteList.loading,
     sortBy: state.noteList.sortBy,
   }
 }

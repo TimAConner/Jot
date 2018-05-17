@@ -1,6 +1,7 @@
 export default function reducer(state = {
   notes: [],
   saving: false,
+  loading: false,
   sortBy: 'notes',
 }, action) {
   switch (action.type) {
@@ -28,35 +29,27 @@ export default function reducer(state = {
     case 'view_notes_failed': {
       return {
         ...state,
+        loading: false,
       };
     }
     case 'view_notes_pending': {
       return {
         ...state,
+        loading: true,
       };
     }
     case 'view_notes_fulfilled': {
-
-      // Merge new notes with olds versions of the note.
-      // Reverse it to get the most recent notes first and merge them.
-      // Reverse the output (with the most recent notes last in the array) 
-      // to have the most recent notes going forward.
-      const mergedNotes = [
-        ...action.payload,
-      ];
-      // .reverse().filter((uniqueNote, index, array) => {
-      //   return array.indexOf(array.find(note => note.id === uniqueNote.id)) === index;
-      // }).reverse();
-
       return {
         ...state,
-        notes: [...mergedNotes],
+        notes: [...action.payload],
         sortBy: 'notes',
+        loading: false,
       };
     }
     case 'view_notes_by_date_pending': {
       return {
         ...state,
+        loading: true,
       };
     }
     case 'view_notes_by_date_fulfilled': {
@@ -64,16 +57,19 @@ export default function reducer(state = {
         ...state,
         notes: [...action.payload],
         sortBy: 'date',
+        loading: false,
       };
     }
     case 'view_notes_by_date_failed': {
       return {
         ...state,
+        loading: false,
       };
     }
     case 'view_notes_by_week_pending': {
       return {
         ...state,
+        loading: true,
       };
     }
     case 'view_notes_by_week_fulfilled': {
@@ -81,11 +77,13 @@ export default function reducer(state = {
         ...state,
         notes: [...action.payload],
         sortBy: 'week',
+        loading: false,
       };
     }
     case 'view_notes_by_week_failed': {
       return {
         ...state,
+        loading: false,
       };
     }
     default: {
