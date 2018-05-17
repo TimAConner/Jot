@@ -1,8 +1,63 @@
 # Jot
-Jot is my back-end capstone built while at [Nashville Software School](http://nashvillesoftwareschool.com/)
+Jot is a streamlined note taking app for the scatterbrained, frequent note taker built as my Back End Capstone for [Nashville Software School](http://nashvillesoftwareschool.com/).  
 
-## Jot
+The application is designed to remove most of the obstacles in modern note taking.  No title, date, or tags must be added to a note.  Simply start typing and Jot (using IBM Watson) will highlight words it thinks are important.  Don't like them? No sweet.  Double tap / click a word and it will override Watson's keywords.  You may add as many as you want.
 
+There are also three distinct ways to sort notes.  
+1. Sort by Edit Date: Every time you edit a note, Jot remmembers when you edited it.  You may sort notes by these edit dates, allowing you to see other notes created around the same time, which may be related.  You 
+![Sort by Edit Date Screen](http://imagebucket.net/zpsigw295dnn/sort_by_edit_date.PNG)
+1. Sort by Week: You may sort by week and see a list of keywords in that week with all notes pertaining to those keywords grouped together beneath them.
+![Sort by Week Screen]( http://imagebucket.net/oigp53rp4av5/sort_by_week.PNG)
+1. Sort by Note: You may sort by note to see notes sorted by their last edit date.
+![Sort by Note Screen](http://imagebucket.net/o9y73l2k9u9u/sort_by_note.PNG)
+
+## Technologies Used
+
+## To Contribute
+1. Fork the project to your github
+1. Clone the project down
+1. Create `server/config/watsonConfig.js`
+1.  Provide your own credentials in it in the below pattern
+```
+module.exports = {
+  "username": "[your username]",
+  "password": "[your password]",
+  "version": '[your version]',
+  "url": 'https://gateway.watsonplatform.net/natural-language-understanding/api/'
+};
+```
+1. Create a new PostgreSQL database.
+1. Create the file  `/sequelize/config/config.json`. 
+1. In that file, provide the credentials to the PostgreSQL database you made.
+```
+{
+  "development": {
+    "username": "Tim",
+    "password": "postgres",
+    "database": "jot",
+    "host": "127.0.0.1",
+    "dialect": "postgres"
+  },
+  "test": {
+    "username": "Tim",
+    "password": "postgres",
+    "database": "jot",
+    "host": "127.0.0.1",
+    "dialect": "postgres"
+  },
+  "production": {
+    "username": "Tim",
+    "password": "postgres",
+    "database": "jot",
+    "host": "127.0.0.1",
+    "dialect": "postgres"
+  }
+}
+```
+1. Run `npm run buildDb`
+1. In another window, run `nodemon server/server.js` to start the node server.
+1. In the same window, run `npm start` to start the react development server.
+1. You're ready to start modifying the project!  Running npm start should open up a browser window.  If not, navigate to `http://localhost:3000/`.
 ## API Endpoints
 This api is consumed via the Jot front end and is only meant to be used with Jot.
 
