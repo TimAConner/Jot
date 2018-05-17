@@ -27,35 +27,29 @@ Jot automatically organizes your note in three seperate ways.  The first, by not
 
 1. Sort by Edit Date: Every time you edit a note, Jot remmembers when you edited it.  You may sort notes by these edit dates, allowing you to see other notes created around the same time, which may be related.
 
-<img src="https://i.imgur.com/tzgudmx.png" alt="Sort by Edit Date Screen" style="width: 30%;"/>
-<img src="https://i.imgur.com/kIJVJPS.png" alt="Sort by Edit Date Screen Search Example" style="width: 30%;"/>
+<img src="https://i.imgur.com/tzgudmx.png" alt="Sort by Edit Date Screen" width='30%' style="width: 30%;"/> <img src="https://i.imgur.com/kIJVJPS.png" alt="Sort by Edit Date Screen Search Example" width='30%' style="width: 30%;"/>
 
 1. Sort by Week: You may sort by week and see a list of keywords in that week with all notes pertaining to those keywords grouped together beneath them.
 
-<img src="https://i.imgur.com/c9YKVY8.png" alt="Sort by Week Screen" style="width: 30%;"/>
-<img src="https://i.imgur.com/M1SHaJr.png" alt="Sort by Week Screen with other week" style="width: 30%;"/>
-<img src="https://i.imgur.com/saLp5tP.png" alt="Sort by Week Screen with other keyword" style="width: 30%;"/>
+<img src="https://i.imgur.com/c9YKVY8.png" alt="Sort by Week Screen" width='30%' style="width: 30%;"/> <img src="https://i.imgur.com/M1SHaJr.png" alt="Sort by Week Screen with other week" width='30%' style="width: 30%;"/> <img src="https://i.imgur.com/saLp5tP.png" alt="Sort by Week Screen with other keyword" width='30%' style="width: 30%;"/>
 
 1. Sort by Note: You may sort by note to see notes sorted by their last edit date which is the traditional way to look at your notes.
 
-<img src="https://i.imgur.com/nJ0CSGc.png" alt="Sort by Note Screen" style="width: 30%;"/>
-<img src="https://i.imgur.com/2Uts5qp.png" alt="Note Sort Screen" style="width: 30%;"/>
+<img src="https://i.imgur.com/nJ0CSGc.png" alt="Sort by Note Screen" width='30%' style="width: 30%;"/> <img src="https://i.imgur.com/2Uts5qp.png" alt="Note Sort Screen" width='30%' style="width: 30%;"/>
 
 ___
 
 ## 3. Sleek Design
 When you load Jot after logging in, Jot defaults to the note taking page with your cursor already in the textbox to allow you to start typing without any hinderance.  If you have logged in previously, it automatically will remember you giving you the quickest route to jotting down a thought.
 
-<img src="https://i.imgur.com/OLjI5um.png" alt="Note Taking Screen" style="width: 30%;"/>
-<img src="https://i.imgur.com/TtIDbtm.png" alt="Note Taking Screen" style="width: 30%;"/>
+<img src="https://i.imgur.com/OLjI5um.png" alt="Note Taking Screen" width='30%' style="width: 30%;"/> <img src="https://i.imgur.com/TtIDbtm.png" alt="Note Taking Screen" width='30%' style="width: 30%;"/>
 
 ___
 
 ## 4. Easy on The Eyes
 Jot is designed with an easy-going user interface and a desire to clutter the user's life as little as possible.  With each user's visual needs varying slightly, on top of the default simple styling, the user can change the font style and size, and how Jot highlights keywords.
 
-<img src="https://i.imgur.com/UI8t3CP.png" alt="Option Screen" style="width: 30%;"/>
-<img src="https://i.imgur.com/VRmsF7b.png" alt="Option Screen with Droopdown" style="width: 30%;"/>
+<img src="https://i.imgur.com/UI8t3CP.png" alt="Option Screen" width='30%' style="width: 30%;"/> <img src="https://i.imgur.com/VRmsF7b.png" alt="Option Screen with Droopdown" width='30%' style="width: 30%;"/>
 
 ___
 
