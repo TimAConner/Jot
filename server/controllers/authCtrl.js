@@ -3,14 +3,12 @@ const passport = require('passport');
 const path = require('path');
 const jwt = require('jsonwebtoken');
 
-
-
 module.exports.logout = (req, res, next) => {
   req.session.destroy(function (err) {
     res.clearCookie('remember_me');
     module.exports.loginFailure(req, res, next);
   });
-}
+};
 
 module.exports.login = function (req, res, next) {
   passport.authenticate('login', { session: false }, (err, user, info) => {
@@ -58,7 +56,7 @@ module.exports.register = (req, res, next) => {
     error.status = 400;
     return next(error);
   }
-}
+};
 
 module.exports.loginFailure = (req, res, next) => {
   const error = new Error('Please login');
@@ -70,7 +68,3 @@ module.exports.loginSuccess = (req, res, next) => {
   const { password, creation_date, ...rest } = req.user;
   res.status(200).json(rest);
 };
-
-module.exports.authenticate = () => {
-  // return passport.authenticate('local-signin', { successRedirect: '/loginRouter', failureRedirect: '/loginRouterB', failureFlash: true });
-}

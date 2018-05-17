@@ -1,10 +1,9 @@
 const passport = require('passport');
 const { Strategy } = require('passport-local');
-const { hashSync, genSaltSync, compareSync } = require('bcrypt-nodejs');
-
 const passportJWT = require("passport-jwt");
 const { Strategy: JWTStrategy, ExtractJwt: ExtractJWT } = passportJWT;
-const { webTokenSecret } = require('../helpers');
+
+const { hashSync, genSaltSync, compareSync } = require('bcrypt-nodejs');
 
 const { User, Token, Option, sequelize } = require('../../sequelize/models/');
 
@@ -48,8 +47,20 @@ const RegistrationStrategy = new Strategy({
             "auto_keyword_style": "italic",
             "user_keyword_style": "bold"
           }).then(option => {
-            return done(null, newUser.get());
-          });
+            return User.findAll(
+              {
+                where: {
+                  email: newUser.get().email
+                },
+                include: [
+                  { model: Option }
+                ],
+              }
+            );
+          })
+            .then(([user]) => {
+              return done(null, user.get());
+            });
         }
       });
     }
@@ -78,7 +89,7 @@ const LoginStrategy = new Strategy({
     .then(([user]) => {
       console.log('user', user);
       if (!user) {
-        return cb(new Error('Can not find a user with those credentials. Please try again.'), false);
+        return cb(new Error('Cannot find a user with those credentials. Please try again.'), false);
       }
       if (req.body.username != user.username) {
         return cb(new Error('Wrong email.  Please try again.'), false);

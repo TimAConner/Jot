@@ -19,5 +19,4 @@ router.put('/notes/:id', isLoggedIn(), saveNote);
 router.get('/notes/', isLoggedIn(), getAllNotes);
 router.put('/notes/', isLoggedIn(), saveNote);
 
-
 module.exports = router;

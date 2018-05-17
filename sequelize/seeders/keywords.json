@@ -8,7 +8,27 @@
     {
       "keyword": "note",
       "user_selected": "true",
-      "note_id": 1
+      "note_id": 2
+    },
+    {
+      "keyword": "example",
+      "user_selected": "true",
+      "note_id": 2
+    },
+    {
+      "keyword": "note",
+      "user_selected": "true",
+      "note_id": 3
+    },
+    {
+      "keyword": "example",
+      "user_selected": "true",
+      "note_id": 3
+    },
+    {
+      "keyword": "note",
+      "user_selected": "true",
+      "note_id": 3
     }
   ]
 }

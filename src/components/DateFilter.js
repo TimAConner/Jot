@@ -1,12 +1,8 @@
 import React from 'react';
 import DatePicker from 'material-ui/DatePicker';
-import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
 
 
-const optionsStyle = {
-  maxWidth: 255,
-  marginRight: 'auto',
-};
+import { optionsStyle } from '../jss/DateFilter';
 
 /**
  * This example allows you to set a date range, and to toggle `autoOk`, and `disableYearSelection`.
@@ -27,22 +23,20 @@ export default class DateFilter extends React.Component {
   render() {
     return (
       <div>
-        <MuiThemeProvider>
-          <div style={optionsStyle}>
-            <DatePicker
-              onChange={this.handleChangeMinDate}
-              autoOk={this.state.autoOk}
-              floatingLabelText="Min Date"
-              disableYearSelection={this.state.disableYearSelection}
-            />
-            <DatePicker
-              onChange={this.handleChangeMaxDate}
-              autoOk={this.state.autoOk}
-              floatingLabelText="Max Date"
-              disableYearSelection={this.state.disableYearSelection}
-            />
-          </div>
-        </MuiThemeProvider>
+        <div style={optionsStyle}>
+          <DatePicker
+            onChange={this.handleChangeMinDate}
+            autoOk={this.state.autoOk}
+            floatingLabelText="Min Date"
+            disableYearSelection={this.state.disableYearSelection}
+          />
+          <DatePicker
+            onChange={this.handleChangeMaxDate}
+            autoOk={this.state.autoOk}
+            floatingLabelText="Max Date"
+            disableYearSelection={this.state.disableYearSelection}
+          />
+        </div>
       </div>
     );
   }

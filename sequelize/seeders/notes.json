@@ -3,6 +3,14 @@
     {
       "text": "This is an example note.",
       "user_id": 1
+    },
+    {
+      "text": "This is xample note.",
+      "user_id": 1
+    },
+    {
+      "text": "This is an note.",
+      "user_id": 1
     }
   ]
 }

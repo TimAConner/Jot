@@ -2,6 +2,41 @@ import axios from 'axios';
 
 export const backendUrl = "http://localhost:8080";
 
+// Returns postgres date in mm/dd/yyyy hh:mm AM / PM
+export const formatDate = postgresDate => {
+  const date = new Date(postgresDate.replace(' ', 'T'));
+  return `${date.toLocaleString([], {
+    timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+    hour12: true,
+    hourCycle: true,
+    year: 'numeric',
+    month: 'numeric',
+    day: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit'
+  })}`;
+};
+
+// Returns postgres date `mm/dd/yy- one week from that date`
+export const getMinMaxWeek = postgresDate => {
+  const minDate = new Date(postgresDate.replace(' ', 'T'));
+  const maxDate = new Date(minDate);
+
+  // Add one week
+  maxDate.setDate(minDate.getDate() + 7);
+
+  const dateOptions =  {
+    timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+    hour12: true,
+    hourCycle: true,
+    year: 'numeric',
+    month: 'numeric',
+    day: 'numeric',
+  };
+
+  return `${minDate.toLocaleString([], dateOptions)} - ${maxDate.toLocaleString([], dateOptions)}`;
+};
+
 export const putPostHeaders = {
   headers: {
     'Content-Type': 'application/json',

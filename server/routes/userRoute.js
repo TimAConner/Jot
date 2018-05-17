@@ -5,7 +5,6 @@ const router = Router();
 const passport = require('passport');
 const { isLoggedIn } = require('./routeHelpers');
 
-
 const {
   fetchUser,
   updateOption,

@@ -1,0 +1,21 @@
+.note-enter {
+  transform: translate(100%);
+}
+.note-enter.note-enter-active {
+  transform: translate(0%);
+  transition: transform 500ms ease-in-out;
+}
+.note-leave {
+  transform: translate(0%);
+}
+.note-leave.note-leave-active {
+  transform: translate(-110%);
+  transition: transform 500ms ease-in-out;
+}
+.note-appear {
+  transform: translate(100%);
+}
+.note-appear.note-appear-active {
+  transform: translate(0%);
+  transition: transform 500ms ease-in-out;
+}

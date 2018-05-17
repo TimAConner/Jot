@@ -1,0 +1,24 @@
+@import url('https://fonts.googleapis.com/css?family=Lato');
+
+* {
+  font-family: Lato;
+}
+
+body {
+  background-color: #FDFDFD;
+}
+
+@media (min-width: 800px) {
+  .jot {
+    display: none;  
+  }
+  .desktopError {
+    text-align: center;
+  }
+}
+
+@media (max-width: 800px) {
+  .desktopError {
+    display: none;
+  }
+}

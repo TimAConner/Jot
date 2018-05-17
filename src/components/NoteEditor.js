@@ -1,11 +1,29 @@
+// React & Redux
 import React from 'react';
 import { connect } from "react-redux";
 
+
+// Redux Map To Props
 import { mapEditorStateToProps, mapEditoreDispatchToProps } from '../actions/editorActions';
 
+// CSS
 import '../css/NoteEditor.css';
 
+// Custom Components
 import Loader from './Loader';
+
+// Material UI
+import AddIcon from 'material-ui/svg-icons/content/add';
+import FloatingActionButton from 'material-ui/FloatingActionButton';
+
+// CSS
+import { editorInputStyle, addButtonStyle } from '../jss/NoteEditor';
+
+// Must be ran afer importing it to initialize it
+import injectTapEventPlugin from "react-tap-event-plugin"
+import isDblTouchTap from '../properties/isDblTouchTap';
+injectTapEventPlugin();
+
 
 class NoteEditor extends React.Component {
 
@@ -50,7 +68,9 @@ class NoteEditor extends React.Component {
       this.userSelectedWords = this.userSelectedWords.filter(word => {
         const regex = new RegExp(`(?<![a-zA-Z])(${word}{1})(?![a-zA-Z])`, 'gi');
         if (totalText.match(regex)) {
-          return word;
+          return true;
+        } else {
+          return false;
         }
       });
 
@@ -75,12 +95,16 @@ class NoteEditor extends React.Component {
     };
   }
 
-  // There are multiples in the keyworrds array so they get wrapped several times.
+  // ERROR / TODO FIX: There are multiple duplicates in the keywords
+  // array so they get wrapped multiple times.
   // When you press save, keywords are being reset because of this.  The new keywords need to be sent back.
   setKeywords() {
     if (this.props.existingNoteLoaded) {
       this.userSelectedWords = [];
       this.autoSelectedWords = [];
+
+      // Go through current notes keywords and sort them into 
+      // user select or auto selected.
       this.props.editor.Keywords.map(({ keyword, user_selected }) => {
         if (user_selected) {
           if (!this.userSelectedWords.includes(keyword)) {
@@ -95,44 +119,62 @@ class NoteEditor extends React.Component {
     }
   }
 
+  simulateDoubleClick = (x, y) => {
+    const clickEvent = document.createEvent('MouseEvents');
+    clickEvent.initMouseEvent(
+      'dblclick', true, true, window, 0,
+      0, 0, x, y, false, false,
+      false, false, 0, null
+    );
+    console.log(x, y);
+    document.elementFromPoint(x, y).dispatchEvent(clickEvent);
+  }
+
+  simulateDoubleClickOnVisualBox = event => {
+    this.visualBox.current.style.zIndex = 1;
+    this.inputBox.current.style.zIndex = -1;
+    this.simulateDoubleClick(event.clientX, event.clientY);
+    this.visualBox.current.style.zIndex = -1;
+    this.inputBox.current.style.zIndex = 1;
+  };
+
   componentDidMount() {
     this.setKeywords();
 
-    const simulateDoubleClick = (x, y) => {
-      const clickEvent = document.createEvent('MouseEvents');
-      clickEvent.initMouseEvent(
-        'dblclick', true, true, window, 0,
-        0, 0, x, y, false, false,
-        false, false, 0, null
-      );
-      document.elementFromPoint(x, y).dispatchEvent(clickEvent);
-    }
-
+    // Add / remove user selected keyword
     this.visualBox.current.addEventListener('dblclick', obj => {
-      const targetWord = obj.target.innerText;
+      const targetWord = obj.target.innerText.toLowerCase();
+
       // Toggle Click
       if (this.userSelectedWords.includes(targetWord)) {
         this.userSelectedWords = this.userSelectedWords.filter(string => string !== targetWord);
       } else {
-        this.userSelectedWords.push(obj.target.innerText);
+        this.userSelectedWords.push(targetWord);
       }
       this.inputBox.current.focus();
       this.updateHtml();
     });
 
+    // When input box is double clicked, pass that click onto the visual box
+    // that holds the styling
     this.inputBox.current.addEventListener('dblclick', event => {
-      this.visualBox.current.style.zIndex = 1;
-      this.inputBox.current.style.zIndex = -1;
-      simulateDoubleClick(event.clientX, event.clientY);
-      this.visualBox.current.style.zIndex = -1;
-      this.inputBox.current.style.zIndex = 1;
+      this.simulateDoubleClickOnVisualBox(event);
     });
 
+    // Handles mobile double tap to select keywords
+    this.inputBox.current.addEventListener('click', event => {
+      if (isDblTouchTap(event)) {
+        this.simulateDoubleClickOnVisualBox(event);
+        this.saveNote();
+      }
+    });
+
+    // Formats note as you type
     this.inputBox.current.addEventListener('keyup', () => {
       this.updateHtml();
     });
 
-    // To force paste without formatting
+    // To remove styling from any pasted text that may have styling
     this.inputBox.current.addEventListener("paste", function (event) {
       event.preventDefault();
       let text = event.clipboardData.getData("text/plain");
@@ -140,16 +182,58 @@ class NoteEditor extends React.Component {
     });
 
     this.inputBox.current.focus();
-
-    // Call once to set the overlay box
     this.updateHtml();
+  }
+
+  hasNoteChanged() {
+
+    if (typeof this.props.editor.Keywords !== 'undefined') {
+
+      // If keyword has changed
+      // What to do if keywords is blank?
+      const editorKeywords = this.props.editor.Keywords.map(({ keyword }) => keyword);
+      if (this.autoSelectedWords !== editorKeywords) {
+        return true;
+      }
+    }
+
+    // If the note  text has changed
+    if (this.inputBox.current.innerText.trim() === '') {
+      return false;
+    }
+    if (this.inputBox.current.innerText.trim() === this.props.editor.text.trim()) {
+      return false;
+    }
+
+    return true;
+  }
+
+  saveNote() {
+    if (this.hasNoteChanged()) {
+
+      // If the note is being saved when save not is called,
+      // set final save required to true 
+      // so it will be saved after the current save is complete.
+      if (this.props.saving && !this.props.finalSaveRequired) {
+        return this.props.setFinalSaveRequired(true);
+      }
+
+      this.props.saveNote(this.props.saving, this.props.editor.id, this.inputBox.current.innerText, this.userSelectedWords, this.props.reloadSortBy);
+    }
   }
 
   componentDidUpdate() {
 
-    // this.autoKeywordClass = this.props.user.Options.auto_keyword_style;
-    // this.userKeywordClass = this.props.user.Options.user_keyword_style;
+    // Check if the note is not being saved and a final save is required
+    if (this.props.finalSaveRequired && !this.props.saving) {
+      this.props.setFinalSaveRequired(false);
+      this.saveNote();
+    }
 
+    // Needed to delete a note if it's a new note you just created.
+    // if(this.props.id =)
+
+    // If the note input box should be put into focus
     if (this.props.focusOnNote) {
       this.props.setFocusToFalse();
     }
@@ -159,31 +243,23 @@ class NoteEditor extends React.Component {
     this.updateHtml();
   }
 
-  saveNote() {
-    if (this.inputBox.current.innerText.trim() === '') {
-      return;
-    }
-    if (this.inputBox.current.innerText.trim() === this.props.editor.text.trim()) {
-      return;
-    }
-    
-    this.props.saveNote(this.props.saving, this.props.editor.id, this.inputBox.current.innerText, this.userSelectedWords, this.props.reloadSortBy);
-  }
-
   newNote() {
-    this.inputBox.current.innerText = '';
-    this.visualBox.current.innerText = '';
-    this.props.newNote();
+
+    //TODO: Add a snackbar for this.
+    if (!this.props.saving) {
+      this.inputBox.current.innerText = '';
+      this.visualBox.current.innerText = '';
+      this.props.newNote();
+    }
   }
 
   render() {
     if (this.props.focusOnNote) {
       this.inputBox.current.focus();
-      this.inputBox.current.scrollIntoView();
     }
-
+    console.log('--------', this.props)
     return (
-      <div className='note-editor'>
+      <div style={editorInputStyle}>
         <div
           ref={this.visualBox}
           id='visualBox'
@@ -193,14 +269,27 @@ class NoteEditor extends React.Component {
           type='text'
           onInput={() => this.saveNote()}
           onDoubleClick={() => this.saveNote()}
-          onBlur={() => this.saveNote()}
+          // onBlur={() => this.saveNote()}
           className={`inputBox ${this.props.options.font_style} ${this.props.options.font_size}`}
-          contentEditable='true'>{this.props.editor.text}
+          contentEditable='true'
+        >
+          {this.props.editor.text}
         </div>
-        <button onClick={() => { this.newNote() }}>New Note</button>
-        {this.props.saving ? <Loader
-          text='Saving'
-        /> : null}
+
+        <FloatingActionButton
+          zDepth={1}
+          backgroundColor={'#90CCF4'}
+          mini={true}
+          onClick={() => this.newNote()}
+          style={addButtonStyle}
+        >
+          <AddIcon />
+        </FloatingActionButton>
+
+        <Loader
+          visible={this.props.saving}
+        />
+
       </div>
     );
   }

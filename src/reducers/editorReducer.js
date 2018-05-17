@@ -4,8 +4,26 @@ export default function reducer(state = {
   focusOnNote: false,
   id: null,
   text: '',
+  finalSaveRequired: false,
 }, action) {
   switch (action.type) {
+    case 'delete_note_fulfilled': {
+
+      // If deleting the current note,
+      // remove it from the editor.
+      // Also change text value so that the text of the editor will be reset.
+      if (action.payload === state.id) {
+        return {
+          ...state,
+          text: ' ',
+          id: null,
+        };
+      }
+
+      return {
+        ...state,
+      };
+    }
     case 'set_focus_to_false': {
       return {
         ...state,
@@ -20,7 +38,7 @@ export default function reducer(state = {
         focusOnNote: true,
       };
     }
-    case 'set_new_note' : {
+    case 'set_new_note': {
       return {
         saving: false,
         existingNoteLoaded: false,
@@ -50,6 +68,13 @@ export default function reducer(state = {
         saving: false,
         existingNoteLoaded: true,
       }
+    }
+
+    case 'final_save_required': {
+      return {
+        ...state,
+        finalSaveRequired: action.payload,
+      };
     }
     default: {
       return state;

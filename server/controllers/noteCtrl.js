@@ -2,7 +2,7 @@
 
 const { generateKeywords } = require('./watsonCtrl');
 
-const saveKeywords = ({ KeywordModel, keywords, noteId, userSelected }) => {
+const _saveKeywords = ({ KeywordModel, keywords, noteId, userSelected }) => {
   return new Promise((resolve, reject) => {
     const keywordPromiseArray = keywords.map(keyword => {
       return (KeywordModel.create({
@@ -19,10 +19,9 @@ const saveKeywords = ({ KeywordModel, keywords, noteId, userSelected }) => {
   });
 };
 
-const insertNoteOrCreateNote = ({ sequelize, noteId, text, userId }) => {
-  
+const _insertNoteOrCreateNote = ({ sequelize, noteId, text, userId }) => {
+
   if (typeof noteId === 'undefined' || noteId === null) {
-    console.log('in here');
     return (sequelize.query(` 
     INSERT INTO notes (text, user_id)
     VALUES ('${text}', ${userId})
@@ -40,10 +39,9 @@ const insertNoteOrCreateNote = ({ sequelize, noteId, text, userId }) => {
     }));
 };
 
-const createDateIfNew = ({ sequelize, noteId }) => {
-  return new Promise((resolve, reject) => {
-    const currentDate = (Date.now() / 1000.0);
-    sequelize.query(`
+const _createDateIfNew = ({ sequelize, noteId }) => {
+  const currentDate = (Date.now() / 1000.0);
+  return sequelize.query(`
     INSERT INTO note_dates (edit_date, note_id)
     SELECT to_timestamp(${currentDate}), ${noteId}
     WHERE NOT EXISTS (
@@ -52,14 +50,10 @@ const createDateIfNew = ({ sequelize, noteId }) => {
           WHERE edit_date >= to_timestamp(${currentDate}) - interval '1 day'
             AND edit_date <= to_timestamp(${currentDate})
             AND note_id = ${noteId}
-      );`).then(([_, rowsInserted]) => {
-        resolve();
-      });
-  });
-
+      );`);
 };
 
-const clearOldKeywords = ({ Keyword, noteId }) => {
+const _clearOldKeywords = ({ Keyword, noteId }) => {
   return (Keyword.destroy({
     where: {
       note_id: noteId,
@@ -199,6 +193,7 @@ module.exports.getAllNotes = (req, res, next) => {
             attributes: {
               exclude: ['id', 'note_id'],
             },
+            order: [['id', 'ASC']],
           }]
         }
       ]
@@ -214,6 +209,7 @@ module.exports.getAllNotes = (req, res, next) => {
         attributes: {
           exclude: ['id', 'note_id'],
         },
+        order: [['id', 'ASC']],
       }, {
         model: Note_Date,
         order: [['edit_date', 'DESC']],
@@ -261,12 +257,12 @@ module.exports.saveNote = (req, res, next) => {
   const userId = req.user.id;
   const selectedKeywords = req.body.keywords;
 
-  if(text.trim() === ''){
+  if (text.trim() === '') {
     const error = new Error('Note text is empty');
     return next(error);
   }
 
-  insertNoteOrCreateNote({ sequelize, noteId, userId, text })
+  _insertNoteOrCreateNote({ sequelize, noteId, userId, text })
     .then(([[anonymousNewNoteObj], success]) => {
 
       // Use the new note id 
@@ -279,7 +275,7 @@ module.exports.saveNote = (req, res, next) => {
       // This needs to be done since a user can update a note
       // and select 3 keywords instead of 5.
       // The extra 2 would not be updated if they only sent in three.
-      return clearOldKeywords({ Keyword, noteId });
+      return _clearOldKeywords({ Keyword, noteId });
     })
     .then(created => {
 
@@ -287,7 +283,7 @@ module.exports.saveNote = (req, res, next) => {
       // Watson will select keywords
       if (!selectedKeywords) {
         return generateKeywords(text).then(keywords => {
-          return saveKeywords({
+          return _saveKeywords({
             KeywordModel: Keyword,
             keywords,
             noteId,
@@ -298,7 +294,7 @@ module.exports.saveNote = (req, res, next) => {
 
       // User has selected keywords
       if (selectedKeywords) {
-        return saveKeywords({
+        return _saveKeywords({
           KeywordModel: Keyword,
           keywords: selectedKeywords,
           noteId,
@@ -307,10 +303,10 @@ module.exports.saveNote = (req, res, next) => {
       }
     })
     .then(() => {
-      return createDateIfNew({ sequelize, noteId });
+      return _createDateIfNew({ sequelize, noteId });
     })
-    .then(() => {
-      
+    .then((values, value) => {
+
       // Return newly put note
       return Note.findAll({
         include: [{
