@@ -60,6 +60,7 @@ class NoteEditor extends React.Component {
       for (let word of userOrWatson()) {
         try {
           const regex = new RegExp(`(?<![a-zA-Z])(${word}{1})(?![a-zA-Z])`, 'gi');
+          
           // To fix issue #36 on github, you may implement a look ahead/behind to check if already in span.
           totalText = totalText.replace(regex, `<span class="${highlightClass()}">$1</span>`);
         }
