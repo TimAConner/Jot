@@ -1,19 +1,55 @@
 # Jot
+
+
 Jot is a streamlined note taking app for the scatterbrained, frequent note taker built as my Back End Capstone for [Nashville Software School](http://nashvillesoftwareschool.com/).  
 
-The application is designed to remove most of the obstacles in modern note taking.  No title, date, or tags must be added to a note.  Simply start typing and Jot (using IBM Watson) will highlight words it thinks are important.  Don't like them? No sweet.  Double tap / click a word and it will override Watson's keywords.  You may add as many as you want.
+1. About
+1. Auto Organization
+1. Technologies Used
+1. How to Contribute
+1. Api Endpoints
+    1. Users
+        1. POST /login
+        1. POST /register
+        1. ~~POST /logout~~
+    1. Notes
+        1. GET /notes
+        1. GET /notes/:id
+        1. DELETE /notes/:id
+        1. PUT /notes/:id
+## 1.  About
+The application is designed to remove most of the obstacles in modern note taking and organizes your notes to help you find related notes.  No title, date, or tags must be added to a note.  Simply start typing and Jot (using IBM Watson) will highlight words it thinks are important.  Don't like them? No sweet.  Double tap / click a word and it will override Watson's keywords.  You may add as many as you want.
 
-There are also three distinct ways to sort notes.  
-1. Sort by Edit Date: Every time you edit a note, Jot remmembers when you edited it.  You may sort notes by these edit dates, allowing you to see other notes created around the same time, which may be related.  You 
-![Sort by Edit Date Screen](http://imagebucket.net/zpsigw295dnn/sort_by_edit_date.PNG)
+## 2. Auto Organization 
+Jot automatically organizes your note in three seperate ways.  The first, by note, is your traditional organization method.  The other two, by everey edit date, and by week, are more in depth to help you find related notes.
+
+1. Sort by Edit Date: Every time you edit a note, Jot remmembers when you edited it.  You may sort notes by these edit dates, allowing you to see other notes created around the same time, which may be related.
+
+![Sort by Edit Date Screen](https://i.imgur.com/tzgudmx.png)
+![Sort by Edit Date Screen Search Example](https://i.imgur.com/kIJVJPS.png)
+
 1. Sort by Week: You may sort by week and see a list of keywords in that week with all notes pertaining to those keywords grouped together beneath them.
-![Sort by Week Screen]( http://imagebucket.net/oigp53rp4av5/sort_by_week.PNG)
-1. Sort by Note: You may sort by note to see notes sorted by their last edit date.
-![Sort by Note Screen](http://imagebucket.net/o9y73l2k9u9u/sort_by_note.PNG)
 
-## Technologies Used
+![Sort by Week Screen](https://i.imgur.com/c9YKVY8.png)
 
-## To Contribute
+1. Sort by Note: You may sort by note to see notes sorted by their last edit date which is the traditional way to look at your notes.
+
+![Sort by Note Screen](https://i.imgur.com/nJ0CSGc.png)
+
+## 3. Sleek Design
+When you load up Jot after loggin in, Jot defaults to the note taking page with your cursor already in the textbox to allow you to start typing without any hinderance.  If you have logged in previously, it automatically will remember you to give you the quickest route to jotting down a note.
+
+## 4. Technologies Used
+1. React / Redux
+1. Material UI
+1. Sequelize
+1. PostgreSQL
+1. Axios
+1. Watson Natural Language Understanding
+1. Passport (with JSON Web Tokens)
+1. Bcrypt
+
+## 5. How to Contribute
 1. Fork the project to your github
 1. Clone the project down
 1. Create `server/config/watsonConfig.js`
@@ -58,7 +94,7 @@ module.exports = {
 1. In another window, run `nodemon server/server.js` to start the node server.
 1. In the same window, run `npm start` to start the react development server.
 1. You're ready to start modifying the project!  Running npm start should open up a browser window.  If not, navigate to `http://localhost:3000/`.
-## API Endpoints
+## 6. API Endpoints
 This api is consumed via the Jot front end and is only meant to be used with Jot.
 
 1. Authorization
@@ -70,7 +106,7 @@ This api is consumed via the Jot front end and is only meant to be used with Jot
     1. GET /notes
     1. GET /notes/:id
     1. DELETE /notes/:id
-    1. PUT /notes/:id.  
+    1. PUT /notes/:id
 
 ### Authorization
 Endpoints denoted with '*' require you to be logged in require a JSON Web Token Authorization header with a body of `Bearer {your_token}`.
