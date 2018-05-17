@@ -22,7 +22,7 @@ const Note = ({ noteId, keywords, date, text, viewNote, deleteNote }) => (
 
           // If they click anywhere but the delete button
           if (!event.target.closest('.delete_button')) {
-            viewNote(noteId)
+            viewNote(noteId);
           }
         }}
         style={noteContainerStyle}>
@@ -32,7 +32,7 @@ const Note = ({ noteId, keywords, date, text, viewNote, deleteNote }) => (
           style={{ zIndex: 1 }}
           backgroundColor={'#F78888'}
           mini={true}
-          onClick={() => { deleteNote(noteId) }}
+          onClick={() => deleteNote(noteId)}
           className='delete_button'
         >
           <DeleteIcon className='delete_button' />

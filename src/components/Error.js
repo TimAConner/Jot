@@ -19,7 +19,7 @@ class Error extends React.Component {
 
   componentWillReceiveProps(props) {
     this.state = {
-      error: this.props.error,
+      error: props.error,
       open: true,
     };
   }

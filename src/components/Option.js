@@ -40,11 +40,13 @@ class Option extends React.Component {
         { value: 'monospace', text: 'Monospace' },
       ],
     };
+
+    this.handleOptionChange = this.handleOptionChange.bind(this);
   }
 
-  handleOptionChange = (value, key) => {
+  handleOptionChange(value, key) {
     this.props.updateOption({ value, key });
-  };
+  }
 
   render() {
     return (
@@ -101,6 +103,6 @@ class Option extends React.Component {
       </div>
     );
   }
-};
+}
 
 export default connect(mapOptionStateToProps, mapOptionDispatchToProps)(Option); 

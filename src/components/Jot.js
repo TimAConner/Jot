@@ -15,7 +15,7 @@ import Loader from './Loader';
 // Global Css
 import '../css/Jot.css';
 import { muiTheme } from '../css/muiTheme';
-import { menuButtonStyling, logoutButtonStyling } from '../jss/Jot';
+import { menuButtonStyle, logoutButtonStyle, logoutButtonLabelStyle } from '../jss/Jot';
 
 // Material UI Componenets
 import Drawer from 'material-ui/Drawer';
@@ -24,19 +24,6 @@ import ListIcon from 'material-ui/svg-icons/action/list';
 import SettingsIcon from 'material-ui/svg-icons/action/settings';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import RaisedButton from 'material-ui/RaisedButton';
-
-// const hideJotOnDesktopStyling = {
-//   '@media (min-width: 800px)': {
-//     'jot': {
-//       display: 'none',
-//     }
-//   },
-//   '@media (max-width: 800px)': {
-//     'desktopError': {
-//       display: 'none',
-//     }
-//   },
-// };
 
 class Jot extends React.Component {
 
@@ -79,7 +66,7 @@ class Jot extends React.Component {
                 backgroundColor={'#90CCF4'}
                 mini={true}
                 onClick={() => this.handleNoteListToggle()}
-                style={menuButtonStyling}
+                style={menuButtonStyle}
               >
                 <ListIcon />
               </FloatingActionButton>
@@ -97,7 +84,7 @@ class Jot extends React.Component {
                   backgroundColor={'#90CCF4'}
                   mini={true}
                   onClick={() => this.handleOptionToggle()}
-                  style={menuButtonStyling}
+                  style={menuButtonStyle}
                 >
                   <SettingsIcon />
                 </FloatingActionButton>
@@ -114,8 +101,13 @@ class Jot extends React.Component {
               >
                 <Option />
 
-                <div style={logoutButtonStyling}>
-                  <RaisedButton color='secondary' onClick={() => this.logout()} label='Logout' secondary={true} />
+                <div style={logoutButtonStyle}>
+                  <RaisedButton
+                    labelStyle={logoutButtonLabelStyle}
+                    color='secondary'
+                    onClick={() => this.logout()}
+                    label='Logout'
+                    secondary={true} />
                 </div>
               </Drawer>
             </div>

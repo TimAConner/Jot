@@ -1,6 +1,6 @@
 // React & Redux
 import React from 'react';
-import { connect } from "react-redux";
+import { connect } from 'react-redux';
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 
 // Redux Map To Props
@@ -34,6 +34,8 @@ class NoteList extends React.Component {
     };
 
     this.handleSearchChange = this.handleSearchChange.bind(this);
+    this.handleChangeMinDate = this.handleChangeMinDate.bind(this);
+    this.handleChangeMaxDate = this.handleChangeMaxDate.bind(this);
     this.keywordMatch = this.keywordMatch.bind(this);
     this.textMatch = this.textMatch.bind(this);
   }
@@ -99,7 +101,7 @@ class NoteList extends React.Component {
               return (
                 <Note
                   noteId={id}
-                  keywords={keywords.length > 0 ? keywords.map(keywordObj => keywordObj.keyword).reduce((acc, cv) => acc + ", " + cv) : []}
+                  keywords={keywords.length > 0 ? keywords.map(keywordObj => keywordObj.keyword).reduce((acc, cv) => acc + ', ' + cv) : []}
                   date={date}
                   text={text}
                   viewNote={() => this.viewNote({
@@ -142,7 +144,7 @@ class NoteList extends React.Component {
             }).map(({ note_id, id, edit_date: date, Note: { Keywords: keywords, text } }) => {
               return (<Note
                 noteId={note_id}
-                keywords={keywords.length > 0 ? keywords.map(keywordObj => keywordObj.keyword).reduce((acc, cv) => acc + ", " + cv) : []}
+                keywords={keywords.length > 0 ? keywords.map(keywordObj => keywordObj.keyword).reduce((acc, cv) => acc + ', ' + cv) : []}
                 date={date}
                 text={text}
                 viewNote={() => this.viewNote({
@@ -196,7 +198,7 @@ class NoteList extends React.Component {
                     {notes.map(({ id, Keywords: keywords, Note_Dates: [{ edit_date: date }], text }) => {
                       return (<Note
                         noteId={id}
-                        keywords={keywords.length > 0 ? keywords.map(keywordObj => keywordObj.keyword).reduce((acc, cv) => acc + ", " + cv) : []}
+                        keywords={keywords.length > 0 ? keywords.map(keywordObj => keywordObj.keyword).reduce((acc, cv) => acc + ', ' + cv) : []}
                         date={date}
                         text={text}
                         viewNote={() => this.viewNote({
@@ -221,17 +223,17 @@ class NoteList extends React.Component {
     }
   }
 
-  handleChangeMinDate = (event, date) => {
+  handleChangeMinDate(event, date) {
     this.setState({
       minDate: date,
     });
-  };
+  }
 
-  handleChangeMaxDate = (event, date) => {
+  handleChangeMaxDate(event, date) {
     this.setState({
       maxDate: date,
     });
-  };
+  }
 
   handleSearchChange(event) {
     this.setState({ searchTerm: event.target.value });
@@ -252,7 +254,7 @@ class NoteList extends React.Component {
               handleChangeMaxDate={this.handleChangeMaxDate}
             />
             : <TextField
-              floatingLabelText="Search..."
+              floatingLabelText='Search...'
               style={{
                 textAlign: 'center',
                 width: '90%',
@@ -262,24 +264,24 @@ class NoteList extends React.Component {
               type='text'
               value={this.state.searchTerm}
               onChange={this.handleSearchChange}
-              hintText="Search..."
+              hintText='Search...'
             />}
         </div>
 
         {/* Search Options */}
         <Tabs>
-          <Tab onActive={() => this.props.viewAllNotes()} label="Note" >
+          <Tab onActive={() => this.props.viewAllNotes()} label='Note' >
           </Tab>
-          <Tab onActive={() => this.props.viewNotesByDates()} label="Edit Dates" >
+          <Tab onActive={() => this.props.viewNotesByDates()} label='Edit Dates' >
           </Tab>
-          <Tab onActive={() => this.props.viewNotesByWeek()} label="Week" >
+          <Tab onActive={() => this.props.viewNotesByWeek()} label='Week' >
           </Tab>
         </Tabs>
 
         {this.generateNoteList()}
 
         <Loader
-          visible={this.props.saving}
+          visible={this.props.saving || this.props.loading}
         />
 
       </div>
