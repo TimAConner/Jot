@@ -17,20 +17,7 @@ import Divider from 'material-ui/Divider';
 
 // Custom Css
 import { muiTheme } from '../css/muiTheme';
-
-const centerStyle = {
-  textAlign: 'center',
-};
-
-const formStyle = {
-  marginBottom: '2em',
-};
-
-const dividerStyle = {
-  marginLeft: '1rem',
-  marginRight: '1rem',
-};
-
+import {centerStyle, formStyle, dividerStyle} from '../jss/Login';
 
 class Login extends React.Component {
 
