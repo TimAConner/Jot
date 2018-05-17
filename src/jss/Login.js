@@ -3,7 +3,15 @@ export const centerStyle = {
 };
 
 export const formStyle = {
-  marginBottom: '2em',
+  marginBottom: '2rem',
+};
+
+export const buttonLabelStyle = {
+  fontSize: '20px',
+};
+
+export const buttonStyle = {
+  marginTop: '1rem',
 };
 
 export const dividerStyle = {

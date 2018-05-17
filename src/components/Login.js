@@ -17,7 +17,13 @@ import Divider from 'material-ui/Divider';
 
 // Custom Css
 import { muiTheme } from '../css/muiTheme';
-import {centerStyle, formStyle, dividerStyle} from '../jss/Login';
+import {
+  centerStyle,
+  formStyle,
+  dividerStyle,
+  buttonLabelStyle,
+  buttonStyle,
+} from '../jss/Login';
 
 class Login extends React.Component {
 
@@ -83,44 +89,78 @@ class Login extends React.Component {
             <TextField
               hintText="Email"
               floatingLabelText="Email"
-              type="text" name="email" value={this.state.email} onChange={this.handleChange} required
+              type="text"
+              name="email"
+              value={this.state.email}
+              onChange={this.handleChange}
+              required
             /><br />
             <TextField
               hintText="Password"
               floatingLabelText="Password"
-              type="password" name="password" value={this.state.password} onChange={this.handleChange} required
+              type="password"
+              name="password"
+              value={this.state.password}
+              onChange={this.handleChange}
+              required
             /><br />
-            <RaisedButton label="Login" type='submit' primary={true} />
+            <RaisedButton
+              style={buttonStyle}
+              labelStyle={buttonLabelStyle}
+              label="Login"
+              type='submit'
+              primary={true} />
           </form>
 
-          <Divider style={dividerStyle}/>
+          <Divider style={dividerStyle} />
 
           <form style={formStyle} onSubmit={this.register}>
             <h2>Register</h2>
             <TextField
               hintText="Name"
               floatingLabelText="Name"
-              type="display_name" name="display_name" value={this.state.display_name} onChange={this.handleChange} required
+              type="display_name"
+              name="display_name"
+              value={this.state.display_name}
+              onChange={this.handleChange} required
             /><br />
             <TextField
               hintText="Email"
               floatingLabelText="Email"
-              type="text" pattern="[^ @]*@[^ @]*" name="register_email" value={this.state.register_email} onChange={this.handleChange} required
+              type="text"
+              pattern="[^ @]*@[^ @]*"
+              name="register_email"
+              value={this.state.register_email}
+              onChange={this.handleChange}
+              required
             /><br />
 
             <TextField
               hintText="Password"
               floatingLabelText="Password"
-              type="password" name="register_password" value={this.state.register_password} onChange={this.handleChange} required
+              type="password"
+              name="register_password"
+              value={this.state.register_password}
+              onChange={this.handleChange}
+              required
             /><br />
 
             <TextField
               hintText="Confirm Password"
               floatingLabelText="Confirm Password"
-              type="password" name="register_confirm" value={this.state.register_confirm} onChange={this.handleChange} required
+              type="password"
+              name="register_confirm"
+              value={this.state.register_confirm}
+              onChange={this.handleChange}
+              required
             /><br />
 
-            <RaisedButton label="Register" type='submit' primary={true} />
+            <RaisedButton
+              style={buttonStyle}
+              labelStyle={buttonLabelStyle}
+              label="Register"
+              type='submit'
+              primary={true} />
           </form>
         </div>
         <div className='desktopError'>
