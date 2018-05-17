@@ -34,6 +34,8 @@ class NoteList extends React.Component {
     };
 
     this.handleSearchChange = this.handleSearchChange.bind(this);
+    this.handleChangeMinDate = this.handleChangeMinDate.bind(this);
+    this.handleChangeMaxDate = this.handleChangeMaxDate.bind(this);
     this.keywordMatch = this.keywordMatch.bind(this);
     this.textMatch = this.textMatch.bind(this);
   }

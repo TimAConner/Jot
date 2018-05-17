@@ -1,6 +1,6 @@
 // React & Redux
 import React from 'react';
-import { connect } from 'react-redux';
+import { connect } from "react-redux";
 
 // Redux Map To Props
 import { mapOptionStateToProps, mapOptionDispatchToProps } from '../actions/optionActions';
@@ -40,6 +40,8 @@ class Option extends React.Component {
         { value: 'monospace', text: 'Monospace' },
       ],
     };
+
+    this.handleOptionChange = this.handleOptionChange.bind(this);
   }
 
   handleOptionChange(value, key) {

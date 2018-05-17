@@ -58,10 +58,14 @@ class NoteEditor extends React.Component {
 
       // Replace keywords in note string
       for (let word of userOrWatson()) {
-        const regex = new RegExp(`(?<![a-zA-Z])(${word}{1})(?![a-zA-Z])`, 'gi');
-
-        // To fix issue #36 on github, you may implement a look ahead/behind to check if already in span.
-        totalText = totalText.replace(regex, `<span class="${highlightClass()}">$1</span>`);
+        try {
+          const regex = new RegExp(`(?<![a-zA-Z])(${word}{1})(?![a-zA-Z])`, 'gi');
+          // To fix issue #36 on github, you may implement a look ahead/behind to check if already in span.
+          totalText = totalText.replace(regex, `<span class="${highlightClass()}">$1</span>`);
+        }
+        catch(error) {
+          console.log(error);
+        }
       }
 
       // If word does not exist in note, remove from keyword array.
@@ -126,17 +130,16 @@ class NoteEditor extends React.Component {
       0, 0, x, y, false, false,
       false, false, 0, null
     );
-    console.log(x, y);
     document.elementFromPoint(x, y).dispatchEvent(clickEvent);
   }
 
-  simulateDoubleClickOnVisualBox = event => {
+  simulateDoubleClickOnVisualBox(event) {
     this.visualBox.current.style.zIndex = 1;
     this.inputBox.current.style.zIndex = -1;
     this.simulateDoubleClick(event.clientX, event.clientY);
     this.visualBox.current.style.zIndex = -1;
     this.inputBox.current.style.zIndex = 1;
-  };
+  }
 
   componentDidMount() {
     this.setKeywords();
