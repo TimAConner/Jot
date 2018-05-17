@@ -10,9 +10,7 @@ import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
 
 // CSS
-const dropdownStyle = {
-  fontSize: '20px',
-};
+import { dropdownStyle } from '../jss/OptionDropdown';
 
 const OptionDropdown = ({ options, changeHandler, currentStyle, styleName, floatingLabelText }) => (
   <div>

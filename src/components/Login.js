@@ -73,7 +73,7 @@ class Login extends React.Component {
     return (
 
       <MuiThemeProvider muiTheme={muiTheme}>
-        <div style={centerStyle}>
+        <div style={centerStyle} className='jot'>
           <h1 style={centerStyle}>Jot</h1>
           <form style={formStyle} onSubmit={this.login}>
 
@@ -135,6 +135,9 @@ class Login extends React.Component {
 
             <RaisedButton label="Register" type='submit' primary={true} />
           </form>
+        </div>
+        <div className='desktopError'>
+          <h2>Please view Jot on mobile.</h2>
         </div>
       </MuiThemeProvider>
     );

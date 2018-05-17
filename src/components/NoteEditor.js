@@ -16,22 +16,14 @@ import Loader from './Loader';
 import AddIcon from 'material-ui/svg-icons/content/add';
 import FloatingActionButton from 'material-ui/FloatingActionButton';
 
+// CSS
+import { editorInputStyle, addButtonStyle } from '../jss/NoteEditor';
+
 // Must be ran afer importing it to initialize it
 import injectTapEventPlugin from "react-tap-event-plugin"
 import isDblTouchTap from '../properties/isDblTouchTap';
 injectTapEventPlugin();
 
-const editorInputStyling = {
-  position: 'absolute',
-  top: '3rem',
-  width: '100%',
-};
-
-const addButtonStyling = {
-  position: 'fixed',
-  bottom: '1rem',
-  right: '1rem',
-};
 
 class NoteEditor extends React.Component {
 
@@ -267,7 +259,7 @@ class NoteEditor extends React.Component {
     }
     console.log('--------', this.props)
     return (
-      <div style={editorInputStyling}>
+      <div style={editorInputStyle}>
         <div
           ref={this.visualBox}
           id='visualBox'
@@ -289,7 +281,7 @@ class NoteEditor extends React.Component {
           backgroundColor={'#90CCF4'}
           mini={true}
           onClick={() => this.newNote()}
-          style={addButtonStyling}
+          style={addButtonStyle}
         >
           <AddIcon />
         </FloatingActionButton>

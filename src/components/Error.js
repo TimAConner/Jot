@@ -4,12 +4,8 @@ import React from 'react';
 // Material UI
 import Snackbar from 'material-ui/Snackbar';
 
-const snackbarStyling = {
-  height: '',
-  lineHeight: 'inherit',
-  paddingBottom: '1em',
-  paddingTop: '1em',
-};
+// CSS
+import { snackbarStyling } from '../jss/Error';
 
 class Error extends React.Component {
 
@@ -21,20 +17,20 @@ class Error extends React.Component {
     };
   }
 
-  componentWillReceiveProps(props){
+  componentWillReceiveProps(props) {
     this.state = {
       error: this.props.error,
       open: true,
     };
   }
-  
+
   render() {
     return (
       <Snackbar
         bodyStyle={snackbarStyling}
         open={true}
         message={this.state.error.toString()}
-        onRequestClose={() => {}}
+        onRequestClose={() => { }}
       />
     );
   }

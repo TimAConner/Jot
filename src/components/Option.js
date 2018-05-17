@@ -8,14 +8,8 @@ import { mapOptionStateToProps, mapOptionDispatchToProps } from '../actions/opti
 // Custom Components
 import OptionDropdown from './OptionDropdown';
 
-const headerStyling = {
-  textAlign: 'center',
-};
-
-const optionDropdownDivStyling = {
-  display: 'grid',
-  justifyContent: 'center',
-};
+// CSS
+import { headerStyle, optionDropdownDivStyle } from '../jss/Option';
 
 class Option extends React.Component {
 
@@ -55,10 +49,10 @@ class Option extends React.Component {
   render() {
     return (
       <div style={{ backgroundColor: '#FDFDFD', }} className='window'>
-        <h1 style={headerStyling}>Options</h1>
-        <h2 style={headerStyling}>{this.props.user !== null ? this.props.user.display_name : null}</h2>
+        <h1 style={headerStyle}>Options</h1>
+        <h2 style={headerStyle}>{this.props.user !== null ? this.props.user.display_name : null}</h2>
 
-        <div style={optionDropdownDivStyling}>
+        <div style={optionDropdownDivStyle}>
 
           {/* <h4>Font Style</h4> */}
           {this.props.user !== null

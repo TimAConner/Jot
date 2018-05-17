@@ -10,34 +10,8 @@ import DeleteIcon from 'material-ui/svg-icons/content/remove';
 // Helpers
 import { formatDate } from '../helpers';
 
-const noteBoxStyle = {
-  margin: '1rem',
-  padding: '0.5rem 1rem 0.5rem',
-  textAlign: 'left',
-};
-
-const noteTextStyle = {
-  whiteSpace: 'nowrap',
-  overflow: 'hidden',
-  textOverflow: 'ellipsis',
-};
-
-const noteDateStyle = {
-  fontSize: '0.8rem',
-  position: 'absolute',
-  top: '0rem',
-  right: '0rem',
-};
-
-const noteContainerStyle = {
-  position: 'relative',
-};
-
-const noteKeywordClass = {
-  textTransform: 'Capitalize',
-  fontSize: '1.25rem',
-};
-
+// CSS
+import { noteBoxStyle, noteTextStyle, noteDateStyle, noteContainerStyle, noteKeywordClass } from '../jss/Note';
 
 const Note = ({ noteId, keywords, date, text, viewNote, deleteNote }) => (
   <Paper style={noteBoxStyle} zDepth={1}>

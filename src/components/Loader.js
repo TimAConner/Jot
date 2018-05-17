@@ -5,25 +5,10 @@ import React from 'react';
 import RefreshIndicator from 'material-ui/RefreshIndicator';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import CircularProgress from 'material-ui/CircularProgress';
-
-
 import { muiTheme } from '../css/muiTheme';
 
-const style = {
-  container: {
-    position: 'fixed',
-    top: '0.3rem',
-    right: '1rem',
-  },
-  refresh: {
-    display: 'inline-block',
-    position: 'relative',
-  },
-};
-
-const hiddenStyle = {
-  display: 'none',
-};
+// CSS
+import { style, hiddenStyle } from '../jss/Loader';
 
 class Loader extends React.Component {
 

@@ -15,6 +15,7 @@ import Loader from './Loader';
 // Global Css
 import '../css/Jot.css';
 import { muiTheme } from '../css/muiTheme';
+import { menuButtonStyling, logoutButtonStyling } from '../jss/Jot';
 
 // Material UI Componenets
 import Drawer from 'material-ui/Drawer';
@@ -23,18 +24,6 @@ import ListIcon from 'material-ui/svg-icons/action/list';
 import SettingsIcon from 'material-ui/svg-icons/action/settings';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import RaisedButton from 'material-ui/RaisedButton';
-
-const menuButtonStyling = {
-  top: '0.3rem',
-  left: '0.3rem',
-  position: 'fixed',
-};
-
-const logoutButtonStyling = {
-  display: 'flex',
-  justifyContent: 'center',
-  marginTop: '2rem',
-};
 
 // const hideJotOnDesktopStyling = {
 //   '@media (min-width: 800px)': {
