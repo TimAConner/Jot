@@ -12,4 +12,5 @@ export const logoutButtonStyle = {
 
 export const logoutButtonLabelStyle = {
   fontSize: '25px',
+  textTransform: 'capitalize',
 };

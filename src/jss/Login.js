@@ -8,6 +8,7 @@ export const formStyle = {
 
 export const buttonLabelStyle = {
   fontSize: '20px',
+  textTransform: 'capitalize',
 };
 
 export const buttonStyle = {
