@@ -18,7 +18,7 @@ Jot is a streamlined note taking app for the scatterbrained, frequent note taker
         1. DELETE /notes/:id
         1. PUT /notes/:id
 ## 1.  About
-The application is designed to remove the obstacles in modern note taking and organizes your notes to help you find related notes.  The user is not required to add a title, date, or tag to the note.  Simply start typing and Jot (using IBM Watson) will highlight words it thinks are important.  Don't like them? No sweet.  Double tap / click a word and it will override Watson's keywords.  You may add as many as you want.
+The application is designed to remove the obstacles  in modern note taking (having to input excess information when all you want to do is remember a tiny note) and organize your notes to help you find related notes.  The user is not required to add a title, date, or tag to the note.  Start typing and Jot (using IBM Watson) will highlight important words and phrases.  Don't like them? No sweet.  Double tap / click a word and it will override Watson's keywords.  You may add as many as you want.
 
 ___
 
