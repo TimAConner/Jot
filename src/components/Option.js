@@ -1,6 +1,6 @@
 // React & Redux
 import React from 'react';
-import { connect } from "react-redux";
+import { connect } from 'react-redux';
 
 // Redux Map To Props
 import { mapOptionStateToProps, mapOptionDispatchToProps } from '../actions/optionActions';
@@ -42,9 +42,9 @@ class Option extends React.Component {
     };
   }
 
-  handleOptionChange = (value, key) => {
+  handleOptionChange(value, key) {
     this.props.updateOption({ value, key });
-  };
+  }
 
   render() {
     return (
@@ -101,6 +101,6 @@ class Option extends React.Component {
       </div>
     );
   }
-};
+}
 
 export default connect(mapOptionStateToProps, mapOptionDispatchToProps)(Option); 

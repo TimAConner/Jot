@@ -28,14 +28,6 @@ class Loader extends React.Component {
   render() {
     return (<MuiThemeProvider style={muiTheme}>
       <div style={this.state.visible ? style.container : hiddenStyle}>
-        {/* <RefreshIndicator
-          size={40}
-          left={10}
-          top={0}
-          status='loading'
-          style={style.refresh}
-          loadingColor='#F3D250'
-        /> */}
         <CircularProgress color='#F3D250' size={40} thickness={3} />
       </div>
     </MuiThemeProvider>);

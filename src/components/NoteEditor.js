@@ -119,7 +119,7 @@ class NoteEditor extends React.Component {
     }
   }
 
-  simulateDoubleClick = (x, y) => {
+  simulateDoubleClick(x, y) {
     const clickEvent = document.createEvent('MouseEvents');
     clickEvent.initMouseEvent(
       'dblclick', true, true, window, 0,

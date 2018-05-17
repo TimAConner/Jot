@@ -1,6 +1,6 @@
 // React & Redux
 import React from 'react';
-import { connect } from "react-redux";
+import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
 
 // Redux Map To Props
@@ -59,7 +59,7 @@ class Login extends React.Component {
 
   register(event) {
     event.preventDefault();
-    this.props.register(this.state.register_email, this.state.register_password, this.state.register_confirm, this.state.display_name)
+    this.props.register(this.state.register_email, this.state.register_password, this.state.register_confirm, this.state.display_name);
   }
 
   render() {
@@ -72,9 +72,9 @@ class Login extends React.Component {
 
             {/* Show error if error from login */}
             {this.props.error !== null ? <Error
-              error={typeof this.props.error.response !== "undefined"
+              error={typeof this.props.error.response !== 'undefined'
                 ? this.props.error.response.data
-                : "Please try again later."}
+                : 'Please try again later.'}
             /> : null}
 
 
@@ -87,19 +87,19 @@ class Login extends React.Component {
             <h2>Login</h2>
 
             <TextField
-              hintText="Email"
-              floatingLabelText="Email"
-              type="text"
-              name="email"
+              hintText='Email'
+              floatingLabelText='Email'
+              type='text'
+              name='email'
               value={this.state.email}
               onChange={this.handleChange}
               required
             /><br />
             <TextField
-              hintText="Password"
-              floatingLabelText="Password"
-              type="password"
-              name="password"
+              hintText='Password'
+              floatingLabelText='Password'
+              type='password'
+              name='password'
               value={this.state.password}
               onChange={this.handleChange}
               required
@@ -107,7 +107,7 @@ class Login extends React.Component {
             <RaisedButton
               style={buttonStyle}
               labelStyle={buttonLabelStyle}
-              label="Login"
+              label='Login'
               type='submit'
               primary={true} />
           </form>
@@ -117,39 +117,39 @@ class Login extends React.Component {
           <form style={formStyle} onSubmit={this.register}>
             <h2>Register</h2>
             <TextField
-              hintText="Name"
-              floatingLabelText="Name"
-              type="display_name"
-              name="display_name"
+              hintText='Name'
+              floatingLabelText='Name'
+              type='display_name'
+              name='display_name'
               value={this.state.display_name}
               onChange={this.handleChange} required
             /><br />
             <TextField
-              hintText="Email"
-              floatingLabelText="Email"
-              type="text"
-              pattern="[^ @]*@[^ @]*"
-              name="register_email"
+              hintText='Email'
+              floatingLabelText='Email'
+              type='text'
+              pattern='[^ @]*@[^ @]*'
+              name='register_email'
               value={this.state.register_email}
               onChange={this.handleChange}
               required
             /><br />
 
             <TextField
-              hintText="Password"
-              floatingLabelText="Password"
-              type="password"
-              name="register_password"
+              hintText='Password'
+              floatingLabelText='Password'
+              type='password'
+              name='register_password'
               value={this.state.register_password}
               onChange={this.handleChange}
               required
             /><br />
 
             <TextField
-              hintText="Confirm Password"
-              floatingLabelText="Confirm Password"
-              type="password"
-              name="register_confirm"
+              hintText='Confirm Password'
+              floatingLabelText='Confirm Password'
+              type='password'
+              name='register_confirm'
               value={this.state.register_confirm}
               onChange={this.handleChange}
               required
@@ -158,7 +158,7 @@ class Login extends React.Component {
             <RaisedButton
               style={buttonStyle}
               labelStyle={buttonLabelStyle}
-              label="Register"
+              label='Register'
               type='submit'
               primary={true} />
           </form>
